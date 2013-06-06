@@ -1,0 +1,21 @@
+review the code base for refactoring opportunities
+estimate the integral of the radial part of the wave function
+  adjust brightness level accordingly
+estimate the volume of a sphere covering most of the density
+  set initial bounding box size accordingly
+make changes to detail level take effect immediately
+make color cycling rate depend on energy of orbital
+color model: consider if intensity is calibrated and adds correctly
+             is there a better way to map complex argument to color?
+try using a fixed set of vertices
+look at more ways to make subdivision faster
+  presently, we do way too many function evaluations trying to find
+  the best place to insert the next point
+examine what precision is needed in the various textures
+look at what version of OpenGL is strictly required, and see if
+  various features can also be used via extensions, so as to lower the
+  OpenGL version requirement
+research the possibility of depth sorting and obscuring background
+  clouds
+handle tetrahedra with a face seen edge-on
+clean up all error handling

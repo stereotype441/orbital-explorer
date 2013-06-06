@@ -1,0 +1,51 @@
+# Uncomment these two lines to use AntTweakBar controls
+CPPFLAGS = -DANTTWEAKBAR
+LINKFLAGS = -lAntTweakBar -lX11
+
+OPT_OR_DEBUG = -O3
+
+CPP = g++
+CPPFLAGS := $(CPPFLAGS) -pthread -Wall -Wshadow $(OPT_OR_DEBUG) $(shell sdl-config --cflags)
+LINKFLAGS := $(LINKFLAGS) -pthread -lGLEW -lGLU -lGL $(shell sdl-config --libs)
+
+OFILES=\
+	sdl_main.o \
+	oopengl.o \
+	callbacks.o \
+	mouseevents.o \
+	controls.o \
+	transform.o \
+	shaders.o \
+	tetrahedralize.o \
+	wavefunction.o
+
+PROG = orbital-explorer
+TEST = unittests
+
+all: $(PROG)
+
+$(PROG): $(OFILES)
+	$(CPP) $(CPPFLAGS) $(OFILES) -o $@ $(LINKFLAGS)
+
+$(TEST): unittests.o
+	$(CPP) $(CPPFLAGS) unittests.o -o $@ $(LINKFLAGS) -lgtest -lgtest_main
+
+%.o: %.cc
+	$(CPP) $(CPPFLAGS) -MMD -MP -MF $(<:%.cc=.%.d) -c $<
+
+shaders.cc: *.vert *.geom *.frag
+	rm -f shaders.cc
+	for shader in *.vert *.geom *.frag ; do \
+	  ./wrap_shader.sh $$shader >> shaders.cc ; \
+	done
+
+.PHONY: clean
+clean:
+	rm -f *~ *.o $(PROG) $(TEST) shaders.cc
+
+.PHONY: cleanall
+cleanall: clean
+	rm -f .*.d
+
+# Import dependences
+-include $(OFILES:%.o=.%.d)

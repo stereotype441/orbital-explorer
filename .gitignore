@@ -1,0 +1,6 @@
+*~
+*.o
+.*.d
+shaders.cc
+orbital-explorer
+unittests
