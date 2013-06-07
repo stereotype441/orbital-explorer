@@ -62,6 +62,8 @@ class Orbital : public Function<3,std::complex<double> >
 public:
   Orbital(int Z_, int N_, int L_, int M_,
           bool real_, bool diff_, bool square_, bool phase_);
+  double radial_part(double r) const;
+  double theta_part(double sin_theta, double cos_theta) const;
   std::complex<double> operator()(const Vector<3> &x) const;
   const int Z, N, L, M;
   const bool real; // If true, add values for +/-M and divide by root 2
@@ -73,8 +75,10 @@ public:
   bool operator!=(const Orbital &rhs) { return !(*this == rhs); }
 
 private:
-  double c;
-  double expc;
-  Polynomial rp;
-  Polynomial ctp;
+  double radial_constant;
+  double radial_exponential_constant;
+  Polynomial radial_polynomial;
+
+  double angular_constant;
+  Polynomial cos_theta_polynomial;
 };

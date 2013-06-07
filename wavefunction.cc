@@ -65,36 +65,64 @@ Orbital::Orbital(int Z_, int N_, int L_, int M_,
   Z(Z_), N(N_), L(L_), M(M_),
   real(real_), diff(diff_), square(square_), phase(phase_)
 {
-  c = 1.0;
-  c *= pow(2.0 * double(Z) / double(N), 1.5);
-  c *= sqrt(factorial(N - L - 1) / (2.0 * double(N) * factorial(N + L)));
-  c *= sqrt((2.0 * double(L) + 1.0) / (4.0 * pi));
-  c *= sqrt(factorial(L - fabs(M)) / factorial(L + fabs(M)));
-  c /= factorial(L);
-  c *= pow(double(Z) / double(N), L);
+  // Set up radial part of wave function
 
-  expc = -double(Z) / double(N);
-
-  rp = 0.0;
+  // Leading constant: (2Z/N)^1.5 sqrt((N-L-1)! / 2N(N+L)!)
+  radial_constant = pow(2.0 * double(Z) / double(N), 1.5) *
+    sqrt(factorial(N - L - 1) /
+         (2.0 * double(N) * factorial(N + L)));
+  // e^(-Zr/N)
+  radial_exponential_constant = -double(Z) / double(N);
+  // (2Zr/N)^L
+  radial_constant *= pow(2.0 * double(Z) / double(N), L);
+  // Associated Laguerre polynomial L_(N-L-1)^(2L+1) (2Zr/N)
+  radial_polynomial = 0.0;
   Polynomial r(1.0, 1);
-  for (int k = 0; k < N - L; ++k) {
-    Polynomial m(1.0);
-    if (k & 1) m = -1.0;
-    m /= factorial(k);
-    m *= choose(N + L, N - L - 1 - k);
-    m *= pow(2.0 * double(Z) * r / double(N), k);
-    rp += m;
+  for (int k = 0; k <= N - L - 1; ++k) {
+    radial_polynomial += ((k & 1) ? -1.0 : 1.0) *
+      choose(N + L, double(N - L - 1 - k)) *
+      pow(2.0 * double(Z) * r / double(N), k) /
+      factorial(k);
   }
 
+  // Set up angular part of wave function
+
+  // Leading constant: sqrt((2L+1)(L-|M|)! / 4pi(L+|M|)!)
+  angular_constant = sqrt((2.0 * double(L) + 1.0) * factorial(L - fabs(M)) /
+                          (4.0 * pi * factorial(L + fabs(M))));
+  // Other constants: 1 / 2^L L!
+  angular_constant /= pow(2.0, L) * factorial(L);
+  // Polynomial in cos(theta) comes from associated Legendre polynomial
   Polynomial x(1.0, 1);
-  Polynomial temp = pow(x * x - 1.0, L);
-  ctp = temp.derivative(L + abs(M));
+  cos_theta_polynomial = pow(x * x - 1.0, L).derivative(L + abs(M));
+}
+
+double Orbital::radial_part(double r) const
+{
+  return radial_constant *
+    exp(radial_exponential_constant * r) *
+    ipow(r, L) *
+    radial_polynomial(r);
+}
+
+double Orbital::theta_part(double sin_theta, double cos_theta) const
+{
+  return angular_constant *
+    cos_theta_polynomial(cos_theta) *
+    ipow(sin_theta, abs(M));
 }
 
 std::complex<double> Orbital::operator()(const Vector<3> &x) const
 {
   double x2y2 = x[0] * x[0] + x[1] * x[1];
+
   double r_xy = sqrt(x2y2);
+  double phi;
+  if (r_xy > 0.0)
+    phi = atan2(x[1], x[0]);
+  else
+    phi = 0.0;
+
   double r = sqrt(x2y2 + x[2] * x[2]);
 
   double sin_theta, cos_theta;
@@ -106,45 +134,51 @@ std::complex<double> Orbital::operator()(const Vector<3> &x) const
     cos_theta = 1.0;
   }
 
-  double phi;
-  if (r_xy > 0.0)
-    phi = atan2(x[1], x[0]);
-  else
-    phi = 0.0;
+  // val is independent of the sign of M
+  double val = radial_part(r) * theta_part(sin_theta, cos_theta);
 
-  double val = c;
-  val *= exp(expc * r);
-  val *= ipow(r, L);
-  val *= rp(r);
-  val *= ipow(sin_theta, abs(M));
-  val *= ctp(cos_theta);
+  // If the sign of M is flipped, angle is negated, so the result
+  // is complex conjugation of the wave function's value.
+  double angle = M * phi;
 
-  std::complex<double> angle;
+  // An additional sign change is present if M is positive and odd, which
+  // makes for a fine mess.
+  double sign = 1.0;
+  if (M > 0 && (M & 1))
+    sign = -1.0;
+
+  double result_mag;
+  complex<double> result_arg;
+  // If real is set, we need to add or subtract what the result would
+  // have been with M negated, and divide by sqrt(2) or i sqrt(2).
+  // (Assumes M is positive or zero. If M is zero the result is already
+  // real.)
   if (real && M != 0) {
-    if (diff) {
-      angle = std::complex<double>(0.0, 1.0);
-      val *= sin(M * phi);
-    } else {
-      angle = std::complex<double>(1.0, 0.0);
-      val *= cos(M * phi);
-    }
-    val *= sqrt(2);
+    double factor = diff ? -1.0 : 1.0;
+    // sign * val * exp(i * angle) + factor * val * exp(-i * angle)
+    // = val * (sign * cos(angle) + sign * i * sin(angle)
+    //          factor * cos(angle) - factor * i * sin(angle))
+    // = val * ((sign + factor) cos(angle) + (sign - factor) i sin(angle))
+    result_mag = val * ((sign + factor) * cos(angle) +
+                        (sign - factor) * sin(angle)) / sqrt(2.0);
+    result_arg = complex<double>(1.0, 0.0);
+  } else {
+    result_mag = sign * val;
+    result_arg = complex<double>(cos(angle), sin(angle));
   }
-  else
-    angle = std::complex<double>(cos(M * phi), sin(M * phi));
 
-  if (val < 0.0) {
-    angle = -angle;
-    val = -val;
+  if (result_mag < 0.0) {
+    result_mag = -result_mag;
+    result_arg = -result_arg;
   }
 
   if (square)
-    val *= val;
+    result_mag *= result_mag;
 
   if (phase)
-    return val * angle;
+    return result_mag * result_arg;
   else
-    return val;
+    return result_mag;
 }
 
 bool Orbital::operator==(const Orbital &rhs)
