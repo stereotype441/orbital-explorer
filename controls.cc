@@ -76,6 +76,7 @@ static int N = 1;
 static int L = 0;
 static int M = 0;
 static int absM = 0;
+static double E = 0.0; // in eV
 static const int minZ = 1;
 static const int maxZ = 100; // FIXME
 static const int minN = 1;
@@ -102,11 +103,18 @@ static void changeAbsM(int);
 static void changeBasis(bool);
 static void changeCombo(bool);
 
+static void setEnergy()
+{
+  E = 13.60569253 * double(Z) * double(Z) / (double(N) * double(N));
+}
+
 static void changeZ(int newZ)
 {
   if (newZ > maxZ) newZ = maxZ;
   if (newZ < minZ) newZ = minZ;
   Z = newZ;
+
+  setEnergy();
 }
 
 static void changeN(int newN)
@@ -117,6 +125,8 @@ static void changeN(int newN)
 
   maxL = N - 1;
   changeL(L);
+
+  setEnergy();
 }
 
 static void changeL(int newL)
@@ -412,6 +422,11 @@ void initControls()
   // Real starts set to false, so this starts hidden
   TwSetParam(physics, "Combo", "visible", TW_PARAM_INT32, 1, &f);
 
+  TwAddVarRO(physics, "Energy (eV)", TW_TYPE_DOUBLE, &E,
+             "help=`Orbital energy`"
+             " group=`Energy`"
+             );
+
   // Which function
 
   TwAddVarCB(physics, "Wave Func", TW_TYPE_BOOLCPP,
@@ -506,6 +521,8 @@ void initControls()
              " group=`GPU & Driver`");
 
   TwSetParam(display, "GPU & Driver", "opened", TW_PARAM_INT32, 1, &f);
+
+  setEnergy();
 
 #else
 

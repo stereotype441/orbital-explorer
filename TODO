@@ -1,10 +1,10 @@
 review the code base for refactoring opportunities
 estimate the integral of the radial part of the wave function
   adjust brightness level accordingly
-estimate the volume of a sphere covering most of the density
+estimate the radius of a sphere covering most of the density
   set initial bounding box size accordingly
 make changes to detail level take effect immediately
-make color cycling rate depend on energy of orbital
+add controls for color cycling on/off and rate of cycling
 color model: consider if intensity is calibrated and adds correctly
              is there a better way to map complex argument to color?
 try using a fixed set of vertices
