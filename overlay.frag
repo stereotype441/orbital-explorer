@@ -49,6 +49,7 @@ in vec2 coord;
 out vec3 RGB;
 uniform sampler2D solidData;
 uniform sampler2D cloudData;
+uniform float color_rotation;
 
 vec3 srgb_gamma(vec3 c)
 {
@@ -71,6 +72,17 @@ void main(void)
   // Integral of intensity-scaled chromaticity (u * Y and v * Y), divided
   // by total intensity (Y), gives intensity-weighted chromaticity.
   vec2 cloud_uv = integrated_uvY.xy / integrated_Y;
+
+  // Rotate (u,v) for color cycling.
+  vec2 white = vec2(0.19784, 0.46832);
+  cloud_uv -= white;
+
+  float s = sin(color_rotation);
+  float c = cos(color_rotation);
+  mat2 rot = mat2(c, s, -s, c);
+  cloud_uv = rot * cloud_uv;
+
+  cloud_uv += white;
 
   // Convert CIE (u,v) color coordinates (as per CIELUV) to (x,y)
   vec2 cloud_xy = vec2(9.0, 4.0) * cloud_uv;

@@ -462,7 +462,6 @@ void display()
   cloudProg->use();
   cloudProg->uniform<Matrix<4,4> >("modelViewProjMatrix") = mvpm;
   cloudProg->uniform<Vector<2> >("nearfar") = Vector2(N, F);
-  cloudProg->uniform<float>("color_rotation") = now_sec;
   cloudProg->uniform<int>("solidDepth") = 0;
   double b = pow(1.618, getBrightness());
   if (orbital->square)
@@ -486,6 +485,7 @@ void display()
   overlayProg->use();
   overlayProg->uniform<int>("solidData") = 0;
   overlayProg->uniform<int>("cloudData") = 1;
+  overlayProg->uniform<float>("color_rotation") = now_sec;
   glActiveTexture(GL_TEXTURE0);
   solidRGBTex->bind(GL_TEXTURE_2D);
   glActiveTexture(GL_TEXTURE1);

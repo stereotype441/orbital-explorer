@@ -46,7 +46,6 @@
 #version 150
 
 uniform mat4 modelViewProjMatrix;
-uniform float color_rotation;
 uniform float brightness;
 
 in vec4 position;
@@ -75,24 +74,6 @@ void calculate_position()
   inverted_position = vector_inverse(pos);
 }
 
-// Rotate a vector in the (u',v') color plane around the sRGB white
-// point by some angle.
-vec2 rotate_hue(vec2 uv, float angle)
-{
-  vec2 white = vec2(0.19784, 0.46832);
-
-  uv -= white;
-
-  float s = sin(angle);
-  float c = cos(angle);
-  mat2 rot = mat2(c, s, -s, c);
-  uv = rot * uv;
-
-  uv += white;
-
-  return uv;
-}
-
 // Apply brightness adjustment and color rotation to the input color,
 // setting the output varying "integrand" to transformed color
 // coordinates that are sensible to integrate.
@@ -100,8 +81,6 @@ void calculate_color()
 {
   vec2 uv = uvY.xy;
   float Y = brightness * uvY.z;
-
-  uv = rotate_hue(uv, color_rotation);
 
   integrand = Y * vec3(uv, 1.0);
 }
