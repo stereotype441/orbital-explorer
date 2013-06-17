@@ -156,6 +156,15 @@ operator=(const std::vector<Vector<4> > &x)
 }
 
 template <>
+void Uniform<Matrix<3,2> >::operator=(const Matrix<3,2> &x)
+{
+  verify_used();
+  Array<6,GLfloat> x_array(x);
+  GLfloat *data_ptr = &(x_array[0]);
+  glUniformMatrix2x3fv(location, 1, GL_TRUE, data_ptr);
+}
+
+template <>
 void Uniform<Matrix<4,4> >::operator=(const Matrix<4,4> &x)
 {
   verify_used();
