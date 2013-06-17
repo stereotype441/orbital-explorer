@@ -280,6 +280,71 @@ void resizeTextures()
   GetGLError();
 }
 
+void drawSolids(const Matrix<4,4> &mvpm, int width, int height)
+{
+  solidProg->use();
+  solidProg->uniform<Matrix<4,4> >("modelViewProjMatrix") = mvpm;
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, solidFBO);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glEnable(GL_DEPTH_TEST);
+  glDisable(GL_BLEND);
+  glLineWidth(2);
+  solid->bind();
+  glViewport(0, 0, width, height);
+  glDrawArrays(GL_LINES, 0, 6);
+
+  GetGLError();
+}
+
+void drawOrbital(const Matrix<4,4> &mvpm, int width, int height,
+                 double N, double F)
+{
+  cloudProg->use();
+  cloudProg->uniform<Matrix<4,4> >("modelViewProjMatrix") = mvpm;
+  cloudProg->uniform<Vector<2> >("nearfar") = Vector2(N, F);
+  cloudProg->uniform<int>("solidDepth") = 0;
+  double b = pow(1.618, getBrightness());
+  if (orbital->square)
+    b *= b;
+  cloudProg->uniform<float>("brightness") = b;
+  glActiveTexture(GL_TEXTURE0);
+  solidDepthTex->bind(GL_TEXTURE_2D);
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, cloudFBO);
+  glClear(GL_COLOR_BUFFER_BIT);
+  glDisable(GL_DEPTH_TEST);
+  glEnable(GL_BLEND);
+  cloud->bind();
+  glViewport(0, 0, width, height);
+  glDrawElements(GL_LINES_ADJACENCY, 4 * num_tetrahedra, GL_UNSIGNED_INT, 0);
+
+  GetGLError();
+}
+
+void drawComposite(int width, int height, double now_sec)
+{
+  overlayProg->use();
+  overlayProg->uniform<int>("solidData") = 0;
+  overlayProg->uniform<int>("cloudData") = 1;
+  Matrix<3,2> ct;
+  ct(0,0) =  cos(now_sec);  ct(0,1) = sin(now_sec);
+  ct(1,0) = -sin(now_sec);  ct(1,1) = cos(now_sec);
+  ct(2,0) = 0.19784;        ct(2,1) = 0.46832;
+  overlayProg->uniform<Matrix<3,2> >("color_trans") = ct;
+  glActiveTexture(GL_TEXTURE0);
+  solidRGBTex->bind(GL_TEXTURE_2D);
+  glActiveTexture(GL_TEXTURE1);
+  cloudDensityTex->bind(GL_TEXTURE_2D);
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+  glClear(GL_COLOR_BUFFER_BIT);
+  glDisable(GL_DEPTH_TEST);
+  glDisable(GL_BLEND);
+  rect->bind();
+  glViewport(0, 0, width, height);
+  glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+
+  GetGLError();
+}
+
 void display()
 {
   int width = getWidth();
@@ -444,63 +509,14 @@ void display()
 
   GetGLError();
 
-  solidProg->use();
-  solidProg->uniform<Matrix<4,4> >("modelViewProjMatrix") = mvpm;
-  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, solidFBO);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glEnable(GL_DEPTH_TEST);
-  glDisable(GL_BLEND);
-  glLineWidth(2);
-  solid->bind();
-  glViewport(0, 0, width, height);
-  glDrawArrays(GL_LINES, 0, 6);
+  drawSolids(mvpm, width, height);
 
-  GetGLError();
-
-  cloudProg->use();
-  cloudProg->uniform<Matrix<4,4> >("modelViewProjMatrix") = mvpm;
-  cloudProg->uniform<Vector<2> >("nearfar") = Vector2(N, F);
-  cloudProg->uniform<int>("solidDepth") = 0;
-  double b = pow(1.618, getBrightness());
-  if (orbital->square)
-    b *= b;
-  cloudProg->uniform<float>("brightness") = b;
-  glActiveTexture(GL_TEXTURE0);
-  solidDepthTex->bind(GL_TEXTURE_2D);
-  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, cloudFBO);
-  glClear(GL_COLOR_BUFFER_BIT);
-  glDisable(GL_DEPTH_TEST);
-  glEnable(GL_BLEND);
-  cloud->bind();
   if (detail_reduction)
-    glViewport(0, 0, width / shrink, height / shrink);
+    drawOrbital(mvpm, width / shrink, height / shrink, N, F);
   else
-    glViewport(0, 0, width, height);
-  glDrawElements(GL_LINES_ADJACENCY, 4 * num_tetrahedra, GL_UNSIGNED_INT, 0);
+    drawOrbital(mvpm, width, height, N, F);
 
-  GetGLError();
-
-  overlayProg->use();
-  overlayProg->uniform<int>("solidData") = 0;
-  overlayProg->uniform<int>("cloudData") = 1;
-  Matrix<3,2> ct;
-  ct(0,0) =  cos(now_sec);  ct(0,1) = sin(now_sec);
-  ct(1,0) = -sin(now_sec);  ct(1,1) = cos(now_sec);
-  ct(2,0) = 0.19784;        ct(2,1) = 0.46832;
-  overlayProg->uniform<Matrix<3,2> >("color_trans") = ct;
-  glActiveTexture(GL_TEXTURE0);
-  solidRGBTex->bind(GL_TEXTURE_2D);
-  glActiveTexture(GL_TEXTURE1);
-  cloudDensityTex->bind(GL_TEXTURE_2D);
-  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-  glClear(GL_COLOR_BUFFER_BIT);
-  glDisable(GL_DEPTH_TEST);
-  glDisable(GL_BLEND);
-  rect->bind();
-  glViewport(0, 0, width, height);
-  glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-
-  GetGLError();
+  drawComposite(width, height, now_sec);
 
   if (detail_reduction) {
     glQueryCounter(timer_query[2 * next_set_of_timers + 1], GL_TIMESTAMP);
