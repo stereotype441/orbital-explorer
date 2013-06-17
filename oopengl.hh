@@ -53,6 +53,17 @@ private:
   Uncopyable &operator=(const Uncopyable &); // DO NOT DEFINE
 };
 
+class Timer : public Uncopyable
+{
+public:
+  Timer() { glGenQueries(1, &id); glQueryCounter(id, GL_TIMESTAMP); }
+  ~Timer() { glDeleteQueries(1, &id); }
+  operator GLuint() { return id; }
+
+private:
+  GLuint id;
+};
+
 class Shader : public Uncopyable
 {
 public:

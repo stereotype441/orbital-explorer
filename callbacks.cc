@@ -91,7 +91,7 @@ static void GetGLError_(int line)
 }
 
 // GPU timers
-static GLuint timer_query[4];
+static Timer *gputimer[4];
 
 // GLSL programs
 static Program *solidProg, *cloudProg, *finalProg;
@@ -149,9 +149,8 @@ static void checkFramebufferCompleteness()
 
 void initialize()
 {
-  glGenQueries(4, timer_query);
   for (int i = 0; i < 4; ++i)
-    glQueryCounter(timer_query[i], GL_TIMESTAMP);
+    gputimer[i] = new Timer();
 
   solidProg = new Program();
   solidProg->vertexShader(solidVertexShaderSource);
@@ -433,19 +432,19 @@ void display()
     long render_time;
     int old_shrink_times_two;
 
-    glGetQueryObjectiv(timer_query[2 * next_set_of_timers],
+    glGetQueryObjectiv(*gputimer[2 * next_set_of_timers],
                        GL_QUERY_RESULT_AVAILABLE, &timer_good);
     if (!timer_good)
       goto bailout;
 
-    glGetQueryObjectiv(timer_query[2 * next_set_of_timers + 1],
+    glGetQueryObjectiv(*gputimer[2 * next_set_of_timers + 1],
                        GL_QUERY_RESULT_AVAILABLE, &timer_good);
     if (!timer_good)
       goto bailout;
 
-    glGetQueryObjectui64v(timer_query[2 * next_set_of_timers],
+    glGetQueryObjectui64v(*gputimer[2 * next_set_of_timers],
                           GL_QUERY_RESULT, &start);
-    glGetQueryObjectui64v(timer_query[2 * next_set_of_timers + 1],
+    glGetQueryObjectui64v(*gputimer[2 * next_set_of_timers + 1],
                           GL_QUERY_RESULT, &stop);
     render_time = stop - start;
 
@@ -471,7 +470,7 @@ void display()
   int shrink = shrink_times_two / 2;
 
   if (detail_reduction)
-    glQueryCounter(timer_query[2 * next_set_of_timers], GL_TIMESTAMP);
+    glQueryCounter(*gputimer[2 * next_set_of_timers], GL_TIMESTAMP);
 
   GetGLError();
 
@@ -519,7 +518,7 @@ void display()
   drawFinal(width, height, now_sec);
 
   if (detail_reduction) {
-    glQueryCounter(timer_query[2 * next_set_of_timers + 1], GL_TIMESTAMP);
+    glQueryCounter(*gputimer[2 * next_set_of_timers + 1], GL_TIMESTAMP);
     next_set_of_timers = 1 - next_set_of_timers;
   }
 
