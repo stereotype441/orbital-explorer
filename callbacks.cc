@@ -483,7 +483,11 @@ void display()
   overlayProg->use();
   overlayProg->uniform<int>("solidData") = 0;
   overlayProg->uniform<int>("cloudData") = 1;
-  overlayProg->uniform<float>("color_rotation") = now_sec;
+  Matrix<3,2> ct;
+  ct(0,0) =  cos(now_sec);  ct(0,1) = sin(now_sec);
+  ct(1,0) = -sin(now_sec);  ct(1,1) = cos(now_sec);
+  ct(2,0) = 0.19784;        ct(2,1) = 0.46832;
+  overlayProg->uniform<Matrix<3,2> >("color_trans") = ct;
   glActiveTexture(GL_TEXTURE0);
   solidRGBTex->bind(GL_TEXTURE_2D);
   glActiveTexture(GL_TEXTURE1);
