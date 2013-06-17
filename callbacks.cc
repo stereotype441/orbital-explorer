@@ -94,7 +94,7 @@ static void GetGLError_(int line)
 static GLuint timer_query[4];
 
 // GLSL programs
-static Program *solidProg, *cloudProg, *overlayProg;
+static Program *solidProg, *cloudProg, *finalProg;
 
 // Vertex array objects
 static VertexArrayObject *solid, *cloud, *rect;
@@ -174,12 +174,12 @@ void initialize()
 
   GetGLError();
 
-  overlayProg = new Program();
-  overlayProg->vertexShader(overlayVertexShaderSource);
-  overlayProg->fragmentShader(overlayFragmentShaderSource);
-  glBindAttribLocation(*overlayProg, 0, "inPosition");
-  glBindFragDataLocation(*overlayProg, 0, "RGB");
-  overlayProg->link();
+  finalProg = new Program();
+  finalProg->vertexShader(finalVertexShaderSource);
+  finalProg->fragmentShader(finalFragmentShaderSource);
+  glBindAttribLocation(*finalProg, 0, "inPosition");
+  glBindFragDataLocation(*finalProg, 0, "RGB");
+  finalProg->link();
 
   GetGLError();
 
@@ -320,16 +320,16 @@ void drawOrbital(const Matrix<4,4> &mvpm, int width, int height,
   GetGLError();
 }
 
-void drawComposite(int width, int height, double now_sec)
+void drawFinal(int width, int height, double now_sec)
 {
-  overlayProg->use();
-  overlayProg->uniform<int>("solidData") = 0;
-  overlayProg->uniform<int>("cloudData") = 1;
+  finalProg->use();
+  finalProg->uniform<int>("solidData") = 0;
+  finalProg->uniform<int>("cloudData") = 1;
   Matrix<3,2> ct;
   ct(0,0) =  cos(now_sec);  ct(0,1) = sin(now_sec);
   ct(1,0) = -sin(now_sec);  ct(1,1) = cos(now_sec);
   ct(2,0) = 0.19784;        ct(2,1) = 0.46832;
-  overlayProg->uniform<Matrix<3,2> >("color_trans") = ct;
+  finalProg->uniform<Matrix<3,2> >("color_trans") = ct;
   glActiveTexture(GL_TEXTURE0);
   solidRGBTex->bind(GL_TEXTURE_2D);
   glActiveTexture(GL_TEXTURE1);
@@ -516,7 +516,7 @@ void display()
   else
     drawOrbital(mvpm, width, height, N, F);
 
-  drawComposite(width, height, now_sec);
+  drawFinal(width, height, now_sec);
 
   if (detail_reduction) {
     glQueryCounter(timer_query[2 * next_set_of_timers + 1], GL_TIMESTAMP);

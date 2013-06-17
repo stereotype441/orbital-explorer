@@ -48,5 +48,5 @@ extern const char *solidFragmentShaderSource;
 extern const char *cloudVertexShaderSource;
 extern const char *cloudGeometryShaderSource;
 extern const char *cloudFragmentShaderSource;
-extern const char *overlayVertexShaderSource;
-extern const char *overlayFragmentShaderSource;
+extern const char *finalVertexShaderSource;
+extern const char *finalFragmentShaderSource;
