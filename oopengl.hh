@@ -56,12 +56,40 @@ private:
 class Timer : public Uncopyable
 {
 public:
-  Timer() { glGenQueries(1, &id); glQueryCounter(id, GL_TIMESTAMP); }
-  ~Timer() { glDeleteQueries(1, &id); }
-  operator GLuint() { return id; }
+  Timer() {
+    glGenQueries(2, id);
+    glQueryCounter(id[0], GL_TIMESTAMP);
+    glQueryCounter(id[1], GL_TIMESTAMP);
+  }
+  ~Timer() { glDeleteQueries(2, id); }
+  void start() {
+    glQueryCounter(id[0], GL_TIMESTAMP);
+  }
+  void stop() {
+    glQueryCounter(id[1], GL_TIMESTAMP);
+  }
+  long read() {
+    GLint timer_good;
+
+    glGetQueryObjectiv(id[0], GL_QUERY_RESULT_AVAILABLE, &timer_good);
+    if (!timer_good)
+      goto bailout;
+
+    glGetQueryObjectiv(id[1], GL_QUERY_RESULT_AVAILABLE, &timer_good);
+    if (!timer_good)
+      goto bailout;
+
+    GLuint64 t0, t1;
+    glGetQueryObjectui64v(id[0], GL_QUERY_RESULT, &t0);
+    glGetQueryObjectui64v(id[1], GL_QUERY_RESULT, &t1);
+    return t1 - t0;
+
+  bailout:
+    throw std::logic_error("GPU timer not ready");
+  }
 
 private:
-  GLuint id;
+  GLuint id[2];
 };
 
 class Shader : public Uncopyable

@@ -91,7 +91,7 @@ static void GetGLError_(int line)
 }
 
 // GPU timers
-static Timer *gputimer[4];
+static Timer *gputimer[2];
 
 // GLSL programs
 static Program *solidProg, *cloudProg, *finalProg;
@@ -149,7 +149,7 @@ static void checkFramebufferCompleteness()
 
 void initialize()
 {
-  for (int i = 0; i < 4; ++i)
+  for (int i = 0; i < 2; ++i)
     gputimer[i] = new Timer();
 
   solidProg = new Program();
@@ -426,51 +426,39 @@ void display()
   static int next_set_of_timers = 0;
   static int shrink_times_two = 2;
 
-  if (detail_reduction) {
-    GLuint64 start, stop;
-    GLint timer_good;
-    long render_time;
-    int old_shrink_times_two;
+  if (detail_reduction)
+    try {
+      long render_time;
+      int old_shrink_times_two;
 
-    glGetQueryObjectiv(*gputimer[2 * next_set_of_timers],
-                       GL_QUERY_RESULT_AVAILABLE, &timer_good);
-    if (!timer_good)
-      goto bailout;
+      render_time = gputimer[next_set_of_timers]->read();
 
-    glGetQueryObjectiv(*gputimer[2 * next_set_of_timers + 1],
-                       GL_QUERY_RESULT_AVAILABLE, &timer_good);
-    if (!timer_good)
-      goto bailout;
+      old_shrink_times_two = shrink_times_two;
+      if (render_time > 30 * 1000 * 1000)
+        ++shrink_times_two;
 
-    glGetQueryObjectui64v(*gputimer[2 * next_set_of_timers],
-                          GL_QUERY_RESULT, &start);
-    glGetQueryObjectui64v(*gputimer[2 * next_set_of_timers + 1],
-                          GL_QUERY_RESULT, &stop);
-    render_time = stop - start;
+      static int calls_since_shrink_reduction = 0;
+      if (++calls_since_shrink_reduction >= 30) {
+        --shrink_times_two;
+        calls_since_shrink_reduction = 0;
+      }
 
-    old_shrink_times_two = shrink_times_two;
-    if (render_time > 30 * 1000 * 1000)
-      ++shrink_times_two;
+      clamp(shrink_times_two, 2, 20);
 
-    static int calls_since_shrink_reduction = 0;
-    if (++calls_since_shrink_reduction >= 30) {
-      --shrink_times_two;
-      calls_since_shrink_reduction = 0;
+      if (shrink_times_two != old_shrink_times_two)
+        setShrinkage(shrink_times_two / 2);
+    } catch (std::logic_error &e) {
+      static bool print_note = true;
+      if (print_note) {
+        fprintf(stderr, "Debug: GPU timer not ready\n");
+        print_note = false;
+      }
     }
-
-    clamp(shrink_times_two, 2, 20);
-
-    if (shrink_times_two != old_shrink_times_two)
-      setShrinkage(shrink_times_two / 2);
-
-  bailout:
-    GetGLError();
-  }
 
   int shrink = shrink_times_two / 2;
 
   if (detail_reduction)
-    glQueryCounter(*gputimer[2 * next_set_of_timers], GL_TIMESTAMP);
+    gputimer[next_set_of_timers]->start();
 
   GetGLError();
 
@@ -518,7 +506,7 @@ void display()
   drawFinal(width, height, now_sec);
 
   if (detail_reduction) {
-    glQueryCounter(*gputimer[2 * next_set_of_timers + 1], GL_TIMESTAMP);
+    gputimer[next_set_of_timers]->stop();
     next_set_of_timers = 1 - next_set_of_timers;
   }
 
