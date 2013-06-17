@@ -505,6 +505,8 @@ void display()
 
   drawFinal(width, height, now_sec);
 
+  glFinish();
+
   if (detail_reduction) {
     gputimer[next_set_of_timers]->stop();
     next_set_of_timers = 1 - next_set_of_timers;
