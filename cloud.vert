@@ -79,8 +79,7 @@ void calculate_position()
 // coordinates that are sensible to integrate.
 void calculate_color()
 {
-  vec2 white = vec2(0.19784, 0.46832);
-  vec2 uv = uvY.xy - white;
+  vec2 uv = uvY.xy;
   float Y = brightness * uvY.z;
 
   integrand = Y * vec3(uv, 1.0);
