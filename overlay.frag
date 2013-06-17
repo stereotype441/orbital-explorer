@@ -75,7 +75,6 @@ void main(void)
 
   // Rotate (u,v) for color cycling.
   vec2 white = vec2(0.19784, 0.46832);
-  cloud_uv -= white;
 
   float s = sin(color_rotation);
   float c = cos(color_rotation);
