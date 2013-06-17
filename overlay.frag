@@ -79,10 +79,8 @@ void main(void)
 
   float s = sin(color_rotation);
   float c = cos(color_rotation);
-  mat2 rot = mat2(c, s, -s, c);
-  cloud_uv = rot * cloud_uv;
-
-  cloud_uv += white;
+  mat2x3 rot = mat2x3(c, -s, white.x, s, c, white.y);
+  cloud_uv = vec3(cloud_uv, 1.0) * rot;
 
   // Convert CIE (u,v) color coordinates (as per CIELUV) to (x,y)
   vec2 cloud_xy = vec2(9.0, 4.0) * cloud_uv;
