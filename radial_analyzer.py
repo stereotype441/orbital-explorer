@@ -47,3 +47,11 @@ class Polynomial(object):
 
     def __radd__(self, other):
         return self + other
+
+    def __pos__(self):
+        return self
+
+    def __neg__(self):
+        n = Polynomial()
+        n.__coeffs = [-x for x in self.__coeffs]
+        return n

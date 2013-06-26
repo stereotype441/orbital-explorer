@@ -107,9 +107,24 @@ class TestPolynomial(unittest.TestCase):
         self.assertEqual((1 + x)(3), 4)
         self.assertEqual((1.5 + x)(3), 4.5)
 
-        self.assertEqual(x, Polynomial(1, 1))
-        self.assertEqual(n, Polynomial(1, 0))
+        self.assertEqual(z, +z)
+        self.assertEqual(n, +n)
+        self.assertEqual(x, +x)
+
+        self.assertEqual(-z, z)
+        self.assertEqual(-n, Polynomial(-1, 0))
+        self.assertEqual(-x, Polynomial(-1, 1))
+
+        self.assertEqual((-(x3 + x + n))(0), -1)
+        self.assertEqual((-(x3 + x + n))(1), -3)
+        self.assertEqual((-(x3 + x + n))(3), -31)
+
+        # These come last, to check for inadvertent modifications
         self.assertEqual(z, Polynomial(0, 0))
+        self.assertEqual(n, Polynomial(1, 0))
+        self.assertEqual(x, Polynomial(1, 1))
+        self.assertEqual(x2, Polynomial(1, 2))
+        self.assertEqual(x3, Polynomial(1, 3))
 
 if __name__ == '__main__':
     unittest.main()
