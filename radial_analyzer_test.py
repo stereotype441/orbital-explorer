@@ -183,6 +183,38 @@ class TestPolynomial(unittest.TestCase):
         self.assertEqual((x + 1) * (x - 1), x2 - 1)
         self.assertEqual((x2 + 1) * (x - 1), x3 - x2 + x - 1)
 
+        self.assertEqual(z ** 0, n)
+        self.assertEqual(z ** 1, z)
+        self.assertEqual(z ** 2, z)
+        self.assertEqual(z ** 3, z)
+
+        self.assertEqual(n ** 0, n)
+        self.assertEqual(n ** 1, n)
+        self.assertEqual(n ** 2, n)
+        self.assertEqual(n ** 3, n)
+
+        self.assertEqual(x ** 0, n)
+        self.assertEqual(x ** 1, x)
+        self.assertEqual(x ** 2, x2)
+        self.assertEqual(x ** 3, x3)
+
+        self.assertEqual(x2 ** 0, n)
+        self.assertEqual(x2 ** 1, x2)
+        self.assertEqual(x2 ** 2, Polynomial(1, 4))
+        self.assertEqual(x2 ** 3, Polynomial(1, 6))
+
+        self.assertEqual((3 * x) ** 0, n)
+        self.assertEqual((3 * x) ** 1, 3 * x)
+        self.assertEqual((3 * x) ** 2, 9 * x2)
+        self.assertEqual((3 * x) ** 3, 27 * x3)
+
+        self.assertEqual((2 * x + 3) ** 0, n)
+        self.assertEqual((2 * x + 3) ** 1, 2 * x + 3)
+        self.assertEqual((2 * x + 3) ** 2, 4 * x2 + 12 * x + 9)
+        self.assertEqual((2 * x + 3) ** 3, 8 * x3 + 36 * x2 + 54 * x + 27)
+
+        self.assertRaises(ArithmeticError, x.__pow__, -1)
+
         # These come last, to check for inadvertent modifications
         self.assertEqual(z, Polynomial(0, 0))
         self.assertEqual(n, Polynomial(1, 0))
