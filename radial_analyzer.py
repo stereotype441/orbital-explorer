@@ -22,3 +22,10 @@ class Polynomial(object):
         return True
     def __ne__(self, other):
         return not (self == other)
+
+    def __call__(self, x):
+        total = 0
+        for i in range(self.degree, -1, -1):
+            total *= x
+            total += self.__coeffs[i]
+        return total

@@ -50,5 +50,39 @@ class TestPolynomial(unittest.TestCase):
         self.assertEqual(Polynomial(0, 1).degree, -1)
         self.assertEqual(Polynomial(0, 5).degree, -1)
 
+        self.assertEqual(z(0), 0)
+        self.assertEqual(n(0), 1)
+        self.assertEqual(x(0), 0)
+
+        self.assertEqual(z(1), 0)
+        self.assertEqual(n(1), 1)
+        self.assertEqual(x(1), 1)
+
+        self.assertEqual(z(3), 0)
+        self.assertEqual(n(3), 1)
+        self.assertEqual(x(3), 3)
+
+        x2 = Polynomial(1, 2)
+        self.assertEqual(x2(0), 0)
+        self.assertEqual(x2(1), 1)
+        self.assertEqual(x2(3), 9)
+
+        x3 = Polynomial(1, 3)
+        self.assertEqual(x3(0), 0)
+        self.assertEqual(x3(1), 1)
+        self.assertEqual(x3(3), 27)
+
+        self.assertEqual(Polynomial(5, 0)(0), 5)
+        self.assertEqual(Polynomial(5, 0)(1), 5)
+        self.assertEqual(Polynomial(5, 0)(3), 5)
+
+        self.assertEqual(Polynomial(5, 1)(0), 0)
+        self.assertEqual(Polynomial(5, 1)(1), 5)
+        self.assertEqual(Polynomial(5, 1)(3), 15)
+
+        self.assertEqual(Polynomial(5, 2)(0), 0)
+        self.assertEqual(Polynomial(5, 2)(1), 5)
+        self.assertEqual(Polynomial(5, 2)(3), 45)
+
 if __name__ == '__main__':
     unittest.main()
