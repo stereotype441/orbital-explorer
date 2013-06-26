@@ -29,3 +29,16 @@ class Polynomial(object):
             total *= x
             total += self.__coeffs[i]
         return total
+
+    def __add__(self, other):
+        if self.degree < other.degree:
+            sm = self.__coeffs
+            lg = other.__coeffs
+        else:
+            sm = other.__coeffs
+            lg = self.__coeffs
+        s = Polynomial()
+        s.__coeffs = list(lg)
+        for i in range(len(sm)):
+            s.__coeffs[i] += sm[i]
+        return s

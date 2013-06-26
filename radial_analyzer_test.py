@@ -84,5 +84,21 @@ class TestPolynomial(unittest.TestCase):
         self.assertEqual(Polynomial(5, 2)(1), 5)
         self.assertEqual(Polynomial(5, 2)(3), 45)
 
+        xp1 = x + n
+        self.assertEqual(xp1(0), 1)
+        self.assertEqual(xp1(1), 2)
+        self.assertEqual(xp1(3), 4)
+
+        self.assertEqual((n + x)(0), 1)
+        self.assertEqual((n + x)(1), 2)
+        self.assertEqual((n + x)(3), 4)
+
+        self.assertEqual((x3 + x + n)(0), 1)
+        self.assertEqual((x3 + x + n)(1), 3)
+        self.assertEqual((x3 + x + n)(3), 31)
+
+        self.assertEqual(x(3), 3)
+        self.assertEqual(n(3), 1)
+
 if __name__ == '__main__':
     unittest.main()
