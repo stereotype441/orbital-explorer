@@ -141,6 +141,48 @@ class TestPolynomial(unittest.TestCase):
         self.assertEqual(x - n, x - 1.0)
         self.assertEqual(1.0 - x, n - x)
 
+        self.assertEqual(z * z,  z)
+        self.assertEqual(z * n,  z)
+        self.assertEqual(z * x,  z)
+        self.assertEqual(z * x2, z)
+        self.assertEqual(z * x3, z)
+
+        self.assertEqual(n * z,  z)
+        self.assertEqual(n * n,  n)
+        self.assertEqual(n * x,  x)
+        self.assertEqual(n * x2, x2)
+        self.assertEqual(n * x3, x3)
+
+        self.assertEqual(x * z,  z)
+        self.assertEqual(x * n,  x)
+        self.assertEqual(x * x,  x2)
+        self.assertEqual(x * x2, x3)
+        self.assertEqual(x * x3, Polynomial(1, 4))
+
+        self.assertEqual(x2 * z,  z)
+        self.assertEqual(x2 * n,  x2)
+        self.assertEqual(x2 * x,  x3)
+        self.assertEqual(x2 * x2, Polynomial(1, 4))
+        self.assertEqual(x2 * x3, Polynomial(1, 5))
+
+        self.assertEqual(x3 * z,  z)
+        self.assertEqual(x3 * n,  x3)
+        self.assertEqual(x3 * x,  Polynomial(1, 4))
+        self.assertEqual(x3 * x2, Polynomial(1, 5))
+        self.assertEqual(x3 * x3, Polynomial(1, 6))
+
+        self.assertEqual(2 * x, Polynomial(2, 1))
+        self.assertEqual(x * 2, Polynomial(2, 1))
+
+        self.assertEqual(3 * (x3 * 2) * 4 * x, Polynomial(24, 4))
+
+        self.assertEqual((x + 1) * (x + 1), x2 + 2 * x + 1)
+        self.assertEqual((x + 1.0) * (x + 1), x2 + 2 * x + 1)
+        self.assertEqual((x + 1) * (x + 1), x2 + 2.0 * x + 1)
+
+        self.assertEqual((x + 1) * (x - 1), x2 - 1)
+        self.assertEqual((x2 + 1) * (x - 1), x3 - x2 + x - 1)
+
         # These come last, to check for inadvertent modifications
         self.assertEqual(z, Polynomial(0, 0))
         self.assertEqual(n, Polynomial(1, 0))

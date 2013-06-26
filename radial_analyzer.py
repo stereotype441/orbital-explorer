@@ -62,3 +62,17 @@ class Polynomial(object):
 
     def __rsub__(self, other):
         return (-self) + other
+
+    def __mul__(self, other):
+        if isinstance(other, int) or isinstance(other, float):
+            return self * Polynomial(other)
+        p = Polynomial()
+        p.__coeffs = [0] * (self.degree + other.degree + 1)
+        for i in range(len(self.__coeffs)):
+            for j in range(len(other.__coeffs)):
+                p.__coeffs[i + j] += self.__coeffs[i] * other.__coeffs[j]
+        p.__standardize()
+        return p
+
+    def __rmul__(self, other):
+        return self * other
