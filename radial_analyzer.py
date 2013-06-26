@@ -43,6 +43,7 @@ class Polynomial(object):
         s.__coeffs = list(lg)
         for i in range(len(sm)):
             s.__coeffs[i] += sm[i]
+        s.__standardize()
         return s
 
     def __radd__(self, other):
@@ -55,3 +56,9 @@ class Polynomial(object):
         n = Polynomial()
         n.__coeffs = [-x for x in self.__coeffs]
         return n
+
+    def __sub__(self, other):
+        return self + (-other)
+
+    def __rsub__(self, other):
+        return (-self) + other

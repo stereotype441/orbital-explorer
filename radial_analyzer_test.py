@@ -119,6 +119,28 @@ class TestPolynomial(unittest.TestCase):
         self.assertEqual((-(x3 + x + n))(1), -3)
         self.assertEqual((-(x3 + x + n))(3), -31)
 
+        xm1 = x - 1
+        self.assertEqual(xm1(0), -1)
+        self.assertEqual(xm1(1), 0)
+        self.assertEqual(xm1(3), 2)
+
+        self.assertEqual(n - n, z)
+        self.assertEqual(x - x, z)
+
+        self.assertEqual(n + (-n), z)
+        self.assertEqual(x + (-x), z)
+
+        self.assertEqual((x3 + x) - x3, x)
+        self.assertEqual((-x3 + n) + x3, n)
+        self.assertEqual((x2 - x3) + x3, x2)
+        self.assertEqual((x3 - x2) + x2, x3)
+
+        self.assertEqual(x - n, x - 1)
+        self.assertEqual(1 - x, n - x)
+
+        self.assertEqual(x - n, x - 1.0)
+        self.assertEqual(1.0 - x, n - x)
+
         # These come last, to check for inadvertent modifications
         self.assertEqual(z, Polynomial(0, 0))
         self.assertEqual(n, Polynomial(1, 0))
