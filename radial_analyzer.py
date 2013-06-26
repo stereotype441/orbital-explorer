@@ -31,6 +31,8 @@ class Polynomial(object):
         return total
 
     def __add__(self, other):
+        if isinstance(other, int) or isinstance(other, float):
+            return self + Polynomial(other)
         if self.degree < other.degree:
             sm = self.__coeffs
             lg = other.__coeffs
@@ -42,3 +44,6 @@ class Polynomial(object):
         for i in range(len(sm)):
             s.__coeffs[i] += sm[i]
         return s
+
+    def __radd__(self, other):
+        return self + other
