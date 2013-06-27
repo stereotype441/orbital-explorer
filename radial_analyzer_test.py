@@ -183,6 +183,10 @@ class TestPolynomial(unittest.TestCase):
         self.assertEqual((x + 1) * (x - 1), x2 - 1)
         self.assertEqual((x2 + 1) * (x - 1), x3 - x2 + x - 1)
 
+        self.assertEqual(x / 2, 0.5 * x)
+        self.assertEqual(((x + 1) ** 4) / 4,
+                         0.25 * x ** 4 + x3 + 1.5 * x2 + x + 0.25)
+
         self.assertEqual(z ** 0, n)
         self.assertEqual(z ** 1, z)
         self.assertEqual(z ** 2, z)

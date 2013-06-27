@@ -77,6 +77,9 @@ class Polynomial(object):
     def __rmul__(self, other):
         return self * other
 
+    def __truediv__(self, other):
+        return self * (1 / other)
+
     def __pow__(self, e):
         if e < 0:
             raise ArithmeticError('Polynomial to a negative power')
