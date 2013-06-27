@@ -167,6 +167,95 @@ def bisect(f, lower, upper):
                 f_upper = f_mid
 
 
+def roots(f):
+    if f.degree < 1:
+        raise Exception('roots called on a constant polynomial')
+    if f.degree == 1:
+        return [-f.constantTerm / f.leadingCoefficient]
+    df = f.derivative()
+    df_roots = roots(df)
+
+    leading_coeff_f = f.leadingCoefficient
+    degree_f = f.degree
+
+    # First, handle the case where df has no roots
+    if len(df_roots) == 0:
+        assert degree_f % 2 == 1
+        f0 = f(0)
+        if f0 == 0:
+            return [0]
+        if leading_coeff_f > 0 and f0 < 0:
+            upper = 1
+            while f(upper) <= 0:
+                upper += 1
+            return [bisect(f, 0, upper)]
+        if leading_coeff_f > 0 and f0 > 0:
+            lower = -1
+            while f(lower) >= 0:
+                lower -= 1
+            return [bisect(f, lower, 0)]
+        if leading_coeff_f < 0 and f0 > 0:
+            upper = 1
+            while f(upper) >= 0:
+                upper += 1
+            return [bisect(f, 0, upper)]
+        if leading_coeff_f < 0 and f0 < 0:
+            lower = -1
+            while f(lower) <= 0:
+                lower -= 1
+            return [bisect(f, lower, 0)]
+        raise Exception('Impossible monotonic polynomial')
+
+    r = []
+
+    # Check for a root to the left of the first root of df
+    first_df_root = df_roots[0]
+    f_at_first_df_root = f(first_df_root)
+    negative_behavior_f = leading_coeff_f * ((-1) ** degree_f)
+    if negative_behavior_f > 0 and f_at_first_df_root < 0:
+        lower_bound_on_first_root = first_df_root - 1
+        while f(lower_bound_on_first_root) <= 0:
+            lower_bound_on_first_root -= 1
+        r.append(bisect(f, lower_bound_on_first_root, first_df_root))
+    if negative_behavior_f < 0 and f_at_first_df_root > 0:
+        lower_bound_on_first_root = first_df_root - 1
+        while f(lower_bound_on_first_root) >= 0:
+            lower_bound_on_first_root -= 1
+        r.append(bisect(f, lower_bound_on_first_root, first_df_root))
+
+    # Look at each pair of roots of df
+    for i in range(len(df_roots) - 1):
+        dr1 = df_roots[i]
+        dr2 = df_roots[i + 1]
+        fdr1 = f(dr1)
+        fdr2 = f(dr2)
+        if fdr1 > 0 and fdr2 < 0 or fdr1 < 0 and fdr2 > 0:
+            r.append(bisect(f, dr1, dr2))
+        if fdr1 == 0:
+            r.append(dr1)
+
+    # Last one -- just check if it's a root of f
+    if f(df_roots[-1]) == 0:
+        r.append(df_roots[-1])
+
+    # Check for a root to the right of the last root of df
+    last_df_root = df_roots[-1]
+    f_at_last_df_root = f(last_df_root)
+    positive_behavior_f = leading_coeff_f
+    if positive_behavior_f > 0 and f_at_last_df_root < 0:
+        upper_bound_on_last_root = last_df_root + 1
+        while f(upper_bound_on_last_root) <= 0:
+            upper_bound_on_last_root += 1
+        r.append(bisect(f, last_df_root, upper_bound_on_last_root))
+    if positive_behavior_f < 0 and f_at_last_df_root > 0:
+        upper_bound_on_last_root = last_df_root + 1
+        while f(upper_bound_on_last_root) >= 0:
+            upper_bound_on_last_root += 1
+        r.append(bisect(f, last_df_root, upper_bound_on_last_root))
+
+    return r
+
+
 class Indenter(object):
 
     def __init__(self):

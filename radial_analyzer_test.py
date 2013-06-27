@@ -321,6 +321,40 @@ class TestBisect(unittest.TestCase):
         self.assertRaises(Exception, bisect, x, 1, -1)
 
 
+class TestRoots(unittest.TestCase):
+
+    def testRoots(self):
+        x = Polynomial(1, 1)
+
+        self.assertRaises(Exception, roots, Polynomial(0))
+        self.assertRaises(Exception, roots, Polynomial(1))
+        self.assertEqual(roots(x), [0])
+        self.assertEqual(roots(x - 1), [1])
+        self.assertEqual(roots(2 * x - 5), [2.5])
+        self.assertEqual(roots(x * x - 1), [-1, 1])
+        self.assertEqual(roots(-x * x + 1), [-1, 1])
+        self.assertEqual(roots(x * x + 1), [])
+        self.assertEqual(roots(-x * x - 1), [])
+        self.assertEqual(roots(x * x), [0])
+        self.assertEqual(roots(x ** 3 - x), [-1, 0, 1])
+        self.assertEqual(roots(-x ** 3 + x), [-1, 0, 1])
+        self.assertEqual(roots(x ** 3 - x ** 2), [0, 1])
+        self.assertEqual(roots(x ** 3 + x ** 2), [-1, 0])
+        self.assertEqual(roots(x ** 3 + x), [0])
+        self.assertEqual(roots(-x ** 3 - x), [0])
+        self.assertEqual(roots((x ** 2 + 1) * (x - 1)), [1])
+        self.assertEqual(roots((x ** 2 + 1) * (x + 1)), [-1])
+        self.assertEqual(roots(-(x ** 2 + 1) * (x - 1)), [1])
+        self.assertEqual(roots(-(x ** 2 + 1) * (x + 1)), [-1])
+        self.assertEqual(roots(x * x * (x + 1)), [-1, 0])
+        self.assertEqual(roots(x * x * (x - 1)), [0, 1])
+        self.assertEqual(roots(-x * x * (x + 1)), [-1, 0])
+        self.assertEqual(roots(-x * x * (x - 1)), [0, 1])
+        self.assertEqual(roots(x ** 3), [0])
+        self.assertEqual(roots((x - 2) ** 3), [2])
+        self.assertEqual(roots((x + 2) ** 3), [-2])
+
+
 class TestIndenter(unittest.TestCase):
 
     def testIndenter(self):
