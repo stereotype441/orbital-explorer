@@ -114,6 +114,41 @@ def laguerre(n, a):
         f += ((-1) ** i) * choose(n + a, n - i) * (x ** i) / factorial(i)
     return f
 
+def bisect(f, lower, upper):
+
+    if not (lower < upper):
+        raise Exception('bisect: lower not less than upper')
+    f_lower = f(lower)
+    if f_lower == 0:
+        return lower
+    f_upper = f(upper)
+    if f_upper == 0:
+        return upper
+    if (f_lower < 0 and f_upper < 0) or (f_lower > 0 and f_upper > 0):
+        raise Exception('bisect: no sign change present')
+
+    while True:
+        mid = (lower + upper) / 2
+        if not (lower < mid < upper):
+            return mid
+        f_mid = f(mid)
+        if f_mid == 0:
+            return mid
+        if f_mid < 0:
+            if f_lower < 0:
+                lower = mid
+                f_lower = f_mid
+            else:
+                upper = mid
+                f_upper = f_mid
+        else:
+            if f_lower > 0:
+                lower = mid
+                f_lower = f_mid
+            else:
+                upper = mid
+                f_upper = f_mid
+
 class Indenter(object):
 
     def __init__(self):

@@ -291,6 +291,23 @@ class TestLaguerre(unittest.TestCase):
         self.assertEqual(laguerre(4, 0),
                          (x**4 - 16 * x**3 + 72 * x**2 - 96 * x + 24) / 24)
 
+class TestBisect(unittest.TestCase):
+
+    def testBisect(self):
+        x = Polynomial(1, 1)
+
+        self.assertEqual(bisect(x, 0, 1), 0)
+        self.assertEqual(bisect(x, -1, 0), 0)
+        self.assertEqual(bisect(x, -1, 1), 0)
+        self.assertEqual(bisect(-x, -1, 1), 0)
+        self.assertEqual(bisect(x, -1, 3), 0)
+        self.assertEqual(bisect(-x, -1, 3), 0)
+        self.assertEqual(bisect(x, -3, 1), 0)
+        self.assertEqual(bisect(-x, -3, 1), 0)
+        self.assertLess(abs(bisect(x * x - x + 1e-100, 0.5, 2) - 1), 1e-15)
+        self.assertRaises(Exception, bisect, x, 1, 2)
+        self.assertRaises(Exception, bisect, x, 1, -1)
+
 class TestIndenter(unittest.TestCase):
 
     def testIndenter(self):
