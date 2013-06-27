@@ -87,3 +87,11 @@ class Polynomial(object):
         if e % 2 == 0:
             return (self * self) ** (e >> 1)
         return self * (self ** (e - 1))
+
+def factorial(n):
+    if n < 0:
+        raise ArithmeticError('Factorial of a negative number')
+    f = 1
+    for i in range(2, n + 1):
+        f *= i
+    return f

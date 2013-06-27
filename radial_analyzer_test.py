@@ -222,5 +222,16 @@ class TestPolynomial(unittest.TestCase):
         self.assertEqual(x2, Polynomial(1, 2))
         self.assertEqual(x3, Polynomial(1, 3))
 
+class TestCombinatorics(unittest.TestCase):
+
+    def testCombinatorics(self):
+        self.assertEqual(factorial(0), 1)
+        self.assertEqual(factorial(1), 1)
+        self.assertEqual(factorial(2), 2)
+        self.assertEqual(factorial(3), 6)
+        self.assertEqual(factorial(4), 24)
+        self.assertEqual(factorial(5), 120)
+        self.assertRaises(ArithmeticError, factorial, -1)
+
 if __name__ == '__main__':
     unittest.main()
