@@ -91,6 +91,11 @@ class Polynomial(object):
             return (self * self) ** (e >> 1)
         return self * (self ** (e - 1))
 
+    def derivative(self):
+        d = Polynomial()
+        d.__coeffs = [i * self.__coeffs[i] for i in range(1, self.degree + 1)]
+        return d
+
 def factorial(n):
     if n < 0:
         raise ArithmeticError('Factorial of a negative number')

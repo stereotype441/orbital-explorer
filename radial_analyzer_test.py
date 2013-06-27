@@ -219,6 +219,14 @@ class TestPolynomial(unittest.TestCase):
 
         self.assertRaises(ArithmeticError, x.__pow__, -1)
 
+        self.assertEqual(z.derivative(), z)
+        self.assertEqual(n.derivative(), z)
+        self.assertEqual(x.derivative(), n)
+        self.assertEqual(x2.derivative(), 2 * x)
+        self.assertEqual(x3.derivative(), 3 * x2)
+        self.assertEqual(((x + 1) ** 4).derivative(),
+                         4 * x3 + 12 * x2 + 12 * x + 4)
+
         # These come last, to check for inadvertent modifications
         self.assertEqual(z, Polynomial(0, 0))
         self.assertEqual(n, Polynomial(1, 0))
