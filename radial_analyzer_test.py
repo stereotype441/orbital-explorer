@@ -291,6 +291,24 @@ class TestLaguerre(unittest.TestCase):
         self.assertEqual(laguerre(4, 0),
                          (x**4 - 16 * x**3 + 72 * x**2 - 96 * x + 24) / 24)
 
+class TestIndenter(unittest.TestCase):
+
+    def testIndenter(self):
+        i = Indenter()
+
+        self.assertEqual(i.out('a'), 'a')
+        i.indent(2)
+        self.assertEqual(i.out('bb'), '  bb')
+        i.indent(3)
+        self.assertEqual(i.out('ccc'), '     ccc')
+        i.dedent()
+        self.assertEqual(i.out('dd'), '  dd')
+        i.indent(5)
+        self.assertEqual(i.out('e'), '       e')
+        i.dedent()
+        i.dedent()
+        self.assertEqual(i.out('ffff'), 'ffff')
+
 
 if __name__ == '__main__':
     unittest.main()

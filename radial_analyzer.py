@@ -113,3 +113,17 @@ def laguerre(n, a):
     for i in range(n + 1):
         f += ((-1) ** i) * choose(n + a, n - i) * (x ** i) / factorial(i)
     return f
+
+class Indenter(object):
+
+    def __init__(self):
+        self.__levels = []
+
+    def indent(self, n):
+        self.__levels.append(n)
+
+    def dedent(self):
+        self.__levels.pop()
+
+    def out(self, str):
+        return ' ' * sum(self.__levels) + str
