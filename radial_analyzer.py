@@ -13,6 +13,20 @@ class Polynomial(object):
     def degree(self):
         return len(self.__coeffs) - 1
 
+    @property
+    def constantTerm(self):
+        if self.degree == -1:
+            return 0
+        else:
+            return self.__coeffs[0]
+
+    @property
+    def leadingCoefficient(self):
+        if self.degree == -1:
+            return 0
+        else:
+            return self.__coeffs[self.degree]
+
     def __eq__(self, other):
         if self.degree != other.degree:
             return False

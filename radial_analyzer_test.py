@@ -227,6 +227,15 @@ class TestPolynomial(unittest.TestCase):
         self.assertEqual(((x + 1) ** 4).derivative(),
                          4 * x3 + 12 * x2 + 12 * x + 4)
 
+        self.assertEqual(z.leadingCoefficient, 0)
+        self.assertEqual(z.constantTerm, 0)
+        self.assertEqual(n.leadingCoefficient, 1)
+        self.assertEqual(n.constantTerm, 1)
+        self.assertEqual(x.leadingCoefficient, 1)
+        self.assertEqual(x.constantTerm, 0)
+        self.assertEqual((3 * x + 5).leadingCoefficient, 3)
+        self.assertEqual((3 * x + 5).constantTerm, 5)
+
         # These come last, to check for inadvertent modifications
         self.assertEqual(z, Polynomial(0, 0))
         self.assertEqual(n, Polynomial(1, 0))
