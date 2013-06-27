@@ -234,6 +234,7 @@ class TestPolynomial(unittest.TestCase):
         self.assertEqual(x2, Polynomial(1, 2))
         self.assertEqual(x3, Polynomial(1, 3))
 
+
 class TestCombinatorics(unittest.TestCase):
 
     def testCombinatorics(self):
@@ -263,6 +264,7 @@ class TestCombinatorics(unittest.TestCase):
         self.assertEqual(choose(200, 100),
             90548514656103281165404177077484163874504589675413336841320)
 
+
 class TestLaguerre(unittest.TestCase):
 
     def testLaguerre(self):
@@ -291,6 +293,7 @@ class TestLaguerre(unittest.TestCase):
         self.assertEqual(laguerre(4, 0),
                          (x**4 - 16 * x**3 + 72 * x**2 - 96 * x + 24) / 24)
 
+
 class TestBisect(unittest.TestCase):
 
     def testBisect(self):
@@ -307,6 +310,7 @@ class TestBisect(unittest.TestCase):
         self.assertLess(abs(bisect(x * x - x + 1e-100, 0.5, 2) - 1), 1e-15)
         self.assertRaises(Exception, bisect, x, 1, 2)
         self.assertRaises(Exception, bisect, x, 1, -1)
+
 
 class TestIndenter(unittest.TestCase):
 

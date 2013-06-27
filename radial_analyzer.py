@@ -96,6 +96,7 @@ class Polynomial(object):
         d.__coeffs = [i * self.__coeffs[i] for i in range(1, self.degree + 1)]
         return d
 
+
 def factorial(n):
     if n < 0:
         raise ArithmeticError('Factorial of a negative number')
@@ -104,8 +105,10 @@ def factorial(n):
         f *= i
     return f
 
+
 def choose(n, k):
     return factorial(n) // (factorial(k) * factorial(n - k))
+
 
 def laguerre(n, a):
     x = Polynomial(1, 1)
@@ -114,8 +117,8 @@ def laguerre(n, a):
         f += ((-1) ** i) * choose(n + a, n - i) * (x ** i) / factorial(i)
     return f
 
-def bisect(f, lower, upper):
 
+def bisect(f, lower, upper):
     if not (lower < upper):
         raise Exception('bisect: lower not less than upper')
     f_lower = f(lower)
@@ -148,6 +151,7 @@ def bisect(f, lower, upper):
             else:
                 upper = mid
                 f_upper = f_mid
+
 
 class Indenter(object):
 
