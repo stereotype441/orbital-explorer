@@ -233,5 +233,23 @@ class TestCombinatorics(unittest.TestCase):
         self.assertEqual(factorial(5), 120)
         self.assertRaises(ArithmeticError, factorial, -1)
 
+        self.assertEqual(choose(0, 0), 1)
+        self.assertEqual(choose(1, 0), 1)
+        self.assertEqual(choose(1, 1), 1)
+        self.assertEqual(choose(2, 0), 1)
+        self.assertEqual(choose(2, 1), 2)
+        self.assertEqual(choose(2, 2), 1)
+        self.assertEqual(choose(3, 0), 1)
+        self.assertEqual(choose(3, 1), 3)
+        self.assertEqual(choose(3, 2), 3)
+        self.assertEqual(choose(3, 3), 1)
+        self.assertEqual(choose(4, 0), 1)
+        self.assertEqual(choose(4, 1), 4)
+        self.assertEqual(choose(4, 2), 6)
+        self.assertEqual(choose(4, 3), 4)
+        self.assertEqual(choose(4, 4), 1)
+        self.assertEqual(choose(200, 100),
+            90548514656103281165404177077484163874504589675413336841320)
+
 if __name__ == '__main__':
     unittest.main()

@@ -95,3 +95,6 @@ def factorial(n):
     for i in range(2, n + 1):
         f *= i
     return f
+
+def choose(n, k):
+    return factorial(n) // (factorial(k) * factorial(n - k))
