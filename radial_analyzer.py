@@ -101,3 +101,10 @@ def factorial(n):
 
 def choose(n, k):
     return factorial(n) // (factorial(k) * factorial(n - k))
+
+def laguerre(n, a):
+    x = Polynomial(1, 1)
+    f = 0
+    for i in range(n + 1):
+        f += ((-1) ** i) * choose(n + a, n - i) * (x ** i) / factorial(i)
+    return f

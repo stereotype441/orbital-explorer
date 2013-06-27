@@ -255,5 +255,34 @@ class TestCombinatorics(unittest.TestCase):
         self.assertEqual(choose(200, 100),
             90548514656103281165404177077484163874504589675413336841320)
 
+class TestLaguerre(unittest.TestCase):
+
+    def testLaguerre(self):
+        x = Polynomial(1, 1)
+
+        self.assertEqual(laguerre(0, 0), Polynomial(1))
+        self.assertEqual(laguerre(0, 1), Polynomial(1))
+        self.assertEqual(laguerre(0, 2), Polynomial(1))
+        self.assertEqual(laguerre(0, 3), Polynomial(1))
+
+        self.assertEqual(laguerre(1, 0), -x + 1)
+        self.assertEqual(laguerre(1, 1), -x + 2)
+        self.assertEqual(laguerre(1, 2), -x + 3)
+        self.assertEqual(laguerre(1, 3), -x + 4)
+
+        self.assertEqual(laguerre(2, 0), (x**2 - 4 * x + 2) / 2)
+        self.assertEqual(laguerre(2, 1), (x**2 - 6 * x + 6) / 2)
+        self.assertEqual(laguerre(2, 2), (x**2 - 8 * x + 12) / 2)
+        self.assertEqual(laguerre(2, 3), (x**2 - 10 * x + 20) / 2)
+
+        self.assertEqual(laguerre(3, 0), (-x**3 + 9 * x**2 - 18 * x + 6) / 6)
+        self.assertEqual(laguerre(3, 1), (-x**3 + 12 * x**2 - 36 * x + 24) / 6)
+        self.assertEqual(laguerre(3, 2), (-x**3 + 15 * x**2 - 60 * x + 60) / 6)
+        self.assertEqual(laguerre(3, 3), (-x**3 + 18 * x**2 - 90 * x + 120) / 6)
+
+        self.assertEqual(laguerre(4, 0),
+                         (x**4 - 16 * x**3 + 72 * x**2 - 96 * x + 24) / 24)
+
+
 if __name__ == '__main__':
     unittest.main()
