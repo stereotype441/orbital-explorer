@@ -19,3 +19,5 @@ research the possibility of depth sorting and obscuring background
   clouds
 handle tetrahedra with a face seen edge-on
 clean up all error handling
+see if the srgb gamma function can be done from C++ as a final step
+  (sRGB render buffer?)
