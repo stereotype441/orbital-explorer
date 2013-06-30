@@ -59,11 +59,6 @@ class Polynomial:
         return total
 
     def __add__(self, other):
-        # If there's a list constructor this will become nicer because
-        # we won't have to create polynomials and then poke around
-        # their insides; instead we can make the list and then turn it
-        # into a polynomial at the last minute.
-
         if isinstance(other, numbers.Number):
             return self + Polynomial(other)
         if self.degree < other.degree:
@@ -72,12 +67,10 @@ class Polynomial:
         else:
             sm = other.__coeffs
             lg = self.__coeffs
-        s = Polynomial()
-        s.__coeffs = list(lg)
+        s = list(lg)
         for i in range(len(sm)):
-            s.__coeffs[i] += sm[i]
-        s.__standardize()
-        return s
+            s[i] += sm[i]
+        return Polynomial(s)
 
     def __radd__(self, other):
         return self + other
@@ -86,9 +79,7 @@ class Polynomial:
         return self
 
     def __neg__(self):
-        n = Polynomial()
-        n.__coeffs = [-x for x in self.__coeffs]
-        return n
+        return Polynomial([-x for x in self.__coeffs])
 
     def __sub__(self, other):
         return self + (-other)
@@ -99,13 +90,11 @@ class Polynomial:
     def __mul__(self, other):
         if isinstance(other, int) or isinstance(other, float):
             return self * Polynomial(other)
-        p = Polynomial()
-        p.__coeffs = [0] * (self.degree + other.degree + 1)
+        p = [0] * (self.degree + other.degree + 1)
         for i in range(len(self.__coeffs)):
             for j in range(len(other.__coeffs)):
-                p.__coeffs[i + j] += self.__coeffs[i] * other.__coeffs[j]
-        p.__standardize()
-        return p
+                p[i + j] += self.__coeffs[i] * other.__coeffs[j]
+        return Polynomial(p)
 
     def __rmul__(self, other):
         return self * other
@@ -125,9 +114,8 @@ class Polynomial:
         return self * (self ** (e - 1))
 
     def derivative(self):
-        d = Polynomial()
-        d.__coeffs = [i * self.__coeffs[i] for i in range(1, self.degree + 1)]
-        return d
+        return Polynomial([i * self.__coeffs[i]
+                           for i in range(1, self.degree + 1)])
 
 
 def factorial(n):
