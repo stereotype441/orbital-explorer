@@ -1,12 +1,24 @@
-class Polynomial(object):
+import numbers
+
+
+class Polynomial:
     """Polynomials, immutable, with floating point coefficients"""
 
+    # Paul's suggestion: make a list constructor.
+
+    # Polynomial(c, n) creates the polynomial c*x^n.
     def __init__(self, c = 0, n = 0):
-        self.__coeffs = [0 for i in range(n)] + [c]
+        # self.__coeffs[n] is the coefficient of x^n.  Invariant:
+        # if len(self.__coeffs) > 0 then self.__coeffs[-1] != 0
+        #
+        # Note: maybe a better invariant would be: len(self.__coeffs)
+        # > 0, and if len(self.__coeffs) > 1, then self.__coeffs[-1]
+        # != 0 (see "degree", below)
+        self.__coeffs = [0] * n + [c]
         self.__standardize()
 
     def __standardize(self):
-        while self.degree >= 0 and self.__coeffs[self.degree] == 0:
+        while self.degree >= 0 and self.__coeffs[-1] == 0:
             self.__coeffs.pop()
 
     @property
@@ -15,6 +27,7 @@ class Polynomial(object):
 
     @property
     def constantTerm(self):
+        # Would be simpler if we change the invariant.
         if self.degree == -1:
             return 0
         else:
@@ -22,30 +35,32 @@ class Polynomial(object):
 
     @property
     def leadingCoefficient(self):
+        # Would be simpler if we change the invariant.
         if self.degree == -1:
             return 0
         else:
-            return self.__coeffs[self.degree]
+            return self.__coeffs[-1]
 
     def __eq__(self, other):
-        if self.degree != other.degree:
-            return False
-        for i in range(self.degree + 1):
-            if self.__coeffs[i] != other.__coeffs[i]:
-                return False
-        return True
+        return self.__coeffs == other.__coeffs
+
     def __ne__(self, other):
         return not (self == other)
 
     def __call__(self, x):
         total = 0
-        for i in range(self.degree, -1, -1):
+        for c in reversed(self.__coeffs):
             total *= x
-            total += self.__coeffs[i]
+            total += c
         return total
 
     def __add__(self, other):
-        if isinstance(other, int) or isinstance(other, float):
+        # If there's a list constructor this will become nicer because
+        # we won't have to create polynomials and then poke around
+        # their insides; instead we can make the list and then turn it
+        # into a polynomial at the last minute.
+
+        if isinstance(other, numbers.Number):
             return self + Polynomial(other)
         if self.degree < other.degree:
             sm = self.__coeffs
