@@ -6,15 +6,19 @@ class Polynomial:
 
     # Paul's suggestion: make a list constructor.
 
-    # Polynomial(c, n) creates the polynomial c*x^n.
     def __init__(self, c = 0, n = 0):
+        '''Polynomial(c, n) creates the polynomial c*x^n.
+        Polynomial([c0, c1, ..., cn]) creates the polynomial c0 + c1 x + ...'''
         # self.__coeffs[n] is the coefficient of x^n.  Invariant:
         # if len(self.__coeffs) > 0 then self.__coeffs[-1] != 0
         #
         # Note: maybe a better invariant would be: len(self.__coeffs)
         # > 0, and if len(self.__coeffs) > 1, then self.__coeffs[-1]
         # != 0 (see "degree", below)
-        self.__coeffs = [0] * n + [c]
+        if isinstance(c, list):
+            self.__coeffs = list(c)
+        else:
+            self.__coeffs = [0] * n + [c]
         self.__standardize()
 
     def __standardize(self):

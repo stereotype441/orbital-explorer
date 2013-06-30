@@ -243,6 +243,18 @@ class TestPolynomial(unittest.TestCase):
         self.assertEqual(x2, Polynomial(1, 2))
         self.assertEqual(x3, Polynomial(1, 3))
 
+        # Also test the list constructor
+        coeffs = [1, 2, 3]
+        f = Polynomial(coeffs)
+        self.assertEqual(f, 1 + 2 * x + 3 * x2)
+        coeffs.append(4)
+        g = Polynomial(coeffs)
+        self.assertEqual(f, 1 + 2 * x + 3 * x2)
+        self.assertEqual(g, 1 + 2 * x + 3 * x2 + 4 * x3)
+        self.assertEqual(Polynomial([0, 0]), Polynomial())
+        self.assertEqual(Polynomial([0]), Polynomial())
+        self.assertEqual(Polynomial([]), Polynomial())
+
 
 class TestCombinatorics(unittest.TestCase):
 
