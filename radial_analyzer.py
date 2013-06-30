@@ -11,10 +11,6 @@ class Polynomial:
         Polynomial([c0, c1, ..., cn]) creates the polynomial c0 + c1 x + ...'''
         # self.__coeffs[n] is the coefficient of x^n.  Invariant:
         # if len(self.__coeffs) > 0 then self.__coeffs[-1] != 0
-        #
-        # Note: maybe a better invariant would be: len(self.__coeffs)
-        # > 0, and if len(self.__coeffs) > 1, then self.__coeffs[-1]
-        # != 0 (see "degree", below)
         if isinstance(c, list):
             self.__coeffs = list(c)
         else:
@@ -31,7 +27,6 @@ class Polynomial:
 
     @property
     def constantTerm(self):
-        # Would be simpler if we change the invariant.
         if self.degree == -1:
             return 0
         else:
@@ -39,7 +34,6 @@ class Polynomial:
 
     @property
     def leadingCoefficient(self):
-        # Would be simpler if we change the invariant.
         if self.degree == -1:
             return 0
         else:
