@@ -259,16 +259,5 @@ def roots(f):
     return r
 
 
-class Indenter(object):
 
-    def __init__(self):
-        self.__levels = []
 
-    def indent(self, n):
-        self.__levels.append(n)
-
-    def dedent(self):
-        self.__levels.pop()
-
-    def out(self, str):
-        return ' ' * sum(self.__levels) + str
