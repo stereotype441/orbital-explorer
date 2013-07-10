@@ -339,7 +339,7 @@ class TestRoots(unittest.TestCase):
         x = Polynomial(1, 1)
 
         self.assertRaises(Exception, roots, Polynomial(0))
-        self.assertRaises(Exception, roots, Polynomial(1))
+        self.assertEqual(roots(Polynomial(1)), [])
         self.assertEqual(roots(x), [0])
         self.assertEqual(roots(x - 1), [1])
         self.assertEqual(roots(2 * x - 5), [2.5])

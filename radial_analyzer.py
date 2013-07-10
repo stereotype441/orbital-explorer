@@ -170,7 +170,9 @@ def bisect(f, lower, upper):
 
 def roots(f):
     if f.degree < 1:
-        raise Exception('roots called on a constant polynomial')
+        if f.constantTerm != 0:
+            return []
+        raise Exception('roots called on the zero polynomial')
     if f.degree == 1:
         return [-f.constantTerm / f.leadingCoefficient]
     df = f.derivative()
