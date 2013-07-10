@@ -275,7 +275,7 @@ def make_table(name, func):
     max_n = 16
     sn = str(max_n)
     print('const double ' + name + '[' + sn + '][' + sn + '][' + sn + '] = {')
-    for n in range(1,17):
+    for n in range(1, max_n + 1):
         print('  // n ==', n)
         print('  {')
         for L in range(0, n):
@@ -284,7 +284,7 @@ def make_table(name, func):
             if L != n - 1:
                 s += (',')
             print(s)
-        if n != 16:
+        if n != max_n:
             print('  },')
         else:
             print('  }')
