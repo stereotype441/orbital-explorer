@@ -265,8 +265,9 @@ def radial_nodes(n, L):
 
 def list_to_cpp(nums):
     if nums == []:
-        return '{}'
-    return '{ ' + ', '.join([str(n) for n in nums]) + ' }'
+        return '    {}'
+    return '    {\n      ' + ',\n      '.join([str(n) for n in nums]) + \
+        '\n    }'
 
 
 def make_table(name, func):
@@ -282,7 +283,7 @@ def make_table(name, func):
             s = list_to_cpp(func(n, L))
             if L != n - 1:
                 s += (',')
-            print('    ' + s)
+            print(s)
         if n != 16:
             print('  },')
         else:
