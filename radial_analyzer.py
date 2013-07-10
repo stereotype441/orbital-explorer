@@ -259,10 +259,6 @@ def roots(f):
     return r
 
 
-def radial_nodes(n, L):
-    return roots(laguerre(n - L - 1, 2 * L + 1))
-
-
 def list_to_cpp(nums):
     if nums == []:
         return '    {}'
@@ -291,5 +287,58 @@ def make_table(name, func):
     print('};')
 
 
+def print_license():
+    print('/*')
+    print(' * This file is part of the Electron Orbital Explorer. The Electron')
+    print(' * Orbital Explorer is distributed under the Simplified BSD License')
+    print(' * (also called the "BSD 2-Clause License"), in hopes that these')
+    print(' * rendering techniques might be used by other programmers in')
+    print(' * applications such as scientific visualization, video gaming, and so')
+    print(' * on. If you find value in this software and use its technologies for')
+    print(' * another purpose, I would love to hear back from you at bjthinks (at)')
+    print(' * gmail (dot) com. If you improve this software and agree to release')
+    print(' * your modifications under the below license, I encourage you to fork')
+    print(' * the development tree on github and push your modifications. The')
+    print(' * Electron Orbital Explorer\'s development URL is:')
+    print(' * https://github.com/bjthinks/orbital-explorer')
+    print(' * (This paragraph is not part of the software license and may be')
+    print(' * removed.)')
+    print(' *')
+    print(' * Copyright (c) 2013, Brian W. Johnson')
+    print(' * All rights reserved.')
+    print(' *')
+    print(' * Redistribution and use in source and binary forms, with or without')
+    print(' * modification, are permitted provided that the following conditions')
+    print(' * are met:')
+    print(' *')
+    print(' * + Redistributions of source code must retain the above copyright')
+    print(' *   notice, this list of conditions and the following disclaimer.')
+    print(' *')
+    print(' * + Redistributions in binary form must reproduce the above copyright')
+    print(' *   notice, this list of conditions and the following disclaimer in')
+    print(' *   the documentation and/or other materials provided with the')
+    print(' *   distribution.')
+    print(' *')
+    print(' * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS')
+    print(' * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT')
+    print(' * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS')
+    print(' * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE')
+    print(' * COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,')
+    print(' * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,')
+    print(' * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;')
+    print(' * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER')
+    print(' * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT')
+    print(' * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN')
+    print(' * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE')
+    print(' * POSSIBILITY OF SUCH DAMAGE.')
+    print(' */')
+
+
+def radial_nodes(n, L):
+    return roots(laguerre(n - L - 1, 2 * L + 1))
+
+
 if __name__ == '__main__':
+    print_license()
+    print('')
     make_table('radial_nodes', radial_nodes)
