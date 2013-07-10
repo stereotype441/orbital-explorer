@@ -454,6 +454,18 @@ def radial_extent(n, L):
     return upper_x
 
 
+def radial_extent2(n, L):
+    maxes = radial_maxima(n, L)
+    maxes.append(0)
+    def f(r):
+        return ((r ** L) * exp(-r / 2) * laguerre(n - L - 1, 2 * L + 1)(r)) ** 2
+    big_f = max([f(r) for r in maxes])
+    upper_x = max(maxes) + 1
+    while f(upper_x) > big_f / 1000:
+        upper_x += 1
+    return upper_x
+
+
 if __name__ == '__main__':
     print_license()
     print('')
@@ -464,3 +476,5 @@ if __name__ == '__main__':
     make_table3('radial_maxima', radial_maxima)
     print('')
     make_table2('radial_extent', radial_extent)
+    print('')
+    make_table2('radial_extent2', radial_extent2)
