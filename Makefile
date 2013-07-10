@@ -17,7 +17,8 @@ OFILES=\
 	transform.o \
 	shaders.o \
 	tetrahedralize.o \
-	wavefunction.o
+	wavefunction.o \
+	radial_data.o
 
 PROG = orbital-explorer
 TEST = unittests
@@ -38,6 +39,10 @@ shaders.cc: *.vert *.geom *.frag
 	for shader in *.vert *.geom *.frag ; do \
 	  ./wrap_shader.sh $$shader >> shaders.cc ; \
 	done
+
+radial_data.cc: radial_analyzer.py
+	rm -f radial_data.cc
+	python3 -B radial_analyzer.py > radial_data.cc
 
 .PHONY: clean
 clean:

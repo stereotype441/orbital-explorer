@@ -2,5 +2,6 @@
 *.o
 .*.d
 shaders.cc
+radial_data.cc
 orbital-explorer
 unittests
