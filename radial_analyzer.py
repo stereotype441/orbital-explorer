@@ -378,11 +378,50 @@ def print_license():
     print(' */')
 
 
+'''
+The radial factor of the wave function is of the form:
+(x ^ L) * exp(-x / 2) * Laguerre(x)
+
+To find radial nodes, we set this to zero, and look for nonzero
+solutions. These occur iff the Laguerre polynomial factor is zero.
+'''
+
+
 def radial_nodes(n, L):
     return roots(laguerre(n - L - 1, 2 * L + 1))
+
+
+'''
+To find radial maxima, we set the derivative of the radial factor to
+zero, like so:
+(L * Laguerre(x) + x * (-1 / 2) * Laguerrre(x) + x * Laguerre'(x))
+    * (x ^ (L-1)) * exp(-x / 2) = 0
+Note that this is correct only for positive L, and we must handle the
+case L=0 separately.
+Simplifying, and ignoring the solution x=0, we get:
+(L - x / 2) * Laguerre(x) + x * Laguerre'(x) = 0
+For the special case L=0, we instead have:
+(-1 / 2) * Laguerre(x) + Laguerre'(x) = 0,
+which differs only in not having zero as a root. (Note that an extra
+root at x=0 would confuse the C++ use of the table, where zero is
+treated as an 'end of data' marker.)
+'''
+
+
+def radial_maxima(n, L):
+    x = Polynomial(1,1)
+    la = laguerre(n - L - 1, 2 * L + 1)
+    dla = la.derivative()
+    if L != 0:
+        f = (L - x / 2) * la + x * dla
+    else:
+        f = (-1 / 2) * la + dla
+    return roots(f)
 
 
 if __name__ == '__main__':
     print_license()
     print('')
     make_table('radial_nodes', radial_nodes)
+    print('')
+    make_table('radial_maxima', radial_maxima)
