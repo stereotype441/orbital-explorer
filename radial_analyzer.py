@@ -422,6 +422,8 @@ def radial_maxima(n, L):
 if __name__ == '__main__':
     print_license()
     print('')
+    print('#include "radial_data.hh"')
+    print('')
     make_table('radial_nodes', radial_nodes)
     print('')
     make_table('radial_maxima', radial_maxima)
