@@ -46,7 +46,7 @@ radial_data.cc: radial_analyzer.py
 
 .PHONY: clean
 clean:
-	rm -f *~ *.o $(PROG) $(TEST) shaders.cc
+	rm -f *~ *.o $(PROG) $(TEST) shaders.cc radial_data.cc
 
 .PHONY: cleanall
 cleanall: clean
