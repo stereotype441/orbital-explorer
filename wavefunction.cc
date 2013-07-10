@@ -48,6 +48,7 @@
 #include <map>
 #include <complex>
 #include <cmath>
+#include <cstdio> // TESTING FIXME
 
 #include "util.hh"
 #include "array.hh"
@@ -57,6 +58,7 @@
 #include "function.hh"
 #include "polynomial.hh"
 #include "wavefunction.hh"
+#include "radial_data.hh"
 
 using namespace std;
 
@@ -190,5 +192,17 @@ bool Orbital::operator==(const Orbital &rhs)
 
 double Orbital::radius() const
 {
-  return 10.0;
+  double r;
+  if (square)
+    r = radial_extent2[N - 1][L];
+  else
+    r = radial_extent[N - 1][L];
+
+  // r is the radial extent of the dimensionless radial part; scale it
+  // to take N and Z into account.
+  r *= 0.5 * double(N) / double(Z);
+
+  printf("Radius %f\n", r);
+
+  return r;
 }

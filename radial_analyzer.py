@@ -449,7 +449,7 @@ def radial_extent(n, L):
         return abs((r ** L) * exp(-r / 2) * laguerre(n - L - 1, 2 * L + 1)(r))
     big_f = max([f(r) for r in maxes])
     upper_x = max(maxes) + 1
-    while f(upper_x) > big_f / 1000:
+    while f(upper_x) > big_f / 1e5:
         upper_x += 1
     return upper_x
 
@@ -461,7 +461,7 @@ def radial_extent2(n, L):
         return ((r ** L) * exp(-r / 2) * laguerre(n - L - 1, 2 * L + 1)(r)) ** 2
     big_f = max([f(r) for r in maxes])
     upper_x = max(maxes) + 1
-    while f(upper_x) > big_f / 1000:
+    while f(upper_x) > big_f / 1e5:
         upper_x += 1
     return upper_x
 
