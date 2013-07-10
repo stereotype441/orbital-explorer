@@ -362,7 +362,7 @@ void display()
     delete orbital;
     orbital = new Orbital(newOrbital);
     delete ts;
-    ts = new TetrahedralSubdivision(*orbital, 10.0);
+    ts = new TetrahedralSubdivision(*orbital, orbital->radius());
     num_points = 0;
 
     // Golden ratio

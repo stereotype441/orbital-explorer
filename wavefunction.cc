@@ -187,3 +187,8 @@ bool Orbital::operator==(const Orbital &rhs)
     && real == rhs.real && diff == rhs.diff && square == rhs.square
     && phase == rhs.phase;
 }
+
+double Orbital::radius() const
+{
+  return 10.0;
+}

@@ -73,6 +73,7 @@ public:
   const bool phase; // If false, ignore complex phase of wave function
   bool operator==(const Orbital &rhs);
   bool operator!=(const Orbital &rhs) { return !(*this == rhs); }
+  double radius() const;
 
 private:
   double radial_constant;
