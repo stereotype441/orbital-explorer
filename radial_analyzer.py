@@ -259,5 +259,36 @@ def roots(f):
     return r
 
 
+def radial_nodes(n, L):
+    return roots(laguerre(n - L - 1, 2 * L + 1))
 
 
+def list_to_cpp(nums):
+    if nums == []:
+        return '{}'
+    return '{ ' + ', '.join([str(n) for n in nums]) + ' }'
+
+
+def make_table(name, func):
+    '''Make a C++ table of values for each n and L'''
+    max_n = 16
+    sn = str(max_n)
+    print('const double ' + name + '[' + sn + '][' + sn + '][' + sn + '] = {')
+    for n in range(1,17):
+        print('  // n ==', n)
+        print('  {')
+        for L in range(0, n):
+            print('    // L ==', L)
+            s = list_to_cpp(func(n, L))
+            if L != n - 1:
+                s += (',')
+            print('    ' + s)
+        if n != 16:
+            print('  },')
+        else:
+            print('  }')
+    print('};')
+
+
+if __name__ == '__main__':
+    make_table('radial_nodes', radial_nodes)
