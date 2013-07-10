@@ -43,6 +43,7 @@
 
 
 import numbers
+from math import exp
 
 
 class Polynomial:
@@ -310,9 +311,11 @@ def list_to_cpp(nums):
         '\n    }'
 
 
-def make_table(name, func):
-    '''Make a C++ table of values for each n and L'''
-    max_n = 16
+max_n = 16
+
+
+def make_table3(name, func):
+    '''Make a C++ table of arrays for each n and L'''
     sn = str(max_n)
     print('const double ' + name + '[' + sn + '][' + sn + '][' + sn + '] = {')
     for n in range(1, max_n + 1):
@@ -321,6 +324,26 @@ def make_table(name, func):
         for L in range(0, n):
             print('    // L ==', L)
             s = list_to_cpp(func(n, L))
+            if L != n - 1:
+                s += (',')
+            print(s)
+        if n != max_n:
+            print('  },')
+        else:
+            print('  }')
+    print('};')
+
+
+def make_table2(name, func):
+    '''Make a C++ table of values for each n and L'''
+    sn = str(max_n)
+    print('const double ' + name + '[' + sn + '][' + sn + '] = {')
+    for n in range(1, max_n + 1):
+        print('  // n ==', n)
+        print('  {')
+        for L in range(0, n):
+            print('    // L ==', L)
+            s = '    ' + str(func(n, L))
             if L != n - 1:
                 s += (',')
             print(s)
@@ -419,11 +442,25 @@ def radial_maxima(n, L):
     return roots(f)
 
 
+def radial_extent(n, L):
+    maxes = radial_maxima(n, L)
+    maxes.append(0)
+    def f(r):
+        return abs((r ** L) * exp(-r / 2) * laguerre(n - L - 1, 2 * L + 1)(r))
+    big_f = max([f(r) for r in maxes])
+    upper_x = max(maxes) + 1
+    while f(upper_x) > big_f / 1000:
+        upper_x += 1
+    return upper_x
+
+
 if __name__ == '__main__':
     print_license()
     print('')
     print('#include "radial_data.hh"')
     print('')
-    make_table('radial_nodes', radial_nodes)
+    make_table3('radial_nodes', radial_nodes)
     print('')
-    make_table('radial_maxima', radial_maxima)
+    make_table3('radial_maxima', radial_maxima)
+    print('')
+    make_table2('radial_extent', radial_extent)
