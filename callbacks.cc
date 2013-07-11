@@ -484,7 +484,7 @@ void display()
   double B = -1.0 / rectangular_imbalance;
   double T =  1.0 / rectangular_imbalance;
   double N =  1.0;
-  double F =  getCameraRadius() + 100.0;
+  double F =  getCameraRadius() + orbital->radius() * sqrt(2.0);
   Matrix<4,4> frustum = transformFrustum(L, R, B, T, N, F);
 
   Matrix<4,4> translation =

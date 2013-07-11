@@ -118,7 +118,7 @@ void mouse_drag_right(int movex, int movey)
   clamp(factor, 0.5, 2.0);
 
   cameraRadius *= factor;
-  clamp(cameraRadius, 1.0, 64.0);
+  clamp(cameraRadius, 1.0, 2048.0);
 }
 
 void mouse_wheel(int direction)
@@ -127,5 +127,5 @@ void mouse_wheel(int direction)
   const double factor = sqrt(sqrt(sqrt(sqrt(2))));
   if (direction ==  1) cameraRadius /= factor;
   if (direction == -1) cameraRadius *= factor;
-  clamp(cameraRadius, 1.0, 64.0);
+  clamp(cameraRadius, 1.0, 2048.0);
 }
