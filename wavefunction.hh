@@ -83,4 +83,6 @@ private:
 
   double angular_constant;
   Polynomial cos_theta_polynomial;
+
+  double normalization_constant;
 };

@@ -73,11 +73,8 @@ Orbital::Orbital(int Z_, int N_, int L_, int M_,
   radial_constant = pow(2.0 * double(Z) / double(N), 1.5) *
     sqrt(factorial(N - L - 1) /
          (2.0 * double(N) * factorial(N + L)));
-  // Compensate for integral of the radial part of the wave function
-  if (!square)
-    radial_constant /= radialIntegral();
-  else
-    radial_constant /= sqrt(radialIntegral());
+  // Precompute the integral of the radial part of the wave function
+  normalization_constant = radialIntegral();
   // e^(-Zr/N)
   radial_exponential_constant = -double(Z) / double(N);
   // (2Zr/N)^L
@@ -181,6 +178,8 @@ std::complex<double> Orbital::operator()(const Vector<3> &x) const
 
   if (square)
     result_mag *= result_mag;
+
+  result_mag /= normalization_constant;
 
   if (phase)
     return result_mag * result_arg;
