@@ -43,7 +43,7 @@
 
 
 import numbers
-from math import exp
+from math import exp, sqrt
 
 
 class Polynomial:
@@ -445,8 +445,9 @@ def radial_maxima(n, L):
 def radial_extent(n, L):
     maxes = radial_maxima(n, L)
     maxes.append(0)
+    la = laguerre(n - L - 1, 2 * L + 1)
     def f(r):
-        return abs((r ** L) * exp(-r / 2) * laguerre(n - L - 1, 2 * L + 1)(r))
+        return abs((r ** L) * exp(-r / 2) * la(r))
     big_f = max([f(r) for r in maxes])
     upper_x = max(maxes) + 1
     while f(upper_x) > big_f / 1e5:
@@ -457,13 +458,43 @@ def radial_extent(n, L):
 def radial_extent2(n, L):
     maxes = radial_maxima(n, L)
     maxes.append(0)
+    la = laguerre(n - L - 1, 2 * L + 1)
     def f(r):
-        return ((r ** L) * exp(-r / 2) * laguerre(n - L - 1, 2 * L + 1)(r)) ** 2
+        return ((r ** L) * exp(-r / 2) * la(r)) ** 2
     big_f = max([f(r) for r in maxes])
     upper_x = max(maxes) + 1
     while f(upper_x) > big_f / 1e5:
         upper_x += 1
     return upper_x
+
+
+dx = 0.01
+
+
+def radial_integral(n, L):
+    outer = radial_extent(n, L)
+    la = laguerre(n - L - 1, 2 * L + 1)
+    c = sqrt(factorial(n - L - 1) / (2 * n * factorial(n + L)))
+    def f(r):
+        return abs(c * (r ** L) * exp(-r / 2) * la(r))
+    tot = 0
+    for s in range(0, int(outer / dx - 0.5)):
+        x = s * dx
+        tot += dx * (f(x) + f(x + dx)) / 2
+    return tot
+
+
+def radial_integral2(n, L):
+    outer = radial_extent2(n, L)
+    la = laguerre(n - L - 1, 2 * L + 1)
+    c = sqrt(factorial(n - L - 1) / (2 * n * factorial(n + L)))
+    def f(r):
+        return (c * (r ** L) * exp(-r / 2) * la(r)) ** 2
+    tot = 0
+    for s in range(0, int(outer / dx - 0.5)):
+        x = s * dx
+        tot += dx * (f(x) + f(x + dx)) / 2
+    return tot
 
 
 if __name__ == '__main__':
@@ -478,3 +509,7 @@ if __name__ == '__main__':
     make_table2('radial_extent', radial_extent)
     print('')
     make_table2('radial_extent2', radial_extent2)
+    print('')
+    make_table2('radial_integral', radial_integral)
+    print('')
+    make_table2('radial_integral2', radial_integral2)
