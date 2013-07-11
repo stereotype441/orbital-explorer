@@ -47,3 +47,5 @@ extern const double radial_nodes[16][16][16];
 extern const double radial_maxima[16][16][16];
 extern const double radial_extent[16][16];
 extern const double radial_extent2[16][16];
+extern const double radial_integral[16][16];
+extern const double radial_integral2[16][16];

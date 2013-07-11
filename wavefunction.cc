@@ -73,6 +73,11 @@ Orbital::Orbital(int Z_, int N_, int L_, int M_,
   radial_constant = pow(2.0 * double(Z) / double(N), 1.5) *
     sqrt(factorial(N - L - 1) /
          (2.0 * double(N) * factorial(N + L)));
+  // Compensate for integral of the radial part of the wave function
+  if (!square)
+    radial_constant /= radialIntegral();
+  else
+    radial_constant /= sqrt(radialIntegral());
   // e^(-Zr/N)
   radial_exponential_constant = -double(Z) / double(N);
   // (2Zr/N)^L
@@ -202,7 +207,27 @@ double Orbital::radius() const
   // to take N and Z into account.
   r *= 0.5 * double(N) / double(Z);
 
-  printf("Radius %f\n", r);
-
   return r;
+}
+
+double Orbital::radialIntegral() const
+{
+  double i;
+  if (square)
+    i = radial_integral2[N - 1][L];
+  else
+    i = radial_integral[N - 1][L];
+
+  // The integral needs to be scaled by two factors. The domain is
+  // compressed by a factor of 2Z/N, and the range is expanded by a
+  // factor of (2Z/N)^1.5. The net result is to scale the integral
+  // by a factor of (2Z/N)^0.5. If the wave function is squared,
+  // then the net result is to scale the integral by a factor of
+  // (2Z/N)^2.
+  if (!square)
+    i *= sqrt(2.0 * double(Z) / double(N));
+  else
+    i *= pow(2.0 * double(Z) / double(N), 2.0);
+
+  return i;
 }

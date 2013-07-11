@@ -74,6 +74,7 @@ public:
   bool operator==(const Orbital &rhs);
   bool operator!=(const Orbital &rhs) { return !(*this == rhs); }
   double radius() const;
+  double radialIntegral() const;
 
 private:
   double radial_constant;
