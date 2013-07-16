@@ -1,5 +1,5 @@
 make changes to detail level take effect immediately
-add controls for color cycling on/off and rate of cycling
+add control for rate of color cycling
 color model: consider if intensity is calibrated and adds correctly
              is there a better way to map complex argument to color?
 try using a fixed set of vertices

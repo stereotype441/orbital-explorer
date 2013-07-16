@@ -74,6 +74,16 @@ double TetrahedralSubdivision::simplexVolume(unsigned tetra) const
   return fabs(dot_product(x - w, cross_product(y - w, z - w)));
 }
 
+static Vector<3> to_color_space(complex<double> x)
+{
+  Vector<3> r;
+  double n = abs(x);
+  r[0] = n * x.real();
+  r[1] = n * x.imag();
+  r[2] = n;
+  return r;
+}
+
 pair<Vector<3>,double>
 TetrahedralSubdivision::find_worst_point(unsigned tetra)
 {
@@ -84,10 +94,10 @@ TetrahedralSubdivision::find_worst_point(unsigned tetra)
   double worst_point_absolute_error = 0.0;
 
   // Values of the function at the simplex's vertices
-  vector<complex<double> > vertex_value(4);
+  vector<Vector<3> > vertex_value(4);
   for (unsigned i = 0; i < 4; ++i) {
     const Vector<3> &v = subdivision.getPoint(simplex.formingPoint(i));
-    vertex_value[i] = f(v);
+    vertex_value[i] = to_color_space(f(v));
   }
 
   // Test points have barycentric coordinates that are multiples of 1/n
@@ -120,13 +130,15 @@ TetrahedralSubdivision::find_worst_point(unsigned tetra)
         }
 
         // Is it worse than the worst so far?
-        complex<double> actual_value = f(test_point);
-        complex<double> interpolated_value = 0.0;
+        Vector<3> actual_value = to_color_space(f(test_point));
+        Vector<3> interpolated_value;
+        interpolated_value = 0.0;
         for (unsigned i = 0; i < 4; ++i) {
           double c = double(bary[i]) / double(n);
           interpolated_value += c * vertex_value[i];
         }
-        double test_point_absolute_error = abs(actual_value - interpolated_value);
+        double test_point_absolute_error =
+          norm(actual_value - interpolated_value);
         if (test_point_absolute_error > worst_point_absolute_error) {
           worst_point_absolute_error = test_point_absolute_error;
           worst_point = test_point;
