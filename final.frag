@@ -51,13 +51,6 @@ uniform sampler2D solidData;
 uniform sampler2D cloudData;
 uniform mat2x3 color_trans;
 
-vec3 srgb_gamma(vec3 c)
-{
-  return mix(c * 12.92,
-             1.055 * pow(c, vec3(1.0 / 2.4)) - vec3(0.055),
-             greaterThan(c, vec3(0.0031308)));
-}
-
 void main(void)
 {
   // sRGB code here. We start by extracting xyY coordinates.
@@ -120,6 +113,6 @@ void main(void)
   float t = max(blet.r, max(blet.g, blet.b));
   linear_RGB = mix(linear_RGB, grey_RGB, t);
 
-  // Gamma correction
-  RGB = srgb_gamma(linear_RGB);
+  // Gamma correction is performed by GL_FRAMEBUFFER_SRGB
+  RGB = linear_RGB;
 }
