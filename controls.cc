@@ -89,7 +89,7 @@ static const int minAbsM = 0;
 static       int maxAbsM = 0;
 static bool basisReal = false;
 static bool comboDiff = false;
-enum FunctionType { WAVE, PROB, PROBPHASE };
+enum FunctionType { WAVE, PROBPHASE };
 static FunctionType function = PROBPHASE;
 static bool detailReduction = true;
 static double brightness = 1.0;
@@ -288,18 +288,6 @@ static void TW_CALL getWave(void *data, void *)
   *(bool *)data = (function == WAVE);
 }
 
-static void TW_CALL setProb(const void *data, void *)
-{
-  bool val = *(const bool *)data;
-  if (val == true)
-    function = PROB;
-}
-
-static void TW_CALL getProb(void *data, void *)
-{
-  *(bool *)data = (function == PROB);
-}
-
 static void TW_CALL setProbPhase(const void *data, void *)
 {
   bool val = *(const bool *)data;
@@ -441,14 +429,6 @@ void initControls()
              " be rendered.`"
              " group=`Function`"
              " key=w"
-             );
-
-  TwAddVarCB(physics, "Prob Density", TW_TYPE_BOOLCPP,
-             setProb, getProb, NULL,
-             "help=`Specifies that the probability density is to"
-             " be rendered.`"
-             " group=`Function`"
-             " key=p"
              );
 
   TwAddVarCB(physics, "Prob & Phase", TW_TYPE_BOOLCPP,
@@ -599,9 +579,6 @@ int handleControls(SDL_Event &event)
     case 'w':
       function = WAVE;
       break;
-    case 'p':
-      function = PROB;
-      break;
     case 'h':
       function = PROBPHASE;
       break;
@@ -616,7 +593,6 @@ int handleControls(SDL_Event &event)
              Z, N, L, absM, comboDiff ? "DIFF" : "SUM");
     const char *functionEnglish
       = (function == WAVE) ? "Wave function"
-      : (function == PROB) ? "Probability density"
       : (function == PROBPHASE) ? "Probability density with phase"
       : "???";
     printf("Function: %s\n", functionEnglish);
@@ -674,7 +650,7 @@ void setVerticesTetrahedra(int v, int t)
 Orbital getOrbital()
 {
   bool square = function != WAVE;
-  bool phase = function != PROB;
+  bool phase = true;
   int m = basisReal ? absM : M;
 
   return Orbital(Z, N, L, m, basisReal, comboDiff, square, phase);
