@@ -92,7 +92,7 @@ static bool comboDiff = false;
 enum FunctionType { WAVE, PROB, PROBPHASE };
 static FunctionType function = PROBPHASE;
 static bool detailReduction = true;
-static double brightness = 3.0;
+static double brightness = 1.0;
 static int detail = 5;
 
 static void changeZ(int);
