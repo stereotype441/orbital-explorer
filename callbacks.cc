@@ -279,6 +279,25 @@ void resizeTextures()
   GetGLError();
 }
 
+Matrix<4,4> generateMvpm(int width, int height, double near, double far)
+{
+  // Generate the so-called model-view-projection matrix
+
+  double rectangular_imbalance = sqrt(double(width) / double(height));
+  double L = -rectangular_imbalance;
+  double R =  rectangular_imbalance;
+  double B = -1.0 / rectangular_imbalance;
+  double T =  1.0 / rectangular_imbalance;
+  Matrix<4,4> frustum = transformFrustum(L, R, B, T, near, far);
+
+  Matrix<4,4> translation =
+    transformTranslation(-getCameraRadius() * basisVector<3>(2));
+
+  Matrix<4,4> rotation = transformRotation(getCameraRotation());
+
+  return frustum * translation * rotation;
+}
+
 void drawSolids(const Matrix<4,4> &mvpm, int width, int height)
 {
   solidProg->use();
@@ -476,32 +495,18 @@ void display()
   double now_sec = (now_tv.tv_sec % 6) + double(now_tv.tv_usec) / 1e6;
   now_sec *= 2.0 * pi / 6.0;
 
-  // Generate the so-called model-view-projection matrix
-
-  double rectangular_imbalance = sqrt(double(width) / double(height));
-  double L = -rectangular_imbalance;
-  double R =  rectangular_imbalance;
-  double B = -1.0 / rectangular_imbalance;
-  double T =  1.0 / rectangular_imbalance;
-  double N =  1.0;
-  double F =  getCameraRadius() + orbital->radius() * sqrt(2.0);
-  Matrix<4,4> frustum = transformFrustum(L, R, B, T, N, F);
-
-  Matrix<4,4> translation =
-    transformTranslation(-getCameraRadius() * basisVector<3>(2));
-
-  Matrix<4,4> rotation = transformRotation(getCameraRotation());
-
-  Matrix<4,4> mvpm = frustum * translation * rotation;
+  double near = 1.0;
+  double far = getCameraRadius() + orbital->radius() * sqrt(2.0);
+  Matrix<4,4> mvpm = generateMvpm(width, height, near, far);
 
   GetGLError();
 
   drawSolids(mvpm, width, height);
 
   if (detail_reduction)
-    drawOrbital(mvpm, width / shrink, height / shrink, N, F);
+    drawOrbital(mvpm, width / shrink, height / shrink, near, far);
   else
-    drawOrbital(mvpm, width, height, N, F);
+    drawOrbital(mvpm, width, height, near, far);
 
   drawFinal(width, height, now_sec);
 
