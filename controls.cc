@@ -148,6 +148,7 @@ static void changeM(int newM)
   if (newM > maxM) newM = maxM;
   if (newM < minM) newM = minM;
   M = newM;
+  absM = abs(M);
 }
 
 static void changeAbsM(int newAbsM)
@@ -155,6 +156,10 @@ static void changeAbsM(int newAbsM)
   if (newAbsM > maxAbsM) newAbsM = maxAbsM;
   if (newAbsM < minAbsM) newAbsM = minAbsM;
   absM = newAbsM;
+  if (M < 0)
+    M = -absM;
+  else
+    M = absM;
 }
 
 static void changeBasis(bool newBasis)
