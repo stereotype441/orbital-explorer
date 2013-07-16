@@ -54,3 +54,4 @@ cleanall: clean
 
 # Import dependences
 -include $(OFILES:%.o=.%.d)
+-include .unittests.d
