@@ -1818,7 +1818,7 @@ TEST_F(DelaunayTest, Add1000PointsShouldNotThrowInThreeDimensions)
   for (int i=0; i<1000; ++i) {
     x[0] = 2.0 * double(rand()) / double(RAND_MAX) - 1.0;
     x[1] = 2.0 * double(rand()) / double(RAND_MAX) - 1.0;
-    x[1] = 2.0 * double(rand()) / double(RAND_MAX) - 1.0;
+    x[2] = 2.0 * double(rand()) / double(RAND_MAX) - 1.0;
     u.inefficientAddPoint(x);
   }
   // The real test is that the above loop doesn't throw any exceptions
