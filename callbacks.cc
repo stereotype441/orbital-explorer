@@ -259,7 +259,7 @@ void initialize()
   // Clouds
   glGenFramebuffers(1, &cloudFBO);
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, cloudFBO);
-  cloudDensityTex = attachNewTexture(GL_RGB16F, GL_RGB, GL_COLOR_ATTACHMENT0);
+  cloudDensityTex = attachNewTexture(GL_RGBA16F, GL_RGB, GL_COLOR_ATTACHMENT0);
   checkFramebufferCompleteness();
 
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
@@ -463,10 +463,10 @@ void display()
   GetGLError();
 
   if (detail_reduction) {
-    resizeTexture(cloudDensityTex, GL_RGB16F, GL_RGB,
+    resizeTexture(cloudDensityTex, GL_RGBA16F, GL_RGB,
                   width / shrink, height / shrink);
   } else {
-    resizeTexture(cloudDensityTex, GL_RGB16F, GL_RGB, width, height);
+    resizeTexture(cloudDensityTex, GL_RGBA16F, GL_RGB, width, height);
   }
 
   GetGLError();
