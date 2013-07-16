@@ -61,7 +61,7 @@ class Orbital : public Function<3,std::complex<double> >
 {
 public:
   Orbital(int Z_, int N_, int L_, int M_,
-          bool real_, bool diff_, bool square_, bool phase_);
+          bool real_, bool diff_, bool square_);
   double radial_part(double r) const;
   double theta_part(double sin_theta, double cos_theta) const;
   std::complex<double> operator()(const Vector<3> &x) const;
@@ -70,7 +70,6 @@ public:
   const bool diff; // If true, real wave function is a difference of
   //                  wave functions for +/-M. If false, sum.
   const bool square; // If true, square magnitude of the function
-  const bool phase; // If false, ignore complex phase of wave function
   bool operator==(const Orbital &rhs);
   bool operator!=(const Orbital &rhs) { return !(*this == rhs); }
   double radius() const;

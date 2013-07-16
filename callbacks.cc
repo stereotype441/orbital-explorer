@@ -421,12 +421,10 @@ void display()
       x[1] = varyings[6 * p + 1] = positions[3 * p + 1];
       x[2] = varyings[6 * p + 2] = positions[3 * p + 2];
       complex<double> density = (*orbital)(x);
-      if (orbital->phase) {
-        double a = arg(density);
-        double r = 0.06;
-        varyings[6 * p + 3] = r * cos(a);
-        varyings[6 * p + 4] = r * sin(a);
-      }
+      double a = arg(density);
+      double r = 0.06;
+      varyings[6 * p + 3] = r * cos(a);
+      varyings[6 * p + 4] = r * sin(a);
       varyings[6 * p + 5] = abs(density);
     }
     cloud->buffer(GL_ARRAY_BUFFER, varyings);

@@ -650,10 +650,9 @@ void setVerticesTetrahedra(int v, int t)
 Orbital getOrbital()
 {
   bool square = function != WAVE;
-  bool phase = true;
   int m = basisReal ? absM : M;
 
-  return Orbital(Z, N, L, m, basisReal, comboDiff, square, phase);
+  return Orbital(Z, N, L, m, basisReal, comboDiff, square);
 }
 
 double getBrightness()

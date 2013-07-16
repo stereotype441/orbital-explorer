@@ -63,9 +63,9 @@
 using namespace std;
 
 Orbital::Orbital(int Z_, int N_, int L_, int M_,
-                 bool real_, bool diff_, bool square_, bool phase_) :
+                 bool real_, bool diff_, bool square_) :
   Z(Z_), N(N_), L(L_), M(M_),
-  real(real_), diff(diff_), square(square_), phase(phase_)
+  real(real_), diff(diff_), square(square_)
 {
   // Set up radial part of wave function
 
@@ -181,17 +181,13 @@ std::complex<double> Orbital::operator()(const Vector<3> &x) const
 
   result_mag /= normalization_constant;
 
-  if (phase)
-    return result_mag * result_arg;
-  else
-    return result_mag;
+  return result_mag * result_arg;
 }
 
 bool Orbital::operator==(const Orbital &rhs)
 {
   return Z == rhs.Z && N == rhs.N && L == rhs.L && M == rhs.M
-    && real == rhs.real && diff == rhs.diff && square == rhs.square
-    && phase == rhs.phase;
+    && real == rhs.real && diff == rhs.diff && square == rhs.square;
 }
 
 double Orbital::radius() const
