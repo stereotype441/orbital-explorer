@@ -1,6 +1,3 @@
-review the code base for refactoring opportunities
-estimate the integral of the radial part of the wave function
-  adjust brightness level accordingly
 make changes to detail level take effect immediately
 add controls for color cycling on/off and rate of cycling
 color model: consider if intensity is calibrated and adds correctly
