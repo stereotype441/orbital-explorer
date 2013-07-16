@@ -146,36 +146,6 @@ TEST(ArrayTest, AccessConstOutOfRange) {
   EXPECT_ANY_THROW(a[-1];);
 }
 
-// An exercise in correctness: verify that Array can be copy constructed
-// and/or conversion constructed even when the base type has no default
-// constructor.
-class NoDefaultConstructor3 {
-public:
-  NoDefaultConstructor3(int) {}
-};
-
-class NoDefaultConstructor {
-public:
-  NoDefaultConstructor(int) {}
-  operator NoDefaultConstructor3() const { return NoDefaultConstructor3(0); }
-};
-
-class NoDefaultConstructor2 {
-public:
-  NoDefaultConstructor2(int) {}
-  explicit NoDefaultConstructor2(const NoDefaultConstructor &) {}
-};
-
-TEST(ArrayTest, ConstructWithoutDefaultConstructor) {
-  Array<2,NoDefaultConstructor> a(NoDefaultConstructor(5));
-  Array<2,NoDefaultConstructor> b(a);
-  Array<2,NoDefaultConstructor2> c(a);
-  Array<2,NoDefaultConstructor3> d(a);
-  Array<2,NoDefaultConstructor> bb = a;
-  Array<2,NoDefaultConstructor2> cc = Array<2,NoDefaultConstructor2>(a);
-  Array<2,NoDefaultConstructor3> dd = Array<2,NoDefaultConstructor3>(a);
-}
-
 class VectorTest : public ::testing::Test {
 protected:
   virtual void SetUp()

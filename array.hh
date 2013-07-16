@@ -47,31 +47,37 @@ template <unsigned n, typename T>
 class Array
 {
 public:
-  Array() : data(n) {}
+  Array() {}
+
   // Array can be explicitly constructed from a scalar, but no corresponding
   // assignment operator is defined -- because derived classes have different
   // behavior when assigned a scalar.
-  explicit Array(const T &x) : data(n,x) {}
+  explicit Array(const T &x)
+  {
+    for (int i = 0; i < n; ++i)
+      data[i] = x;
+  }
 
   // A "conversion constructor" for explicitly turning arrays of one type
   // into another as long as the sizes are the same and the element type
   // is (explicitly or implicitly) convertible.
   // This is more type-safe than a conversion operator, which can't be
-  // made explicit
+  // made explicit.
   template <typename U>
   explicit Array(const Array<n,U> &xs)
   {
-    // Avoid requiring that T have a default constructor
-    data.reserve(n);
     for (unsigned i=0; i<n; ++i)
-      data.push_back(T(xs[i]));
+      data[i] = T(xs[i]);
   }
 
   // Similarly, a function for (explicitly) converting an array into an
   // STL vector
   std::vector<T> toVector() const
   {
-    return data;
+    std::vector<T> r;
+    for (int i = 0; i < n; ++i)
+      r.push_back(data[i]);
+    return r;
   }
 
   T &operator[](unsigned i)
@@ -96,7 +102,7 @@ protected:
   }
 
 private:
-  std::vector<T> data;
+  T data[n];
 
   void check_index(unsigned i) const
   {
