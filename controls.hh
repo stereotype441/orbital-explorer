@@ -52,3 +52,4 @@ void setVerticesTetrahedra(int vertices, int tetrahedra);
 Orbital getOrbital();
 double getBrightness();
 int getDetail();
+bool getColorPhase();

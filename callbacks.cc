@@ -350,6 +350,7 @@ void drawFinal(int width, int height, double now_sec)
   ct(1,0) = -sin(now_sec);  ct(1,1) = cos(now_sec);
   ct(2,0) = 0.19784;        ct(2,1) = 0.46832;
   finalProg->uniform<Matrix<3,2> >("color_trans") = ct;
+  finalProg->uniform<int>("use_color") = getColorPhase();
   glActiveTexture(GL_TEXTURE0);
   solidRGBTex->bind(GL_TEXTURE_2D);
   glActiveTexture(GL_TEXTURE1);

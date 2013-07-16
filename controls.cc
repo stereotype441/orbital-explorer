@@ -94,6 +94,7 @@ static FunctionType function = PROBPHASE;
 static bool detailReduction = true;
 static double brightness = 1.0;
 static int detail = 5;
+static bool colorPhase = true;
 
 static void changeZ(int);
 static void changeN(int);
@@ -461,6 +462,11 @@ void initControls()
 
   // Misc display parameters
 
+  TwAddVarRW(physics, "Color", TW_TYPE_BOOLCPP, &colorPhase,
+             "help=`Select whether the phase of the wave function"
+             " is shown with color.`"
+             " group=`Display`");
+
   TwAddVarRW(physics, "Brightness", TW_TYPE_DOUBLE, &brightness,
              "help=`Adjust the brightness of the orbital.`"
              " group=`Display`"
@@ -682,4 +688,9 @@ double getBrightness()
 int getDetail()
 {
   return detail;
+}
+
+bool getColorPhase()
+{
+  return colorPhase;
 }

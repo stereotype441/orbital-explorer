@@ -50,6 +50,7 @@ out vec3 RGB;
 uniform sampler2D solidData;
 uniform sampler2D cloudData;
 uniform mat2x3 color_trans;
+uniform bool use_color;
 
 void main(void)
 {
@@ -62,9 +63,14 @@ void main(void)
   // Extract u, v, and Y from the input.
   // Integral of intensity (Y) along line of sight.
   float integrated_Y = integrated_uvY[2];
-  // Integral of intensity-scaled chromaticity (u * Y and v * Y), divided
-  // by total intensity (Y), gives intensity-weighted chromaticity.
-  vec2 cloud_uv = integrated_uvY.xy / integrated_Y;
+
+  vec2 cloud_uv;
+  if (use_color)
+    // Integral of intensity-scaled chromaticity (u * Y and v * Y), divided
+    // by total intensity (Y), gives intensity-weighted chromaticity.
+    cloud_uv = integrated_uvY.xy / integrated_Y;
+  else
+    cloud_uv = vec2(0, 0);
 
   // Apply the final transformation of the color coordinates.
   // This rotates the color around the origin, then translates the
