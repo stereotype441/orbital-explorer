@@ -271,6 +271,7 @@ void resizeTextures()
   resizeTexture(solidRGBTex, GL_RGB8, GL_RGB, width, height);
   resizeTexture(solidDepthTex, GL_DEPTH_COMPONENT24, GL_DEPTH_COMPONENT,
                 width, height);
+  resizeTexture(cloudDensityTex, GL_RGBA16F, GL_RGB, width, height);
 
   GetGLError();
 }
@@ -432,10 +433,6 @@ void display()
 
     setVerticesTetrahedra(int(num_points), int(num_tetrahedra));
   }
-
-  GetGLError();
-
-  resizeTexture(cloudDensityTex, GL_RGBA16F, GL_RGB, width, height);
 
   GetGLError();
 
