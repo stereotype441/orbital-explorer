@@ -46,8 +46,6 @@
 void initControls();
 int handleControls(SDL_Event &event);
 void drawControls();
-bool getReduction();
-void setShrinkage(int shrinkage);
 void setVerticesTetrahedra(int vertices, int tetrahedra);
 Orbital getOrbital();
 double getBrightness();

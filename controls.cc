@@ -91,7 +91,6 @@ static bool basisReal = false;
 static bool comboDiff = false;
 enum FunctionType { WAVE, PROBPHASE };
 static FunctionType function = PROBPHASE;
-static bool detailReduction = true;
 static double brightness = 1.0;
 static int detail = 5;
 static bool colorPhase = true;
@@ -301,22 +300,9 @@ static void TW_CALL getProbPhase(void *data, void *)
   *(bool *)data = (function == PROBPHASE);
 }
 
-static void TW_CALL setDetailReduction(const void *data, void *)
-{
-  bool val = *(const bool *)data;
-  detailReduction = val;
-  TwSetParam(display, "Reduction Factor", "visible", TW_PARAM_INT32, 1, &val);
-}
-
-static void TW_CALL getDetailReduction(void *data, void *)
-{
-  *(bool *)data = detailReduction;
-}
-
 #endif
 
 static int fps = 0;
-static int shrinkage = 1;
 static int vertices = 0;
 static int tetrahedra = 0;
 
@@ -473,20 +459,6 @@ void initControls()
              " group=`Rendering`"
              );
 
-  TwAddVarCB(display, "Detail Reduction", TW_TYPE_BOOLCPP,
-             setDetailReduction, getDetailReduction, NULL,
-             "help=`Turn on/off dynamic detail reduction, which attempts"
-             " to preserve a fast frame rate at the expense of less"
-             " resolution.`"
-             " group=`Rendering`"
-             );
-
-  TwAddVarRO(display, "Reduction Factor", TW_TYPE_INT32, &shrinkage,
-             "help=`Factor by which resolution is reduced"
-             " so as to maintain high responsiveness.`"
-             " group=`Rendering`"
-             );
-
   TwAddVarRO(display, "Vertices", TW_TYPE_INT32, &vertices,
              "help=`Number of vertices describing the orbital`"
              " group=`Rendering`"
@@ -631,16 +603,6 @@ void drawControls()
 #ifdef ANTTWEAKBAR
     TwDraw();
 #endif
-}
-
-bool getReduction()
-{
-  return detailReduction;
-}
-
-void setShrinkage(int s)
-{
-  shrinkage = s;
 }
 
 void setVerticesTetrahedra(int v, int t)

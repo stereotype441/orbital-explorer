@@ -90,9 +90,6 @@ static void GetGLError_(int line)
   }
 }
 
-// GPU timers
-static Timer *gputimer[2];
-
 // GLSL programs
 static Program *solidProg, *cloudProg, *finalProg;
 
@@ -149,9 +146,6 @@ static void checkFramebufferCompleteness()
 
 void initialize()
 {
-  for (int i = 0; i < 2; ++i)
-    gputimer[i] = new Timer();
-
   solidProg = new Program();
   solidProg->vertexShader(solidVertexShaderSource);
   solidProg->fragmentShader(solidFragmentShaderSource);
@@ -439,55 +433,9 @@ void display()
     setVerticesTetrahedra(int(num_points), int(num_tetrahedra));
   }
 
-  bool detail_reduction = getReduction();
-
   GetGLError();
 
-  static int next_set_of_timers = 0;
-  static int shrink_times_two = 2;
-
-  if (detail_reduction)
-    try {
-      long render_time;
-      int old_shrink_times_two;
-
-      render_time = gputimer[next_set_of_timers]->read();
-
-      old_shrink_times_two = shrink_times_two;
-      if (render_time > 30 * 1000 * 1000)
-        ++shrink_times_two;
-
-      static int calls_since_shrink_reduction = 0;
-      if (++calls_since_shrink_reduction >= 30) {
-        --shrink_times_two;
-        calls_since_shrink_reduction = 0;
-      }
-
-      clamp(shrink_times_two, 2, 20);
-
-      if (shrink_times_two != old_shrink_times_two)
-        setShrinkage(shrink_times_two / 2);
-    } catch (std::logic_error &e) {
-      static bool print_note = true;
-      if (print_note) {
-        fprintf(stderr, "Debug: GPU timer not ready\n");
-        print_note = false;
-      }
-    }
-
-  int shrink = shrink_times_two / 2;
-
-  if (detail_reduction)
-    gputimer[next_set_of_timers]->start();
-
-  GetGLError();
-
-  if (detail_reduction) {
-    resizeTexture(cloudDensityTex, GL_RGBA16F, GL_RGB,
-                  width / shrink, height / shrink);
-  } else {
-    resizeTexture(cloudDensityTex, GL_RGBA16F, GL_RGB, width, height);
-  }
+  resizeTexture(cloudDensityTex, GL_RGBA16F, GL_RGB, width, height);
 
   GetGLError();
 
@@ -508,19 +456,11 @@ void display()
 
   drawSolids(mvpm, width, height);
 
-  if (detail_reduction)
-    drawOrbital(mvpm, width / shrink, height / shrink, near, far);
-  else
-    drawOrbital(mvpm, width, height, near, far);
+  drawOrbital(mvpm, width, height, near, far);
 
   drawFinal(width, height, color_cycle);
 
   glFinish();
-
-  if (detail_reduction) {
-    gputimer[next_set_of_timers]->stop();
-    next_set_of_timers = 1 - next_set_of_timers;
-  }
 
   GetGLError();
 }
