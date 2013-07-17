@@ -18,7 +18,8 @@ OFILES=\
 	shaders.o \
 	tetrahedralize.o \
 	wavefunction.o \
-	radial_data.o
+	radial_data.o \
+	util.o
 
 PROG = orbital-explorer
 TEST = unittests

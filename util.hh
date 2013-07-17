@@ -43,7 +43,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <map>
+
 static const double pi = 3.141592653589793238;
+
+double now();
 
 template <typename T> void clamp(T &x, T low, T high)
 {

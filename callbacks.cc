@@ -331,14 +331,22 @@ void drawOrbital(const Matrix<4,4> &mvpm, int width, int height,
   GetGLError();
 }
 
-void drawFinal(int width, int height, double color_cycle_amount)
+void drawFinal(int width, int height)
 {
+  double this_instant = now();
+  static double last_instant = -1.;
+  if (last_instant < 0)
+    last_instant = this_instant;
+  static double color_cycle = 0.;
+  color_cycle += (this_instant - last_instant) * double(getCycleRate());
+  last_instant = this_instant;
+
   finalProg->use();
   finalProg->uniform<int>("solidData") = 0;
   finalProg->uniform<int>("cloudData") = 1;
   Matrix<3,2> ct;
-  ct(0,0) =  cos(color_cycle_amount);  ct(0,1) = sin(color_cycle_amount);
-  ct(1,0) = -sin(color_cycle_amount);  ct(1,1) = cos(color_cycle_amount);
+  ct(0,0) =  cos(color_cycle);  ct(0,1) = sin(color_cycle);
+  ct(1,0) = -sin(color_cycle);  ct(1,1) = cos(color_cycle);
   ct(2,0) = 0.19784;        ct(2,1) = 0.46832;
   finalProg->uniform<Matrix<3,2> >("color_trans") = ct;
   finalProg->uniform<int>("use_color") = getColorPhase();
@@ -440,15 +448,6 @@ void display()
 
   GetGLError();
 
-  struct timeval now_tv;
-  gettimeofday(&now_tv, NULL);
-  double now_sec = double(now_tv.tv_sec) + double(now_tv.tv_usec) / 1e6;
-  static double then_sec = -1.;
-  if (then_sec < 0) then_sec = now_sec;
-  static double color_cycle = 0.;
-  color_cycle += (now_sec - then_sec) * double(getCycleRate());
-  then_sec = now_sec;
-
   double near = 1.0;
   double far = getCameraRadius() + orbital->radius() * sqrt(2.0);
   Matrix<4,4> mvpm = generateMvpm(width, height, near, far);
@@ -473,7 +472,7 @@ void display()
     drawOrbital(mvpm, width, height, near, far);
     need_full_redraw = false;
   }
-  drawFinal(width, height, color_cycle);
+  drawFinal(width, height);
 
   glFinish();
 
