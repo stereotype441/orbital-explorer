@@ -318,10 +318,6 @@ void drawOrbital(const Matrix<4,4> &mvpm, int width, int height,
   cloudProg->uniform<Matrix<4,4> >("modelViewProjMatrix") = mvpm;
   cloudProg->uniform<Vector<2> >("nearfar") = Vector2(N, F);
   cloudProg->uniform<int>("solidDepth") = 0;
-  double b = pow(1.618, getBrightness());
-  if (orbital->square)
-    b *= b;
-  cloudProg->uniform<float>("brightness") = b;
   glActiveTexture(GL_TEXTURE0);
   solidDepthTex->bind(GL_TEXTURE_2D);
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, cloudFBO);
@@ -346,6 +342,10 @@ void drawFinal(int width, int height, double color_cycle_amount)
   ct(2,0) = 0.19784;        ct(2,1) = 0.46832;
   finalProg->uniform<Matrix<3,2> >("color_trans") = ct;
   finalProg->uniform<int>("use_color") = getColorPhase();
+  double b = pow(1.618, getBrightness());
+  if (orbital->square)
+    b *= b;
+  finalProg->uniform<float>("brightness") = b;
   glActiveTexture(GL_TEXTURE0);
   solidRGBTex->bind(GL_TEXTURE_2D);
   glActiveTexture(GL_TEXTURE1);

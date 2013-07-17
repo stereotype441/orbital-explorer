@@ -51,6 +51,7 @@ uniform sampler2D solidData;
 uniform sampler2D cloudData;
 uniform mat2x3 color_trans;
 uniform bool use_color;
+uniform float brightness;
 
 void main(void)
 {
@@ -61,6 +62,7 @@ void main(void)
   vec3 integrated_uvY = texture(cloudData, coord).xyz;
 
   // Extract u, v, and Y from the input.
+
   // Integral of intensity (Y) along line of sight.
   float integrated_Y = integrated_uvY[2];
 
@@ -80,6 +82,9 @@ void main(void)
   // Convert CIE (u,v) color coordinates (as per CIELUV) to (x,y)
   vec2 cloud_xy = vec2(9.0, 4.0) * cloud_uv;
   cloud_xy /= dot(vec3(6.0, -16.0, 12.0), vec3(cloud_uv, 1.0));
+
+  // Brightness adjustment.
+  integrated_Y *= brightness;
 
   // Exponential fall-off of intensity. Has no effect on chromaticity.
   // This takes into account that nearby "particles" of cloud or fog

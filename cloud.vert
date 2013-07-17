@@ -46,7 +46,6 @@
 #version 150
 
 uniform mat4 modelViewProjMatrix;
-uniform float brightness;
 
 in vec4 position;
 in vec3 uvY;
@@ -80,8 +79,7 @@ void calculate_position()
 void calculate_color()
 {
   vec2 uv = uvY.xy;
-  float Y = brightness * uvY.z;
-
+  float Y = uvY.z;
   integrand = Y * vec3(uv, 1.0);
 }
 
