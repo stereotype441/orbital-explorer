@@ -95,6 +95,7 @@ static bool detailReduction = true;
 static double brightness = 1.0;
 static int detail = 5;
 static bool colorPhase = true;
+static int cycleRate = 1;
 
 static void changeZ(int);
 static void changeN(int);
@@ -447,6 +448,12 @@ void initControls()
              " is shown with color.`"
              " group=`Display`");
 
+  TwAddVarRW(physics, "Cycle rate", TW_TYPE_INT32, &cycleRate,
+             "help=`Select how fast the colors cycle, in units of angular"
+             " frequency (rad/s).`"
+             " group=`Display`"
+             " min=0 max=10");
+
   TwAddVarRW(physics, "Brightness", TW_TYPE_DOUBLE, &brightness,
              "help=`Adjust the brightness of the orbital.`"
              " group=`Display`"
@@ -668,4 +675,9 @@ int getDetail()
 bool getColorPhase()
 {
   return colorPhase;
+}
+
+int getCycleRate()
+{
+  return cycleRate;
 }

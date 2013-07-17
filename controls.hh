@@ -53,3 +53,4 @@ Orbital getOrbital();
 double getBrightness();
 int getDetail();
 bool getColorPhase();
+int getCycleRate();
