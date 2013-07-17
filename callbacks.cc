@@ -363,6 +363,8 @@ void drawFinal(int width, int height, double color_cycle_amount)
 
 void display()
 {
+  static bool need_full_redraw = true;
+
   int width = getWidth();
   int height = getHeight();
 
@@ -432,6 +434,8 @@ void display()
     GetGLError();
 
     setVerticesTetrahedra(int(num_points), int(num_tetrahedra));
+
+    need_full_redraw = true;
   }
 
   GetGLError();
@@ -449,12 +453,26 @@ void display()
   double far = getCameraRadius() + orbital->radius() * sqrt(2.0);
   Matrix<4,4> mvpm = generateMvpm(width, height, near, far);
 
+  static Matrix<4,4> old_mvpm;
+  for (int r = 0; r < 4; ++r)
+    for (int c = 0; c < 4; ++c)
+      if (mvpm(r, c) != old_mvpm(r, c))
+        need_full_redraw = true;
+  old_mvpm = mvpm;
+  static int old_width = 0;
+  static int old_height = 0;
+  if (width != old_width || height != old_height)
+    need_full_redraw = true;
+  old_width = width;
+  old_height = height;
+
   GetGLError();
 
-  drawSolids(mvpm, width, height);
-
-  drawOrbital(mvpm, width, height, near, far);
-
+  if (need_full_redraw) {
+    drawSolids(mvpm, width, height);
+    drawOrbital(mvpm, width, height, near, far);
+    need_full_redraw = false;
+  }
   drawFinal(width, height, color_cycle);
 
   glFinish();
