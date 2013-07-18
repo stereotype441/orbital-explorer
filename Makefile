@@ -1,12 +1,8 @@
-# Uncomment these two lines to use AntTweakBar controls
-CPPFLAGS = -DANTTWEAKBAR
-LINKFLAGS = -lAntTweakBar -lX11
-
 OPT_OR_DEBUG = -O3
 
 CPP = g++
-CPPFLAGS := $(CPPFLAGS) -pthread -Wall -Wshadow $(OPT_OR_DEBUG) $(shell sdl-config --cflags)
-LINKFLAGS := $(LINKFLAGS) -pthread -lGLEW -lGLU -lGL $(shell sdl-config --libs)
+CPPFLAGS := -pthread -Wall -Wshadow $(OPT_OR_DEBUG) $(shell sdl-config --cflags)
+LINKFLAGS := -lAntTweakBar -lX11 -pthread -lGLEW -lGLU -lGL $(shell sdl-config --libs)
 
 OFILES=\
 	sdl_main.o \

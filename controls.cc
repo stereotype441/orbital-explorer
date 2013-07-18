@@ -65,9 +65,7 @@
 #include "mouseevents.hh"
 #include "controls.hh"
 
-#ifdef ANTTWEAKBAR
 #include "AntTweakBar.h"
-#endif
 
 using namespace std;
 
@@ -172,8 +170,6 @@ static void changeCombo(bool newCombo)
   comboDiff = newCombo;
 }
 
-#ifdef ANTTWEAKBAR
-
 static TwBar *physics = NULL;
 static TwBar *display = NULL;
 
@@ -275,16 +271,12 @@ static void TW_CALL getCombo(void *data, void *)
   *(bool *)data = comboDiff;
 }
 
-#endif
-
 static int fps = 0;
 static int vertices = 0;
 static int tetrahedra = 0;
 
 void initControls()
 {
-#ifdef ANTTWEAKBAR
-
   int t = 1;
   int f = 0;
 
@@ -459,92 +451,11 @@ void initControls()
   TwSetParam(display, "GPU & Driver", "opened", TW_PARAM_INT32, 1, &f);
 
   setEnergy();
-
-#else
-
-  printf("GPU:  %s\n", glGetString(GL_RENDERER));
-  printf("GL:   %s\n", glGetString(GL_VERSION));
-  printf("GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
-
-#endif
 }
 
 int handleControls(SDL_Event &event)
 {
-#ifdef ANTTWEAKBAR
-
   return TwEventSDL(&event, SDL_MAJOR_VERSION, SDL_MINOR_VERSION);
-
-#else
-
-  int handled = false;
-
-  if (event.type == SDL_KEYDOWN) {
-    handled = true;
-    switch (event.key.keysym.unicode) {
-    default:
-      handled = false;
-      break;
-    case 'z':
-      changeZ(Z - 1);
-      break;
-    case 'Z':
-      changeZ(Z + 1);
-      break;
-    case 'n':
-      changeN(N - 1);
-      break;
-    case 'N':
-      changeN(N + 1);
-      break;
-    case 'l':
-      changeL(L - 1);
-      break;
-    case 'L':
-      changeL(L + 1);
-      break;
-    case 'm':
-      changeM(M - 1);
-      break;
-    case 'M':
-      changeM(M + 1);
-      break;
-    case 'a':
-      changeAbsM(absM - 1);
-      break;
-    case 'A':
-      changeAbsM(absM + 1);
-      break;
-    case 'b':
-      changeBasis(!basisReal);
-      break;
-    case 'c':
-      changeCombo(!comboDiff);
-      break;
-    case 'w':
-      orbital = false;
-      break;
-    case 'h':
-      orbital = true;
-      break;
-    }
-  }
-
-  if (handled) {
-    if (!basisReal)
-      printf("Z = %d\tN = %d\tL = %d\tM = %d\tBasis=REAL\n", Z, N, L, M);
-    else
-      printf("Z = %d\tN = %d\tL = %d\t|M|=%d\tBasis=COMPLEX\tCombo=%s\n",
-             Z, N, L, absM, comboDiff ? "DIFF" : "SUM");
-    const char *functionEnglish
-      = (orbital == false) ? "Wave function"
-      : (orbital == true) ? "Orbital"
-      : "???";
-    printf("Function: %s\n", functionEnglish);
-  }
-  return handled;
-
-#endif
 }
 
 void drawControls()
@@ -555,31 +466,17 @@ void drawControls()
   ++frame_count;
   if (then != now) {
     fps = frame_count;
-#ifndef ANTTWEAKBAR
-    static int old_fps = 0;
-    if (old_fps != fps) {
-      old_fps = fps;
-      printf("FPS: %d\n", fps);
-    }
-#endif
     frame_count = 0;
     then = now;
   }
 
-#ifdef ANTTWEAKBAR
-    TwDraw();
-#endif
+  TwDraw();
 }
 
 void setVerticesTetrahedra(int v, int t)
 {
   vertices = v;
   tetrahedra = t;
-
-#ifndef ANTTWEAKBAR
-  printf("Vertices: %d\n", vertices);
-  printf("Tetrahedra: %d\n", tetrahedra);
-#endif
 }
 
 Orbital getOrbital()
