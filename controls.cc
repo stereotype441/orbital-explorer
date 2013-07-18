@@ -89,8 +89,7 @@ static const int minAbsM = 0;
 static       int maxAbsM = 0;
 static bool basisReal = false;
 static bool comboDiff = false;
-enum FunctionType { WAVE, PROBPHASE };
-static FunctionType function = PROBPHASE;
+static bool orbital = true;
 static double brightness = 1.0;
 static int detail = 5;
 static bool colorPhase = true;
@@ -276,30 +275,6 @@ static void TW_CALL getCombo(void *data, void *)
   *(bool *)data = comboDiff;
 }
 
-static void TW_CALL setWave(const void *data, void *)
-{
-  bool val = *(const bool *)data;
-  if (val == true)
-    function = WAVE;
-}
-
-static void TW_CALL getWave(void *data, void *)
-{
-  *(bool *)data = (function == WAVE);
-}
-
-static void TW_CALL setProbPhase(const void *data, void *)
-{
-  bool val = *(const bool *)data;
-  if (val == true)
-    function = PROBPHASE;
-}
-
-static void TW_CALL getProbPhase(void *data, void *)
-{
-  *(bool *)data = (function == PROBPHASE);
-}
-
 #endif
 
 static int fps = 0;
@@ -410,21 +385,12 @@ void initControls()
 
   // Which function
 
-  TwAddVarCB(physics, "Wave Func", TW_TYPE_BOOLCPP,
-             setWave, getWave, NULL,
-             "help=`Specifies that the underlying wave function is to"
-             " be rendered.`"
-             " group=`Function`"
-             " key=w"
-             );
-
-  TwAddVarCB(physics, "Prob & Phase", TW_TYPE_BOOLCPP,
-             setProbPhase, getProbPhase, NULL,
-             "help=`Specifies that the probability density, multipled by"
-             " the phase of the underlying wave function, is to"
-             " be rendered.`"
-             " group=`Function`"
-             " key=h"
+  TwAddVarRW(physics, "Function", TW_TYPE_BOOLCPP, &orbital,
+             "help=`Specifies whether the orbital or underlying wave"
+             " function is rendered.`"
+             " group=`Choose`"
+             " false=`WAVE` true=`ORBITAL`"
+             " key=f"
              );
 
   // Misc display parameters
@@ -556,10 +522,10 @@ int handleControls(SDL_Event &event)
       changeCombo(!comboDiff);
       break;
     case 'w':
-      function = WAVE;
+      orbital = false;
       break;
     case 'h':
-      function = PROBPHASE;
+      orbital = true;
       break;
     }
   }
@@ -571,8 +537,8 @@ int handleControls(SDL_Event &event)
       printf("Z = %d\tN = %d\tL = %d\t|M|=%d\tBasis=COMPLEX\tCombo=%s\n",
              Z, N, L, absM, comboDiff ? "DIFF" : "SUM");
     const char *functionEnglish
-      = (function == WAVE) ? "Wave function"
-      : (function == PROBPHASE) ? "Probability density with phase"
+      = (orbital == false) ? "Wave function"
+      : (orbital == true) ? "Orbital"
       : "???";
     printf("Function: %s\n", functionEnglish);
   }
@@ -618,10 +584,9 @@ void setVerticesTetrahedra(int v, int t)
 
 Orbital getOrbital()
 {
-  bool square = function != WAVE;
   int m = basisReal ? absM : M;
 
-  return Orbital(Z, N, L, m, basisReal, comboDiff, square);
+  return Orbital(Z, N, L, m, basisReal, comboDiff, orbital);
 }
 
 double getBrightness()
