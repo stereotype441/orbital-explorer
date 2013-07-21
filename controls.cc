@@ -171,7 +171,7 @@ static void changeCombo(bool newCombo)
 }
 
 static TwBar *physics = NULL;
-static TwBar *display = NULL;
+static TwBar *graphics = NULL;
 
 static void myTwTerminate()
 {
@@ -293,8 +293,8 @@ void initControls()
   TwWindowSize(getWidth(), getHeight());
 
   physics = TwNewBar("Physics");
-  display = TwNewBar("Display");
-  TwSetParam(display, NULL, "iconified", TW_PARAM_INT32, 1, &t);
+  graphics = TwNewBar("Graphics");
+  TwSetParam(graphics, NULL, "iconified", TW_PARAM_INT32, 1, &t);
 
   if (sizeof(int) != 4) {
     fprintf(stderr, "sizeof(int) != 4\n");
@@ -305,7 +305,7 @@ void initControls()
 
   TwAddVarCB(physics, "Z", TW_TYPE_INT32, setZ, getZ, NULL,
              "help=`Nuclear charge`"
-             " group=`Quantum Numbers`"
+             " group=`Orbital`"
              " keydecr=z keyincr=Z"
              );
   TwSetParam(physics, "Z", "min", TW_PARAM_INT32, 1, &minZ);
@@ -313,7 +313,7 @@ void initControls()
 
   TwAddVarCB(physics, "N", TW_TYPE_INT32, setN, getN, NULL,
              "help=`Principal quantum number or \"energy level\"`"
-             " group=`Quantum Numbers`"
+             " group=`Orbital`"
              " keydecr=n keyincr=N"
              );
   TwSetParam(physics, "N", "min", TW_PARAM_INT32, 1, &minN);
@@ -321,7 +321,7 @@ void initControls()
 
   TwAddVarCB(physics, "L", TW_TYPE_INT32, setL, getL, NULL,
              "help=`Angular momentum quantum number`"
-             " group=`Quantum Numbers`"
+             " group=`Orbital`"
              " keydecr=l keyincr=L"
              );
   TwSetParam(physics, "L", "min", TW_PARAM_INT32, 1, &minL);
@@ -329,7 +329,7 @@ void initControls()
 
   TwAddVarCB(physics, "M", TW_TYPE_INT32, setM, getM, NULL,
              "help=`Angular momentum z-projection quantum number`"
-             " group=`Quantum Numbers`"
+             " group=`Orbital`"
              " keydecr=m keyincr=M"
              );
   TwSetParam(physics, "M", "min", TW_PARAM_INT32, 1, &minM);
@@ -338,13 +338,23 @@ void initControls()
   TwAddVarCB(physics, "|M|", TW_TYPE_INT32, setAbsM, getAbsM, NULL,
              "help=`Absolute value of angular momentum z-projection"
              " quantum number`"
-             " group=`Quantum Numbers`"
+             " group=`Orbital`"
              " keydecr=a keyincr=A"
              );
   TwSetParam(physics, "|M|", "min", TW_PARAM_INT32, 1, &minAbsM);
   TwSetParam(physics, "|M|", "max", TW_PARAM_INT32, 1, &maxAbsM);
   // Real starts set to false, so this starts hidden
   TwSetParam(physics, "|M|", "visible", TW_PARAM_INT32, 1, &f);
+
+  // Which function
+
+  TwAddVarRW(physics, "Function", TW_TYPE_BOOLCPP, &orbital,
+             "help=`Specifies whether the probability distribution or "
+             " underlying wave function is rendered.`"
+             " group=`Orbital`"
+             " false=`WAVE` true=`PROB`"
+             " key=f"
+             );
 
   TwAddVarCB(physics, "Basis", TW_TYPE_BOOLCPP,
              setBasis, getBasis, NULL,
@@ -353,7 +363,7 @@ void initControls()
              " momentum. Real wave functions are eigenfunctions"
              " for energy, angular momentum, and the absolute value"
              " of the z-projection of angular momentum.`"
-             " group=`Quantum Numbers`"
+             " group=`Orbital`"
              " false=`COMPLEX` true=`REAL`"
              " key=b"
              );
@@ -363,7 +373,7 @@ void initControls()
              "help=`Specifies whether a sum or difference of complex"
              " eigenfunctions for +/-M should be used to generate a"
              " real-valued eigenfunction for |M|.`"
-             " group=`Quantum Numbers`"
+             " group=`Orbital`"
              " false=`SUM` true=`DIFF`"
              " key=c"
              );
@@ -372,17 +382,7 @@ void initControls()
 
   TwAddVarRO(physics, "Energy (eV)", TW_TYPE_DOUBLE, &E,
              "help=`Orbital energy`"
-             " group=`Energy`"
-             );
-
-  // Which function
-
-  TwAddVarRW(physics, "Function", TW_TYPE_BOOLCPP, &orbital,
-             "help=`Specifies whether the orbital or underlying wave"
-             " function is rendered.`"
-             " group=`Choose`"
-             " false=`WAVE` true=`ORBITAL`"
-             " key=f"
+             " group=`Orbital`"
              );
 
   // Misc display parameters
@@ -412,17 +412,17 @@ void initControls()
 
   // Rendering
 
-  TwAddVarRO(display, "FPS", TW_TYPE_INT32, &fps,
+  TwAddVarRO(graphics, "FPS", TW_TYPE_INT32, &fps,
              "help=`Frames per second`"
              " group=`Rendering`"
              );
 
-  TwAddVarRO(display, "Vertices", TW_TYPE_INT32, &vertices,
+  TwAddVarRO(graphics, "Vertices", TW_TYPE_INT32, &vertices,
              "help=`Number of vertices describing the orbital`"
              " group=`Rendering`"
              );
 
-  TwAddVarRO(display, "Tetrahedra", TW_TYPE_INT32, &tetrahedra,
+  TwAddVarRO(graphics, "Tetrahedra", TW_TYPE_INT32, &tetrahedra,
              "help=`Number of tetrahedra describing the orbital`"
              " group=`Rendering`"
              );
@@ -431,24 +431,24 @@ void initControls()
 
   static const string gpu(reinterpret_cast<const char *>
                           (glGetString(GL_RENDERER)));
-  TwAddVarRO(display, "GPU", TW_TYPE_STDSTRING, &gpu,
+  TwAddVarRO(graphics, "GPU", TW_TYPE_STDSTRING, &gpu,
              "help=`Driver version, as reported by glGetString(GL_RENDERER)`"
              " group=`GPU & Driver`");
 
   static const string gl(reinterpret_cast<const char *>
                          (glGetString(GL_VERSION)));
-  TwAddVarRO(display, "GL", TW_TYPE_STDSTRING, &gl,
+  TwAddVarRO(graphics, "GL", TW_TYPE_STDSTRING, &gl,
              "help=`OpenGL version, as reported by glGetString(GL_VERSION)`"
              " group=`GPU & Driver`");
 
   static const string glsl(reinterpret_cast<const char *>
                            (glGetString(GL_SHADING_LANGUAGE_VERSION)));
-  TwAddVarRO(display, "GLSL", TW_TYPE_STDSTRING, &glsl,
+  TwAddVarRO(graphics, "GLSL", TW_TYPE_STDSTRING, &glsl,
              "help=`GLSL version, as reported by "
              "glGetString(GL_SHADING_LANGUAGE_VERSION)`"
              " group=`GPU & Driver`");
 
-  TwSetParam(display, "GPU & Driver", "opened", TW_PARAM_INT32, 1, &f);
+  TwSetParam(graphics, "GPU & Driver", "opened", TW_PARAM_INT32, 1, &f);
 
   setEnergy();
 }
