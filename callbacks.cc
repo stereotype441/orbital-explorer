@@ -381,21 +381,26 @@ void display()
 
   // Are we just starting up, or did the wave function change?
   Orbital newOrbital = getOrbital();
-  if (!orbital || *orbital != newOrbital) {
+  // Did the detail level change?
+  static int saved_detail = 0;
+  int detail = getDetail();
+  if (!orbital || *orbital != newOrbital || saved_detail != detail) {
+    saved_detail = detail;
+
     // Stop any running thread
     if (ts)
       ts->kill();
     // delete checks for NULL, so we don't have to
     delete orbital;
-    orbital = new Orbital(newOrbital);
     delete ts;
+    orbital = new Orbital(newOrbital);
     ts = new TetrahedralSubdivision(*orbital, orbital->radius());
     num_points = 0;
 
     // Golden ratio
     const double phi = (1.0 + sqrt(5.0)) / 2.0;
     // 500, 800, 1300, 2100, 3400, 5500, 8900, 14400, 23300, 37700
-    int v = 100 * int(pow(phi, getDetail() + 4.0) / sqrt(5.0) + 0.5);
+    int v = 100 * int(pow(phi, double(detail) + 4.0) / sqrt(5.0) + 0.5);
     ts->runUntil(v);
     just_started = true;
   }
