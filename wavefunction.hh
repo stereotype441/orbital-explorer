@@ -43,6 +43,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef WAVEFUNCTION_HH
+#define WAVEFUNCTION_HH
+
 inline double factorial(int n)
 {
   if (n < 0)
@@ -85,3 +88,5 @@ private:
 
   double normalization_constant;
 };
+
+#endif

@@ -43,6 +43,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef GENERICOPS_HH
+#define GENERICOPS_HH
+
 // Template madness.
 
 // If V is a vector space over F, and V inherits from VectorSpace<F,V>,
@@ -219,3 +222,5 @@ inline const A &operator*=(CommutativeAlgebra<F,A> &x,
   static_cast<A &>(x) = static_cast<A &>(x) * static_cast<const A &>(y);
   return static_cast<A &>(x);
 }
+
+#endif

@@ -43,6 +43,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef DELAUNAY_HH
+#define DELAUNAY_HH
+
 template <unsigned n>
 Vector<n> find_circumcenter(const Array<n+1,Vector<n> > &xs)
 {
@@ -432,3 +435,5 @@ void Delaunay<n>::addSimplex(Hole &hole,
   }
   simplex_map[new_simplex_index] = new_simplex;
 }
+
+#endif

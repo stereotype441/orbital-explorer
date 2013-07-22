@@ -43,6 +43,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef MOUSEEVENTS_HH
+#define MOUSEEVENTS_HH
+
 int getWidth();
 int getHeight();
 void resize(int w, int h);
@@ -51,3 +54,5 @@ double getCameraRadius();
 void mouse_drag_left(int movex, int movey);
 void mouse_drag_right(int movex, int movey);
 void mouse_wheel(int direction);
+
+#endif

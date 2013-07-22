@@ -43,7 +43,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef CALLBACKS_HH
+#define CALLBACKS_HH
+
 void initialize();
 void resizeTextures();
 void display();
 void cleanup();
+
+#endif

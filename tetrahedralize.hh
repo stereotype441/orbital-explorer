@@ -43,6 +43,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef TETRAHEDRALIZE_HH
+#define TETRAHEDRALIZE_HH
+
 // Given a complex-valued function on three dimensional space, an initial
 // radius, and number of vertices, subdivide an initial, large tetrahedron
 // into a union of tetrahedra such that:
@@ -115,3 +118,5 @@ private:
   WorkerThreadData worker_data;
   pthread_mutex_t mutex;
 };
+
+#endif

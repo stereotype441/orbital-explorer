@@ -43,6 +43,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef OOPENGL_HH
+#define OOPENGL_HH
+
 class Uncopyable
 {
 public:
@@ -214,3 +217,5 @@ public:
 private:
   GLuint id;
 };
+
+#endif

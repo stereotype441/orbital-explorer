@@ -43,6 +43,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef VECTOR_HH
+#define VECTOR_HH
+
 template <unsigned n, typename T, class V>
 class GenericVector : public Array<n,T>, public VectorSpace<T,V>
 {
@@ -196,3 +199,5 @@ inline Vector<3> Vector3(double x, double y, double z)
   a[2] = z;
   return a;
 }
+
+#endif

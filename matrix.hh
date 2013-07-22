@@ -43,6 +43,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef MATRIX_HH
+#define MATRIX_HH
+
 template <unsigned p, unsigned q, typename T, class M>
 class GenericMatrix : public Array<p*q,T>, public Algebra<T,M>
 {
@@ -261,3 +264,5 @@ M inverse(const GenericMatrix<n,n,T,M> &x)
 
   return z;
 }
+
+#endif

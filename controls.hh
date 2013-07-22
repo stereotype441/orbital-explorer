@@ -43,6 +43,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef CONTROLS_HH
+#define CONTROLS_HH
+
 void initControls();
 int handleControls(SDL_Event &event);
 void drawControls();
@@ -52,3 +55,5 @@ double getBrightness();
 int getDetail();
 bool getColorPhase();
 int getCycleRate();
+
+#endif

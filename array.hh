@@ -43,6 +43,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef ARRAY_HH
+#define ARRAY_HH
+
 template <unsigned n, typename T>
 class Array
 {
@@ -117,3 +120,5 @@ void Array<n,T>::throw_array_range_exception() const
 {
   throw std::range_error("Array<> index out of range");
 }
+
+#endif

@@ -43,6 +43,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef UTIL_HH
+#define UTIL_HH
+
 #include <map>
 
 static const double pi = 3.141592653589793238;
@@ -62,3 +65,5 @@ std::map<K,V> singleton(const K &k, const V &v)
   m.insert(std::make_pair(k,v));
   return m;
 }
+
+#endif

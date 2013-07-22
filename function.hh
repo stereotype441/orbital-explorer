@@ -43,6 +43,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef FUNCTION_HH
+#define FUNCTION_HH
+
 template <unsigned n, typename T>
 class Function
 {
@@ -106,3 +109,5 @@ Matrix<n,n> RealFunction<n>::hessian(const Vector<n> &x) const
 
   return hess;
 }
+
+#endif

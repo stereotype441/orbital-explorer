@@ -43,6 +43,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef QUATERNION_HH
+#define QUATERNION_HH
+
 class Quaternion : public Algebra<double, Quaternion>
 {
 public:
@@ -108,3 +111,5 @@ inline double norm(const Quaternion &q)
 {
   return std::sqrt(norm_squared(q));
 }
+
+#endif

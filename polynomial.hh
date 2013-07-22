@@ -43,6 +43,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef POLYNOMIAL_HH
+#define POLYNOMIAL_HH
+
 inline static double ipow(double x, unsigned y)
 {
   // At some point, calling C library pow() is faster
@@ -171,3 +174,5 @@ inline Polynomial Polynomial::derivative(unsigned n = 1) const
 
   return df.derivative(n - 1);
 }
+
+#endif
