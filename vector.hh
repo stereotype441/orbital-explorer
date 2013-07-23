@@ -46,6 +46,11 @@
 #ifndef VECTOR_HH
 #define VECTOR_HH
 
+#include <complex>
+
+#include "genericops.hh"
+#include "array.hh"
+
 template <unsigned n, typename T, class V>
 class GenericVector : public Array<n,T>, public VectorSpace<T,V>
 {

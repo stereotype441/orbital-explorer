@@ -46,6 +46,10 @@
 #ifndef QUATERNION_HH
 #define QUATERNION_HH
 
+#include <cmath>
+
+#include "genericops.hh"
+
 class Quaternion : public Algebra<double, Quaternion>
 {
 public:

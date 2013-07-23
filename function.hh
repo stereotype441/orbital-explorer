@@ -46,6 +46,8 @@
 #ifndef FUNCTION_HH
 #define FUNCTION_HH
 
+#include "matrix.hh"
+
 template <unsigned n, typename T>
 class Function
 {

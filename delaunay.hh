@@ -46,6 +46,12 @@
 #ifndef DELAUNAY_HH
 #define DELAUNAY_HH
 
+#include <cstdio>
+#include <set>
+
+#include "matrix.hh"
+#include "util.hh"
+
 template <unsigned n>
 Vector<n> find_circumcenter(const Array<n+1,Vector<n> > &xs)
 {

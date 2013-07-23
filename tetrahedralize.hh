@@ -46,6 +46,9 @@
 #ifndef TETRAHEDRALIZE_HH
 #define TETRAHEDRALIZE_HH
 
+#include "function.hh"
+#include "delaunay.hh"
+
 // Given a complex-valued function on three dimensional space, an initial
 // radius, and number of vertices, subdivide an initial, large tetrahedron
 // into a union of tetrahedra such that:

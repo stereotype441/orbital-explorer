@@ -46,6 +46,9 @@
 #ifndef ARRAY_HH
 #define ARRAY_HH
 
+#include <vector>
+#include <stdexcept>
+
 template <unsigned n, typename T>
 class Array
 {

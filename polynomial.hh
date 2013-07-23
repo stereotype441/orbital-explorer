@@ -46,6 +46,11 @@
 #ifndef POLYNOMIAL_HH
 #define POLYNOMIAL_HH
 
+#include <cmath>
+#include <map>
+
+#include "genericops.hh"
+
 inline static double ipow(double x, unsigned y)
 {
   // At some point, calling C library pow() is faster

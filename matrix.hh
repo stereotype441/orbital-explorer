@@ -46,6 +46,8 @@
 #ifndef MATRIX_HH
 #define MATRIX_HH
 
+#include "vector.hh"
+
 template <unsigned p, unsigned q, typename T, class M>
 class GenericMatrix : public Array<p*q,T>, public Algebra<T,M>
 {

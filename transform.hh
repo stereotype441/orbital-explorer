@@ -46,6 +46,9 @@
 #ifndef TRANSFORM_HH
 #define TRANSFORM_HH
 
+#include "matrix.hh"
+#include "quaternion.hh"
+
 Matrix<4,4> transformTranslation(const Vector<3> &v);
 Matrix<4,4> transformRotation(double t, Vector<3> v);
 Matrix<4,4> transformRotation(const Quaternion &q);

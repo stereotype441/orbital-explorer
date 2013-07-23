@@ -46,6 +46,9 @@
 #ifndef WAVEFUNCTION_HH
 #define WAVEFUNCTION_HH
 
+#include "function.hh"
+#include "polynomial.hh"
+
 inline double factorial(int n)
 {
   if (n < 0)

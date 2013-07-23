@@ -46,6 +46,10 @@
 #ifndef CONTROLS_HH
 #define CONTROLS_HH
 
+#include <SDL.h>
+
+#include "wavefunction.hh"
+
 void initControls();
 int handleControls(SDL_Event &event);
 void drawControls();

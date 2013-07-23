@@ -46,6 +46,8 @@
 #ifndef MOUSEEVENTS_HH
 #define MOUSEEVENTS_HH
 
+#include "quaternion.hh"
+
 int getWidth();
 int getHeight();
 void resize(int w, int h);

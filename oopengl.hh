@@ -46,6 +46,10 @@
 #ifndef OOPENGL_HH
 #define OOPENGL_HH
 
+#include <stdexcept>
+#include <vector>
+#include <GL/glew.h>
+
 class Uncopyable
 {
 public:
