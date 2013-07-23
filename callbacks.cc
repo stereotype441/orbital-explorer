@@ -331,10 +331,8 @@ void display()
   Matrix<4,4> mvpm = generateMvpm(width, height, near, far);
 
   static Matrix<4,4> old_mvpm;
-  for (int r = 0; r < 4; ++r)
-    for (int c = 0; c < 4; ++c)
-      if (mvpm(r, c) != old_mvpm(r, c))
-        need_full_redraw = true;
+  if (mvpm != old_mvpm)
+    need_full_redraw = true;
   old_mvpm = mvpm;
   static int old_width = 0;
   static int old_height = 0;

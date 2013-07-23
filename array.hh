@@ -49,8 +49,10 @@
 #include <vector>
 #include <stdexcept>
 
+#include "genericops.hh"
+
 template <unsigned n, typename T>
-class Array
+class Array : public Equality<Array<n,T> >
 {
 public:
   Array() {}
@@ -95,6 +97,14 @@ public:
   {
     check_index(i);
     return data[i];
+  }
+
+  bool operator==(const Array<n,T> &rhs) const
+  {
+    for (int i = 0; i < n; ++i)
+      if (data[i] != rhs.data[i])
+        return false;
+    return true;
   }
 
 protected:

@@ -48,7 +48,6 @@
 
 #include <complex>
 
-#include "genericops.hh"
 #include "array.hh"
 
 template <unsigned n, typename T, class V>
