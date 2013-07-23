@@ -57,6 +57,18 @@
 #include "matrix.hh"
 #include "oopengl.hh"
 
+void GetGLError_(int line)
+{
+  GLenum err;
+  if ((err = glGetError()) != GL_NO_ERROR) {
+    fprintf(stderr, "Detected OpenGL error at line %d\n", line);
+    do
+      fprintf(stderr, "Error code %d (0x%x)\n", err, err);
+    while ((err = glGetError()) != GL_NO_ERROR);
+    exit(1);
+  }
+}
+
 void Shader::compileSource(const char *source)
 {
   GLint status;

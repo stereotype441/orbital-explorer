@@ -50,6 +50,9 @@
 #include <vector>
 #include <GL/glew.h>
 
+void GetGLError_(int line);
+#define GetGLError() GetGLError_(__LINE__)
+
 class Uncopyable
 {
 public:

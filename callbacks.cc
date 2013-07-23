@@ -73,28 +73,15 @@
 #include "oopengl.hh"
 #include "mouseevents.hh"
 #include "controls.hh"
+#include "solid.hh"
 
 using namespace std;
 
-#define GetGLError() GetGLError_(__LINE__)
-
-static void GetGLError_(int line)
-{
-  GLenum err;
-  if ((err = glGetError()) != GL_NO_ERROR) {
-    fprintf(stderr, "Detected OpenGL error at line %d\n", line);
-    do
-      fprintf(stderr, "Error code %d (0x%x)\n", err, err);
-    while ((err = glGetError()) != GL_NO_ERROR);
-    exit(1);
-  }
-}
-
 // GLSL programs
-static Program *solidProg, *cloudProg, *finalProg;
+static Program *cloudProg, *finalProg;
 
 // Vertex array objects
-static VertexArrayObject *solid, *cloud, *rect;
+static VertexArrayObject *cloud, *rect;
 
 // Framebuffer names
 static GLuint solidFBO, cloudFBO;
@@ -146,15 +133,7 @@ static void checkFramebufferCompleteness()
 
 void initialize()
 {
-  solidProg = new Program();
-  solidProg->vertexShader(solidVertexShaderSource);
-  solidProg->fragmentShader(solidFragmentShaderSource);
-  glBindAttribLocation(*solidProg, 0, "inPosition");
-  glBindAttribLocation(*solidProg, 1, "inColor");
-  glBindFragDataLocation(*solidProg, 0, "fragColor");
-  solidProg->link();
-
-  GetGLError();
+  initSolids();
 
   cloudProg = new Program();
   cloudProg->vertexShader(cloudVertexShaderSource);
@@ -173,34 +152,6 @@ void initialize()
   glBindAttribLocation(*finalProg, 0, "inPosition");
   glBindFragDataLocation(*finalProg, 0, "RGB");
   finalProg->link();
-
-  GetGLError();
-
-  // Solid objects
-  solid = new VertexArrayObject();
-  solid->bind();
-
-  // Positions
-  GLfloat solid_data[] = {
-    // X axis
-    0.0, 0.0, 0.0, 0.6400, 0.3300, 0.2126,
-    1.0, 0.0, 0.0, 0.6400, 0.3300, 0.2126,
-
-    // Y axis
-    0.0, 0.0, 0.0, 0.3000, 0.6000, 0.3290,
-    0.0, 1.0, 0.0, 0.3000, 0.6000, 0.3290,
-
-    // Z axis
-    0.0, 0.0, 0.0, 0.1500, 0.0600, 0.0721,
-    0.0, 0.0, 1.0, 0.1500, 0.0600, 0.0721
-  };
-  solid->buffer(GL_ARRAY_BUFFER, solid_data, sizeof(solid_data));
-
-  glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6*sizeof(GLfloat), 0);
-  glEnableVertexAttribArray(1);
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6*sizeof(GLfloat),
-                        (void *)(3 * sizeof(GLfloat)));
 
   GetGLError();
 
@@ -293,22 +244,6 @@ Matrix<4,4> generateMvpm(int width, int height, double near, double far)
   Matrix<4,4> rotation = transformRotation(getCameraRotation());
 
   return frustum * translation * rotation;
-}
-
-void drawSolids(const Matrix<4,4> &mvpm, int width, int height)
-{
-  solidProg->use();
-  solidProg->uniform<Matrix<4,4> >("modelViewProjMatrix") = mvpm;
-  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, solidFBO);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glEnable(GL_DEPTH_TEST);
-  glDisable(GL_BLEND);
-  glLineWidth(2);
-  solid->bind();
-  glViewport(0, 0, width, height);
-  glDrawArrays(GL_LINES, 0, 6);
-
-  GetGLError();
 }
 
 void drawOrbital(const Matrix<4,4> &mvpm, int width, int height,
@@ -473,7 +408,7 @@ void display()
   GetGLError();
 
   if (need_full_redraw) {
-    drawSolids(mvpm, width, height);
+    drawSolids(mvpm, width, height, solidFBO);
     drawOrbital(mvpm, width, height, near, far);
     need_full_redraw = false;
   }

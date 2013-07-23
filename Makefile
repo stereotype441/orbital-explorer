@@ -15,7 +15,8 @@ OFILES=\
 	tetrahedralize.o \
 	wavefunction.o \
 	radial_data.o \
-	util.o
+	util.o \
+	solid.o
 
 PROG = orbital-explorer
 TEST = unittests
