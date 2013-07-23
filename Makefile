@@ -16,7 +16,8 @@ OFILES=\
 	wavefunction.o \
 	radial_data.o \
 	util.o \
-	solid.o
+	solid.o \
+	final.o
 
 PROG = orbital-explorer
 TEST = unittests
