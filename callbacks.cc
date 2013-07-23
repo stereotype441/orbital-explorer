@@ -54,7 +54,7 @@
 #include <complex>
 #include <sys/time.h>
 #include <GL/glew.h>
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 #include "callbacks.hh"
 #include "shaders.hh"

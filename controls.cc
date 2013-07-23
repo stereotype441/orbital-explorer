@@ -51,7 +51,7 @@
 #include <cmath>
 #include <cstdio>
 #include <ctime>
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include <GL/glew.h>
 
 #include "array.hh"

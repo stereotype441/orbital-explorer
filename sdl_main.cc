@@ -53,7 +53,7 @@
 #include <cmath>
 #include <unistd.h>
 #include <GL/glew.h>
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 #include "callbacks.hh"
 #include "array.hh"
@@ -81,6 +81,16 @@ static int go()
   }
   atexit(SDL_Quit);
 
+  SDL_Window *window =
+    SDL_CreateWindow("Electron Orbital Explorer",
+                     SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+                     640, 480, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+
+  SDL_GLContext glcontext = SDL_GL_CreateContext(window);
+
+  resize(640, 480);
+
+#if 0
   if (SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8) < 0 ||
       SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8) < 0 ||
       SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8) < 0 ||
@@ -94,7 +104,6 @@ static int go()
   const SDL_VideoInfo *video = SDL_GetVideoInfo();
   int bpp = video->vfmt->BitsPerPixel;
   const Uint32 videoModeFlags = SDL_OPENGL | SDL_RESIZABLE;
-  resize(640, 480);
   SDL_Surface *screen = SDL_SetVideoMode(getWidth(), getHeight(),
                                          bpp, videoModeFlags);
   if (screen == NULL) {
@@ -111,6 +120,7 @@ static int go()
     fprintf(stderr, "SDL_EnableKeyRepeat(): %s\n", SDL_GetError());
     // This is not a fatal error, so keep going
   }
+#endif
 
   //
   // Initialize GLEW
@@ -152,11 +162,13 @@ static int go()
       // If event has not been handled by controls, process it
       if (!handled)
         switch (event.type) {
+#if 0
         case SDL_VIDEORESIZE:
           resize(event.resize.w, event.resize.h);
           SDL_SetVideoMode(getWidth(), getHeight(), bpp, videoModeFlags);
           resizeTextures();
           break;
+#endif
         case SDL_MOUSEMOTION:
           if (event.motion.state == SDL_BUTTON(1)) // Left button down
             mouse_drag_left(event.motion.xrel, event.motion.yrel);
@@ -176,7 +188,7 @@ static int go()
 
     display();
     drawControls();
-    SDL_GL_SwapBuffers();
+    SDL_GL_SwapWindow(window);
   }
 
   return 0;
