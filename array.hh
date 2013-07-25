@@ -101,7 +101,7 @@ public:
 
   bool operator==(const Array<n,T> &rhs) const
   {
-    for (int i = 0; i < n; ++i)
+    for (unsigned i = 0; i < n; ++i)
       if (data[i] != rhs.data[i])
         return false;
     return true;
