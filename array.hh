@@ -83,7 +83,7 @@ public:
   std::vector<T> toVector() const
   {
     std::vector<T> r;
-    for (int i = 0; i < n; ++i)
+    for (unsigned i = 0; i < n; ++i)
       r.push_back(data[i]);
     return r;
   }
