@@ -176,13 +176,12 @@ static int go()
       int amount;
       if (!handled)
         switch (event.type) {
-#if 0
-        case SDL_VIDEORESIZE:
-          resize(event.resize.w, event.resize.h);
-          SDL_SetVideoMode(getWidth(), getHeight(), bpp, videoModeFlags);
-          resizeTextures();
+        case SDL_WINDOWEVENT:
+          if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
+            resize(event.window.data1, event.window.data2);
+            resizeTextures();
+          }
           break;
-#endif
         case SDL_MOUSEMOTION:
           if (event.motion.state == SDL_BUTTON(1)) // Left button down
             mouse_drag_left(event.motion.xrel, event.motion.yrel);
