@@ -43,95 +43,76 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef ARRAY_HH
-#define ARRAY_HH
+#include "oopengl.hh"
+#include "shaders.hh"
+#include "util.hh"
+#include "controls.hh"
 
-#include <vector>
-#include <stdexcept>
+static Program *finalProg;
+static VertexArrayObject *rect;
 
-#include "genericops.hh"
-
-template <unsigned n, typename T>
-class Array : public Equality<Array<n,T> >
+void initFinal()
 {
-public:
-  Array() {}
+  finalProg = new Program();
+  finalProg->vertexShader(finalVertexShaderSource);
+  finalProg->fragmentShader(finalFragmentShaderSource);
+  glBindAttribLocation(*finalProg, 0, "inPosition");
+  glBindFragDataLocation(*finalProg, 0, "RGB");
+  finalProg->link();
 
-  // Array can be explicitly constructed from a scalar, but no corresponding
-  // assignment operator is defined -- because derived classes have different
-  // behavior when assigned a scalar.
-  explicit Array(const T &x)
-  {
-    for (int i = 0; i < n; ++i)
-      data[i] = x;
-  }
+  GetGLError();
 
-  // A "conversion constructor" for explicitly turning arrays of one type
-  // into another as long as the sizes are the same and the element type
-  // is (explicitly or implicitly) convertible.
-  // This is more type-safe than a conversion operator, which can't be
-  // made explicit.
-  template <typename U>
-  explicit Array(const Array<n,U> &xs)
-  {
-    for (unsigned i=0; i<n; ++i)
-      data[i] = T(xs[i]);
-  }
+  // Big rectangle
+  rect = new VertexArrayObject();
+  rect->bind();
 
-  // Similarly, a function for (explicitly) converting an array into an
-  // STL vector
-  std::vector<T> toVector() const
-  {
-    std::vector<T> r;
-    for (int i = 0; i < n; ++i)
-      r.push_back(data[i]);
-    return r;
-  }
+  // Positions
+  GLfloat rect_data[] = {
+    -1.0, -1.0, 0.0,
+    -1.0,  1.0, 0.0,
+    +1.0,  1.0, 0.0,
+    +1.0, -1.0, 0.0,
+  };
+  rect->buffer(GL_ARRAY_BUFFER, rect_data, sizeof(rect_data));
 
-  T &operator[](unsigned i)
-  {
-    check_index(i);
-    return data[i];
-  }
-  const T &operator[](unsigned i) const
-  {
-    check_index(i);
-    return data[i];
-  }
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(GLfloat), 0);
 
-  bool operator==(const Array<n,T> &rhs) const
-  {
-    for (int i = 0; i < n; ++i)
-      if (data[i] != rhs.data[i])
-        return false;
-    return true;
-  }
-
-protected:
-  T &unsafe_element(unsigned i)
-  {
-    return data[i];
-  }
-  const T &unsafe_element(unsigned i) const
-  {
-    return data[i];
-  }
-
-private:
-  T data[n];
-
-  void check_index(unsigned i) const
-  {
-    if (i >= n)
-      throw_array_range_exception();
-  }
-  void throw_array_range_exception() const;
-};
-
-template <unsigned n, typename T>
-void Array<n,T>::throw_array_range_exception() const
-{
-  throw std::range_error("Array<> index out of range");
+  GetGLError();
 }
 
-#endif
+void drawFinal(int width, int height, double brightness,
+               Texture *solidRGBTex, Texture *cloudDensityTex)
+{
+  double this_instant = now();
+  static double last_instant = -1.;
+  if (last_instant < 0)
+    last_instant = this_instant;
+  static double color_cycle = 0.;
+  color_cycle += (this_instant - last_instant) * double(getCycleRate());
+  last_instant = this_instant;
+
+  finalProg->use();
+  finalProg->uniform<int>("solidData") = 0;
+  finalProg->uniform<int>("cloudData") = 1;
+  Matrix<3,2> ct;
+  ct(0,0) =  cos(color_cycle);  ct(0,1) = sin(color_cycle);
+  ct(1,0) = -sin(color_cycle);  ct(1,1) = cos(color_cycle);
+  ct(2,0) = 0.19784;        ct(2,1) = 0.46832;
+  finalProg->uniform<Matrix<3,2> >("color_trans") = ct;
+  finalProg->uniform<int>("use_color") = getColorPhase();
+  finalProg->uniform<float>("brightness") = brightness;
+  glActiveTexture(GL_TEXTURE0);
+  solidRGBTex->bind(GL_TEXTURE_2D);
+  glActiveTexture(GL_TEXTURE1);
+  cloudDensityTex->bind(GL_TEXTURE_2D);
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+  glClear(GL_COLOR_BUFFER_BIT);
+  glDisable(GL_DEPTH_TEST);
+  glDisable(GL_BLEND);
+  rect->bind();
+  glViewport(0, 0, width, height);
+  glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+
+  GetGLError();
+}

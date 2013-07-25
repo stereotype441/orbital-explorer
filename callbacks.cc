@@ -73,14 +73,15 @@
 #include "mouseevents.hh"
 #include "controls.hh"
 #include "solid.hh"
+#include "final.hh"
 
 using namespace std;
 
 // GLSL programs
-static Program *cloudProg, *finalProg;
+static Program *cloudProg;
 
 // Vertex array objects
-static VertexArrayObject *cloud, *rect;
+static VertexArrayObject *cloud;
 
 // Framebuffer names
 static GLuint solidFBO, cloudFBO;
@@ -145,35 +146,10 @@ void initialize()
 
   GetGLError();
 
-  finalProg = new Program();
-  finalProg->vertexShader(finalVertexShaderSource);
-  finalProg->fragmentShader(finalFragmentShaderSource);
-  glBindAttribLocation(*finalProg, 0, "inPosition");
-  glBindFragDataLocation(*finalProg, 0, "RGB");
-  finalProg->link();
-
-  GetGLError();
+  initFinal();
 
   // Clouds
   cloud = new VertexArrayObject();
-
-  GetGLError();
-
-  // Big rectangle
-  rect = new VertexArrayObject();
-  rect->bind();
-
-  // Positions
-  GLfloat rect_data[] = {
-    -1.0, -1.0, 0.0,
-    -1.0,  1.0, 0.0,
-    +1.0,  1.0, 0.0,
-    +1.0, -1.0, 0.0,
-  };
-  rect->buffer(GL_ARRAY_BUFFER, rect_data, sizeof(rect_data));
-
-  glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(GLfloat), 0);
 
   GetGLError();
 
@@ -261,44 +237,6 @@ void drawOrbital(const Matrix<4,4> &mvpm, int width, int height,
   cloud->bind();
   glViewport(0, 0, width, height);
   glDrawElements(GL_LINES_ADJACENCY, 4 * num_tetrahedra, GL_UNSIGNED_INT, 0);
-
-  GetGLError();
-}
-
-void drawFinal(int width, int height)
-{
-  double this_instant = now();
-  static double last_instant = -1.;
-  if (last_instant < 0)
-    last_instant = this_instant;
-  static double color_cycle = 0.;
-  color_cycle += (this_instant - last_instant) * double(getCycleRate());
-  last_instant = this_instant;
-
-  finalProg->use();
-  finalProg->uniform<int>("solidData") = 0;
-  finalProg->uniform<int>("cloudData") = 1;
-  Matrix<3,2> ct;
-  ct(0,0) =  cos(color_cycle);  ct(0,1) = sin(color_cycle);
-  ct(1,0) = -sin(color_cycle);  ct(1,1) = cos(color_cycle);
-  ct(2,0) = 0.19784;        ct(2,1) = 0.46832;
-  finalProg->uniform<Matrix<3,2> >("color_trans") = ct;
-  finalProg->uniform<int>("use_color") = getColorPhase();
-  double b = pow(1.618, getBrightness());
-  if (orbital->square)
-    b *= b;
-  finalProg->uniform<float>("brightness") = b;
-  glActiveTexture(GL_TEXTURE0);
-  solidRGBTex->bind(GL_TEXTURE_2D);
-  glActiveTexture(GL_TEXTURE1);
-  cloudDensityTex->bind(GL_TEXTURE_2D);
-  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-  glClear(GL_COLOR_BUFFER_BIT);
-  glDisable(GL_DEPTH_TEST);
-  glDisable(GL_BLEND);
-  rect->bind();
-  glViewport(0, 0, width, height);
-  glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
   GetGLError();
 }
@@ -392,10 +330,8 @@ void display()
   Matrix<4,4> mvpm = generateMvpm(width, height, near, far);
 
   static Matrix<4,4> old_mvpm;
-  for (int r = 0; r < 4; ++r)
-    for (int c = 0; c < 4; ++c)
-      if (mvpm(r, c) != old_mvpm(r, c))
-        need_full_redraw = true;
+  if (mvpm != old_mvpm)
+    need_full_redraw = true;
   old_mvpm = mvpm;
   static int old_width = 0;
   static int old_height = 0;
@@ -411,7 +347,10 @@ void display()
     drawOrbital(mvpm, width, height, near, far);
     need_full_redraw = false;
   }
-  drawFinal(width, height);
+  double brightness = pow(1.618, getBrightness());
+  if (orbital->square)
+    brightness *= brightness;
+  drawFinal(width, height, brightness, solidRGBTex, cloudDensityTex);
 
   glFinish();
 

@@ -43,95 +43,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef ARRAY_HH
-#define ARRAY_HH
+#ifndef FINAL_HH
+#define FINAL_HH
 
-#include <vector>
-#include <stdexcept>
+#include "oopengl.hh"
 
-#include "genericops.hh"
-
-template <unsigned n, typename T>
-class Array : public Equality<Array<n,T> >
-{
-public:
-  Array() {}
-
-  // Array can be explicitly constructed from a scalar, but no corresponding
-  // assignment operator is defined -- because derived classes have different
-  // behavior when assigned a scalar.
-  explicit Array(const T &x)
-  {
-    for (int i = 0; i < n; ++i)
-      data[i] = x;
-  }
-
-  // A "conversion constructor" for explicitly turning arrays of one type
-  // into another as long as the sizes are the same and the element type
-  // is (explicitly or implicitly) convertible.
-  // This is more type-safe than a conversion operator, which can't be
-  // made explicit.
-  template <typename U>
-  explicit Array(const Array<n,U> &xs)
-  {
-    for (unsigned i=0; i<n; ++i)
-      data[i] = T(xs[i]);
-  }
-
-  // Similarly, a function for (explicitly) converting an array into an
-  // STL vector
-  std::vector<T> toVector() const
-  {
-    std::vector<T> r;
-    for (int i = 0; i < n; ++i)
-      r.push_back(data[i]);
-    return r;
-  }
-
-  T &operator[](unsigned i)
-  {
-    check_index(i);
-    return data[i];
-  }
-  const T &operator[](unsigned i) const
-  {
-    check_index(i);
-    return data[i];
-  }
-
-  bool operator==(const Array<n,T> &rhs) const
-  {
-    for (int i = 0; i < n; ++i)
-      if (data[i] != rhs.data[i])
-        return false;
-    return true;
-  }
-
-protected:
-  T &unsafe_element(unsigned i)
-  {
-    return data[i];
-  }
-  const T &unsafe_element(unsigned i) const
-  {
-    return data[i];
-  }
-
-private:
-  T data[n];
-
-  void check_index(unsigned i) const
-  {
-    if (i >= n)
-      throw_array_range_exception();
-  }
-  void throw_array_range_exception() const;
-};
-
-template <unsigned n, typename T>
-void Array<n,T>::throw_array_range_exception() const
-{
-  throw std::range_error("Array<> index out of range");
-}
+void initFinal();
+void drawFinal(int width, int height, double brightness,
+               Texture *solidRGBTex, Texture *cloudDensityTex);
 
 #endif

@@ -48,6 +48,19 @@
 
 // Template madness.
 
+// If C inherits from Equality<C>, and defines the == operation, then
+// the base class Equality<C> will also define the != operation.
+
+template <class C>
+class Equality
+{};
+
+template <class C>
+inline bool operator!=(const Equality<C> &x, const Equality<C> &y)
+{
+  return !(static_cast<const C &>(x) == static_cast<const C &>(y));
+}
+
 // If V is a vector space over F, and V inherits from VectorSpace<F,V>,
 // and defines the operations:
 //   V += V
