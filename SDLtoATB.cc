@@ -81,6 +81,7 @@ int TW_CALL myTwEventSDL20(const SDL_Event &event)
   //static int s_KeyMod = 0;
 
   switch (event.type) {
+
 #if 0
   case SDL_TEXTINPUT:
     if (event.text.text[0] != 0 && event.text.text[1] == 0) {
@@ -94,6 +95,7 @@ int TW_CALL myTwEventSDL20(const SDL_Event &event)
     }
     s_KeyMod = 0;
     break;
+
   case SDL_KEYDOWN:
     if (event.key.keysym.sym & SDLK_SCANCODE_MASK) {
       int key = 0;
@@ -139,24 +141,44 @@ int TW_CALL myTwEventSDL20(const SDL_Event &event)
     else
       s_KeyMod = event.key.keysym.mod;
     break;
+
   case SDL_KEYUP:
     s_KeyMod = 0;
     break;
 #endif
+
   case SDL_MOUSEMOTION:
     handled = TwMouseMotion(event.motion.x, event.motion.y);
     break;
+
   case SDL_MOUSEWHEEL:
     handled = TwMouseWheel(event.wheel.y);
-    printf("%d\n", handled);
     break;
+
   case SDL_MOUSEBUTTONUP:
   case SDL_MOUSEBUTTONDOWN:
-    handled =
-      TwMouseButton((event.button.state == SDL_RELEASED) ?
-                    TW_MOUSE_RELEASED : TW_MOUSE_PRESSED,
-                    static_cast<TwMouseButtonID>(event.button.button));
+    TwMouseAction action;
+    if (event.button.state == SDL_PRESSED)
+      action = TW_MOUSE_PRESSED;
+    else if (event.button.state == SDL_RELEASED)
+      action = TW_MOUSE_RELEASED;
+    else
+      break;
+
+    TwMouseButtonID button;
+    if (event.button.button == SDL_BUTTON_LMASK)
+      button = TW_MOUSE_LEFT;
+    else if (event.button.button == SDL_BUTTON_MMASK)
+      button = TW_MOUSE_MIDDLE;
+    else if (event.button.button == SDL_BUTTON_RMASK)
+      button = TW_MOUSE_RIGHT;
+    else
+      break;
+
+    handled = TwMouseButton(action, button);
+
     break;
+
   case SDL_WINDOWEVENT:
     if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
       // tell the new size to TweakBar

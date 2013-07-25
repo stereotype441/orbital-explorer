@@ -174,7 +174,6 @@ static int go()
 
       // If event hasn't been fully handled by AntTweakBar, process it
       if (!handled) {
-        int amount;
         switch (event.type) {
         case SDL_WINDOWEVENT:
           if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
@@ -191,6 +190,7 @@ static int go()
             mouse_drag_right(event.motion.xrel, event.motion.yrel);
           break;
         case SDL_MOUSEWHEEL:
+          int amount;
           amount = event.wheel.y;
           clamp(amount, -1, 1);
           if (amount)
