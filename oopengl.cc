@@ -49,7 +49,6 @@
 #include <cstdlib>
 #include <cmath>
 #include <cstdio>
-#include <GL/glew.h>
 
 #include "array.hh"
 #include "genericops.hh"

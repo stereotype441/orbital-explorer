@@ -48,7 +48,8 @@
 
 #include <stdexcept>
 #include <vector>
-#include <GL/glew.h>
+
+#include "glprocs.hh"
 
 void GetGLError_(const char *file, int line);
 #define GetGLError() GetGLError_(__FILE__, __LINE__)

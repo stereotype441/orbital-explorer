@@ -43,14 +43,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef SOLID_HH
-#define SOLID_HH
+#ifndef GLPROCS_HH
+#define GLPROCS_HH
 
-#include "glprocs.hh"
-#include "matrix.hh"
+#include <GL/glew.h>
 
-void initSolids();
-void drawSolids(const Matrix<4,4> &mvpm, int width, int height,
-                GLuint solidFBO);
+void initGLProcs();
 
 #endif

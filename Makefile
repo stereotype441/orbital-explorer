@@ -17,7 +17,8 @@ OFILES=\
 	radial_data.o \
 	util.o \
 	solid.o \
-	final.o
+	final.o \
+	glprocs.o
 
 PROG = orbital-explorer
 TEST = unittests

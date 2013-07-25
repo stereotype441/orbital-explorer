@@ -43,14 +43,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef SOLID_HH
-#define SOLID_HH
+#include <cstdlib>
+#include <cstdio>
 
 #include "glprocs.hh"
-#include "matrix.hh"
 
-void initSolids();
-void drawSolids(const Matrix<4,4> &mvpm, int width, int height,
-                GLuint solidFBO);
-
-#endif
+void initGLProcs()
+{
+  GLenum glewInitResult = glewInit();
+  if (glewInitResult != GLEW_OK) {
+    fprintf(stderr, "glewInit(): %s\n", glewGetErrorString(glewInitResult));
+    exit(1);
+  }
+}
