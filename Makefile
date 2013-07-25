@@ -1,7 +1,7 @@
 OPT_OR_DEBUG = -O3
 
 CPP = g++
-CPPFLAGS := -pthread -Wall -Wshadow $(OPT_OR_DEBUG) $(shell sdl-config --cflags)
+CPPFLAGS := -pthread -Wall -Wshadow -Werror $(OPT_OR_DEBUG) $(shell sdl-config --cflags)
 LINKFLAGS := -lAntTweakBar -lX11 -pthread -lGLEW -lGLU -lGL $(shell sdl-config --libs)
 
 OFILES=\
