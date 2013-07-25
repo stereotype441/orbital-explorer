@@ -17,7 +17,8 @@ OFILES=\
 	radial_data.o \
 	util.o \
 	solid.o \
-	final.o
+	final.o \
+	glprocs.o
 
 PROG = orbital-explorer
 TEST = unittests
@@ -45,11 +46,11 @@ radial_data.cc: radial_analyzer.py
 
 .PHONY: clean
 clean:
-	rm -f *~ *.o $(PROG) $(TEST) shaders.cc radial_data.cc
+	rm -f *~ *.o $(PROG) $(TEST)
 
 .PHONY: cleanall
 cleanall: clean
-	rm -f .*.d
+	rm -f .*.d shaders.cc radial_data.cc
 
 # Import dependences
 -include $(OFILES:%.o=.%.d)

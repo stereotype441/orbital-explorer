@@ -53,8 +53,8 @@
 #include <cmath>
 #include <complex>
 #include <sys/time.h>
-#include <GL/glew.h>
 
+#include "glprocs.hh"
 #include "callbacks.hh"
 #include "shaders.hh"
 #include "array.hh"

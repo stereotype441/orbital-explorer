@@ -52,8 +52,8 @@
 #include <cstdio>
 #include <ctime>
 #include <SDL2/SDL.h>
-#include <GL/glew.h>
 
+#include "glprocs.hh"
 #include "array.hh"
 #include "genericops.hh"
 #include "vector.hh"

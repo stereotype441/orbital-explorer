@@ -52,9 +52,9 @@
 #include <cstdlib>
 #include <cmath>
 #include <unistd.h>
-#include <GL/glew.h>
 #include <SDL2/SDL.h>
 
+#include "glprocs.hh"
 #include "callbacks.hh"
 #include "array.hh"
 #include "genericops.hh"
@@ -139,14 +139,10 @@ static int go()
 #endif
 
   //
-  // Initialize GLEW
+  // Get access to OpenGL functions
   //
 
-  GLenum glewInitResult = glewInit();
-  if (glewInitResult != GLEW_OK) {
-    fprintf(stderr, "glewInit(): %s\n", glewGetErrorString(glewInitResult));
-    return 1;
-  }
+  initGLProcs();
 
   //
   // Initialize orbital rendering pipeline
