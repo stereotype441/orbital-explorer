@@ -183,9 +183,11 @@ static int go()
           }
           break;
         case SDL_MOUSEMOTION:
-          if (event.motion.state == SDL_BUTTON(1)) // Left button down
+          // TODO: detect mouse button down, and put the mouse into
+          // relative mode.
+          if (event.motion.state == SDL_BUTTON_LMASK)
             mouse_drag_left(event.motion.xrel, event.motion.yrel);
-          if (event.motion.state == SDL_BUTTON(3)) // Right button down
+          if (event.motion.state == SDL_BUTTON_RMASK)
             mouse_drag_right(event.motion.xrel, event.motion.yrel);
           break;
         case SDL_MOUSEWHEEL:
