@@ -455,7 +455,10 @@ void initControls()
 
 int handleControls(SDL_Event &event)
 {
-  return TwEventSDL(&event, SDL_MAJOR_VERSION, SDL_MINOR_VERSION);
+  // For now, don't try to send SDL 2 events to the AntTweakBar handler
+  // that expects SDL 1 events...
+  return false;
+  //return TwEventSDL(&event, SDL_MAJOR_VERSION, SDL_MINOR_VERSION);
 }
 
 void drawControls()

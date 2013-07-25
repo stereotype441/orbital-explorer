@@ -69,6 +69,14 @@
 
 using namespace std;
 
+void set_sdl_attr(SDL_GLattr attr, int value)
+{
+  if (SDL_GL_SetAttribute(attr, value) < 0) {
+    fprintf(stderr, "SDL_GL_SetAttribute(): %s\n", SDL_GetError());
+    exit(1);
+  }
+}
+
 static int go()
 {
   //
@@ -81,38 +89,46 @@ static int go()
   }
   atexit(SDL_Quit);
 
+  // Request at least 24-bit color
+  set_sdl_attr(SDL_GL_RED_SIZE, 8);
+  set_sdl_attr(SDL_GL_GREEN_SIZE, 8);
+  set_sdl_attr(SDL_GL_BLUE_SIZE, 8);
+
+  // Tell OpenGL we don't need a depth buffer
+  set_sdl_attr(SDL_GL_DEPTH_SIZE, 0);
+
+#ifdef __APPLE__
+  // Apple defaults to an OpenGL 2.1 Compatibility context unless you
+  // specify otherwise.
+  set_sdl_attr(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+  set_sdl_attr(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+  set_sdl_attr(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+#endif
+
+  int starting_width = 640;
+  int starting_height = 480;
+
+  // Create a window
   SDL_Window *window =
     SDL_CreateWindow("Electron Orbital Explorer",
                      SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                     640, 480, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+                     starting_width, starting_height,
+                     SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+  if (!window) {
+    fprintf(stderr, "SDL_CreateWindow(): %s\n", SDL_GetError());
+    exit(1);
+  }
 
+  // Create an OpenGL context associated with the window
   SDL_GLContext glcontext = SDL_GL_CreateContext(window);
+  if (!glcontext) {
+    fprintf(stderr, "SDL_GL_CreateContext(): %s\n", SDL_GetError());
+    exit(1);
+  }
 
-  resize(640, 480);
+  resize(starting_width, starting_height);
 
 #if 0
-  if (SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8) < 0 ||
-      SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8) < 0 ||
-      SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8) < 0 ||
-      SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 0) < 0 ||
-      SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 0) < 0 ||
-      SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1) < 0) {
-    fprintf(stderr, "STL_GL_SetAttribute(): %s\n", SDL_GetError());
-    return 1;
-  }
-
-  const SDL_VideoInfo *video = SDL_GetVideoInfo();
-  int bpp = video->vfmt->BitsPerPixel;
-  const Uint32 videoModeFlags = SDL_OPENGL | SDL_RESIZABLE;
-  SDL_Surface *screen = SDL_SetVideoMode(getWidth(), getHeight(),
-                                         bpp, videoModeFlags);
-  if (screen == NULL) {
-    fprintf(stderr, "SDL_SetVideoMode(): %s\n", SDL_GetError());
-    return 1;
-  }
-
-  SDL_WM_SetCaption("Electron Orbital Explorer", "EOE"); // Can't fail
-
   SDL_EnableUNICODE(1); // Can't fail
 
   if (SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY,
