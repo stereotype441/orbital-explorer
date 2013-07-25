@@ -66,6 +66,7 @@
 #include "wavefunction.hh"
 #include "mouseevents.hh"
 #include "controls.hh"
+#include "util.hh"
 
 using namespace std;
 
@@ -172,6 +173,7 @@ static int go()
       int handled = handleControls(event);
 
       // If event has not been handled by controls, process it
+      int amount;
       if (!handled)
         switch (event.type) {
 #if 0
@@ -187,11 +189,11 @@ static int go()
           if (event.motion.state == SDL_BUTTON(3)) // Right button down
             mouse_drag_right(event.motion.xrel, event.motion.yrel);
           break;
-        case SDL_MOUSEBUTTONDOWN:
-          if (event.button.button == 4) // Scroll wheel up
-            mouse_wheel(1);
-          if (event.button.button == 5) // Scroll wheel down
-            mouse_wheel(-1);
+        case SDL_MOUSEWHEEL:
+          amount = event.wheel.y;
+          clamp(amount, -1, 1);
+          if (amount)
+            mouse_wheel(amount);
           break;
         case SDL_QUIT:
           return 0;
