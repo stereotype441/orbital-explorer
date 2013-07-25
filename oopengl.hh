@@ -63,6 +63,8 @@ private:
   Uncopyable &operator=(const Uncopyable &); // DO NOT DEFINE
 };
 
+// This uses OpenGL 3.3 features, so it isn't Mac-safe...
+#if 0
 class Timer : public Uncopyable
 {
 public:
@@ -101,6 +103,7 @@ public:
 private:
   GLuint id[2];
 };
+#endif
 
 class Shader : public Uncopyable
 {
