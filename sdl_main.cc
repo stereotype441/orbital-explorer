@@ -198,6 +198,12 @@ static int go()
           break;
         case SDL_QUIT:
           return 0;
+        case SDL_TEXTINPUT:
+          // FIXME: This is only semi-funcitonal. Arrow keys don't
+          // work, etc.
+          if (event.text.text[0] != 0 && event.text.text[1] == 0)
+            keyPressed(event.text.text[0]);
+          break;
         }
     }
 

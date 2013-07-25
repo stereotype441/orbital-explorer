@@ -461,6 +461,11 @@ int handleControls(SDL_Event &event)
   //return TwEventSDL(&event, SDL_MAJOR_VERSION, SDL_MINOR_VERSION);
 }
 
+int keyPressed(int key)
+{
+  return TwKeyPressed(key, 0);
+}
+
 void drawControls()
 {
   static time_t then = time(NULL);

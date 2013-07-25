@@ -52,6 +52,7 @@
 
 void initControls();
 int handleControls(SDL_Event &event);
+int keyPressed(int key);
 void drawControls();
 void setVerticesTetrahedra(int vertices, int tetrahedra);
 Orbital getOrbital();
