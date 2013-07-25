@@ -43,20 +43,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef CONTROLS_HH
-#define CONTROLS_HH
+#ifndef SDLTOATB_HH
+#define SDLTOATB_HH
 
 #include <SDL2/SDL.h>
 
-#include "wavefunction.hh"
-
-void initControls();
-void drawControls();
-void setVerticesTetrahedra(int vertices, int tetrahedra);
-Orbital getOrbital();
-double getBrightness();
-int getDetail();
-bool getColorPhase();
-int getCycleRate();
+int myTwEventSDL20(const SDL_Event &event);
 
 #endif

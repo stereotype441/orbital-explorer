@@ -18,7 +18,8 @@ OFILES=\
 	util.o \
 	solid.o \
 	final.o \
-	glprocs.o
+	glprocs.o \
+	SDLtoATB.o
 
 PROG = orbital-explorer
 TEST = unittests

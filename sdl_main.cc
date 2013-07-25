@@ -67,6 +67,7 @@
 #include "mouseevents.hh"
 #include "controls.hh"
 #include "util.hh"
+#include "SDLtoATB.hh"
 
 using namespace std;
 
@@ -168,13 +169,12 @@ static int go()
 
     while (SDL_PollEvent(&event)) {
 
-      // Can controls handle the event?
-      // (Note that this takes care of resizing the controls)
-      int handled = handleControls(event);
+      // Can AntTweakBar handle the event?
+      int handled = myTwEventSDL20(event);
 
-      // If event has not been handled by controls, process it
-      int amount;
-      if (!handled)
+      // If event hasn't been fully handled by AntTweakBar, process it
+      if (!handled) {
+        int amount;
         switch (event.type) {
         case SDL_WINDOWEVENT:
           if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
@@ -198,13 +198,16 @@ static int go()
           break;
         case SDL_QUIT:
           return 0;
+#if 0
         case SDL_TEXTINPUT:
           // FIXME: This is only semi-funcitonal. Arrow keys don't
           // work, etc.
           if (event.text.text[0] != 0 && event.text.text[1] == 0)
-            keyPressed(event.text.text[0]);
+            TwKeyPressed(event.text.text[0], 0);
           break;
+#endif
         }
+      }
     }
 
     display();

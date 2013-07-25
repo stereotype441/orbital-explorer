@@ -51,7 +51,6 @@
 #include <cmath>
 #include <cstdio>
 #include <ctime>
-#include <SDL2/SDL.h>
 
 #include "glprocs.hh"
 #include "array.hh"
@@ -451,19 +450,6 @@ void initControls()
   TwSetParam(graphics, "GPU & Driver", "opened", TW_PARAM_INT32, 1, &f);
 
   setEnergy();
-}
-
-int handleControls(SDL_Event &event)
-{
-  // For now, don't try to send SDL 2 events to the AntTweakBar handler
-  // that expects SDL 1 events...
-  return false;
-  //return TwEventSDL(&event, SDL_MAJOR_VERSION, SDL_MINOR_VERSION);
-}
-
-int keyPressed(int key)
-{
-  return TwKeyPressed(key, 0);
 }
 
 void drawControls()
