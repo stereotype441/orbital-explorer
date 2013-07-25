@@ -152,7 +152,11 @@ int TW_CALL myTwEventSDL20(const SDL_Event &event)
     break;
 
   case SDL_MOUSEWHEEL:
-    handled = TwMouseWheel(event.wheel.y);
+    {
+      static int s_WheelPos = 0;
+      s_WheelPos += event.wheel.y;
+      handled = TwMouseWheel(s_WheelPos);
+    }
     break;
 
   case SDL_MOUSEBUTTONUP:
