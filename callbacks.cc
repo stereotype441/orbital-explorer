@@ -193,6 +193,9 @@ void resizeTextures()
   int width = getWidth();
   int height = getHeight();
 
+  // FIXME: we get extraneous events from SDL; it would be good to
+  // filter for actual changes in width / height.
+
   // Resize statically-sized textures
   resizeTexture(solidRGBTex, GL_RGB8, GL_RGB, width, height);
   resizeTexture(solidDepthTex, GL_DEPTH_COMPONENT24, GL_DEPTH_COMPONENT,
