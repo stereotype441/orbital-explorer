@@ -53,46 +53,46 @@
 #include "util.hh"
 
 template <unsigned n>
-Vector<n> find_circumcenter(const Array<n+1,Vector<n> > &xs)
+Vector<n> find_circumcenter(const Array<n + 1, Vector<n> > &xs)
 {
-  Matrix<n,n> a;
-  for (unsigned i=0; i<n; ++i)
-    for (unsigned j=0; j<n; ++j)
-      a(i,j) = xs[i][j] - xs[n][j];
+  Matrix<n, n> a;
+  for (unsigned i = 0; i < n; ++i)
+    for (unsigned j = 0; j < n; ++j)
+      a(i, j) = xs[i][j] - xs[n][j];
   Vector<n> b;
-  for (unsigned i=0; i<n; ++i)
+  for (unsigned i = 0; i < n; ++i)
     b[i] = (norm_squared(xs[i]) - norm_squared(xs[n])) / 2.0;
   return inverse(a) * b;
 }
 
 template<unsigned n>
 double average_distance_squared(const Vector<n> &x,
-                                const Array<n+1,Vector<n> > &ys)
+                                const Array<n + 1, Vector<n> > &ys)
 {
   double sum = 0.0;
 
-  for (unsigned i=0; i<n+1; ++i)
+  for (unsigned i = 0; i < n + 1; ++i)
     sum += norm_squared(x - ys[i]);
 
-  return sum / double(n+1);
+  return sum / double(n + 1);
 }
 
 template <unsigned n>
 struct Face
 {
   Face() {} // needed for unit tests
-  explicit Face(const Array<n,unsigned> &ps) : points(ps) {}
-  Array<n,unsigned> points;
+  explicit Face(const Array<n, unsigned> &ps) : points(ps) {}
+  Array<n, unsigned> points;
   bool operator==(const Face &rhs) const
   {
-    for (unsigned i=0; i<n; ++i)
+    for (unsigned i = 0; i < n; ++i)
       if (points[i] != rhs.points[i])
         return false;
     return true;
   }
   bool operator<(const Face &rhs) const
   {
-    for (unsigned i=0; i<n; ++i)
+    for (unsigned i = 0; i < n; ++i)
       if (points[i] < rhs.points[i])
         return true;
       else if (points[i] > rhs.points[i])
@@ -106,7 +106,7 @@ class Simplex
 {
 public:
   Simplex() {} // needed for unit tests
-  Simplex(const std::vector<Vector<n> > &, const Array<n+1,unsigned> &);
+  Simplex(const std::vector<Vector<n> > &, const Array<n + 1, unsigned> &);
 
   // unclear which of the following getters are needed
   unsigned formingPoint(unsigned i) const { return fp[i]; }
@@ -116,24 +116,24 @@ public:
   double radiusSquared() const { return r2; }
 
   bool isInsideCircumsphere(const Vector<n> &) const;
-  Array<n+1,Face<n> > faces() const;
+  Array<n + 1, Face<n> > faces() const;
   unsigned connectAcrossFace(const Face<n> &, unsigned);
 
 private:
-  Array<n+1,unsigned> fp;
-  Array<n+1,unsigned> adj;
+  Array<n + 1, unsigned> fp;
+  Array<n + 1, unsigned> adj;
   Vector<n> c;
   double r2;
 };
 
 template <unsigned n>
 inline Simplex<n>::Simplex(const std::vector<Vector<n> > &points,
-                           const Array<n+1,unsigned> &fp_)
+                           const Array<n + 1, unsigned> &fp_)
   : fp(fp_),
     adj(0)
 {
-  Array<n+1, Vector<n> > point_locations;
-  for (unsigned i=0; i<=n; ++i)
+  Array<n + 1, Vector<n> > point_locations;
+  for (unsigned i = 0; i <= n; ++i)
     point_locations[i] = points.at(fp[i]);
   c = find_circumcenter(point_locations);
   r2 = average_distance_squared(c, point_locations);
@@ -141,7 +141,7 @@ inline Simplex<n>::Simplex(const std::vector<Vector<n> > &points,
 
 template <>
 inline Simplex<3>::Simplex(const std::vector<Vector<3> > &points,
-                           const Array<4,unsigned> &fp_)
+                           const Array<4, unsigned> &fp_)
   : fp(fp_),
     adj(0)
 {
@@ -181,21 +181,21 @@ inline Simplex<3>::Simplex(const std::vector<Vector<3> > &points,
 template <unsigned n>
 bool Simplex<n>::isInsideCircumsphere(const Vector<n> &v) const
 {
-  return norm_squared(v-c) < r2 * (1. + 1e-9);
+  return norm_squared(v - c) < r2 * (1. + 1e-9);
 }
 
 template <unsigned n>
-Array<n+1,Face<n> > Simplex<n>::faces() const
+Array<n + 1, Face<n> > Simplex<n>::faces() const
 {
-  Array<n+1,Face<n> > fs;
+  Array<n + 1, Face<n> > fs;
 
   // fs[0] = [ fp[1] fp[2] fp[3] ]
   // fs[1] = [ fp[0] fp[2] fp[3] ]
   // fs[2] = [ fp[0] fp[1] fp[3] ]
   // fs[3] = [ fp[0] fp[1] fp[2] ]
-  for (unsigned i=0; i<n+1; ++i)
-    for (unsigned j=0; j<n; ++j)
-      fs[i].points[j] = (j >= i ? fp[j+1] : fp[j]);
+  for (unsigned i = 0; i < n + 1; ++i)
+    for (unsigned j = 0; j < n; ++j)
+      fs[i].points[j] = (j >= i ? fp[j + 1] : fp[j]);
 
   return fs;
 }
@@ -221,7 +221,7 @@ class Delaunay
 {
 public:
   Delaunay() {} // needed for unit tests
-  Delaunay(const Array<n+1,Vector<n> > &);
+  Delaunay(const Array<n + 1, Vector<n> > &);
 
   unsigned numPoints() const;
   const Vector<n> &getPoint(unsigned) const;
@@ -235,7 +235,7 @@ public:
 private:
   unsigned findOneDeletedSimplex(const Vector<n> &) const;
   std::set<unsigned> findDeletedSimplices(const Vector<n> &, unsigned) const;
-  typedef std::map<Face<n>,unsigned> Hole;
+  typedef std::map<Face<n>, unsigned> Hole;
   Hole deleteSimplices(const std::set<unsigned> &);
   void deleteSimplex(Hole &, unsigned);
   void addSimplices(unsigned, Hole &);
@@ -247,15 +247,15 @@ private:
 };
 
 template <unsigned n>
-Delaunay<n>::Delaunay(const Array<n+1,Vector<n> > &vs)
+Delaunay<n>::Delaunay(const Array<n + 1, Vector<n> > &vs)
   : points(vs.toVector()),
     max_simplex(1),
     simplex_map()
 {
-  Array<n+1,unsigned> ind;
-  for (unsigned i=0; i<n+1; ++i)
+  Array<n + 1, unsigned> ind;
+  for (unsigned i = 0; i < n + 1; ++i)
     ind[i] = i;
-  simplex_map = singleton<unsigned,Simplex<n> >(1, Simplex<n>(points, ind));
+  simplex_map = singleton<unsigned, Simplex<n> >(1, Simplex<n>(points, ind));
 }
 
 template <unsigned n>
@@ -287,7 +287,7 @@ bool Delaunay<n>::hasSimplex(unsigned i) const
 template <unsigned n>
 const Simplex<n> &Delaunay<n>::getSimplex(unsigned i) const
 {
-  typename std::map<unsigned,Simplex<n> >::const_iterator s;
+  typename std::map<unsigned, Simplex<n> >::const_iterator s;
   s = simplex_map.find(i);
   if (s == simplex_map.end())
     throw std::logic_error("getSimplex() called on nonexistent simplex");
@@ -303,7 +303,7 @@ void Delaunay<n>::inefficientAddPoint(const Vector<n> &v)
 template <unsigned n>
 unsigned Delaunay<n>::findOneDeletedSimplex(const Vector<n> &v) const
 {
-  for (unsigned i=0; i<=max_simplex; ++i)
+  for (unsigned i = 0; i <= max_simplex; ++i)
     if (hasSimplex(i) && getSimplex(i).isInsideCircumsphere(v))
       return i;
 
@@ -334,7 +334,7 @@ Delaunay<n>::findDeletedSimplices(const Vector<n> &v, unsigned start) const
   std::vector<unsigned> frontier;
   frontier.push_back(start);
   while (!frontier.empty()) {
-    unsigned f = frontier[frontier.size()-1];
+    unsigned f = frontier[frontier.size() - 1];
     frontier.pop_back();
     if (deleted_set.find(f) != deleted_set.end())
       continue;
@@ -342,7 +342,7 @@ Delaunay<n>::findDeletedSimplices(const Vector<n> &v, unsigned start) const
     if (!s.isInsideCircumsphere(v))
       continue;
     deleted_set.insert(f);
-    for (unsigned i=0; i<n+1; ++i) {
+    for (unsigned i = 0; i < n + 1; ++i) {
       unsigned a = s.adjacency(i);
       if (a != 0)
         frontier.push_back(a);
@@ -370,8 +370,8 @@ template <unsigned n>
 void Delaunay<n>::deleteSimplex(Hole &hole, unsigned delete_me_index)
 {
   const Simplex<n> &delete_me = getSimplex(delete_me_index);
-  Array<n+1,Face<n> > faces = delete_me.faces();
-  for (unsigned j=0; j<n+1; ++j)
+  Array<n + 1, Face<n> > faces = delete_me.faces();
+  for (unsigned j = 0; j < n + 1; ++j)
     if (hole.find(faces[j]) == hole.end())
       hole[faces[j]] = delete_me.adjacency(j);
     else
@@ -390,8 +390,8 @@ void Delaunay<n>::addSimplices(unsigned new_point_index, Hole &hole)
     typename Hole::const_iterator i;
     try {
       for (i = hole.begin(); i != hole.end(); ++i) {
-        Array<n+1,unsigned> forming_points;
-        for (unsigned j=0; j<n; ++j)
+        Array<n + 1, unsigned> forming_points;
+        for (unsigned j = 0; j < n; ++j)
           forming_points[j] = i->first.points[j];
         forming_points[n] = new_point_index;
         // The following line can throw an exception if the new simplex that
@@ -418,8 +418,8 @@ void Delaunay<n>::addSimplex(Hole &hole,
                              Simplex<n> &new_simplex)
 {
   unsigned new_simplex_index = ++max_simplex;
-  Array<n+1,Face<n> > faces = new_simplex.faces();
-  for (unsigned j=0; j<n+1; ++j) {
+  Array<n + 1, Face<n> > faces = new_simplex.faces();
+  for (unsigned j = 0; j < n + 1; ++j) {
     typename Hole::const_iterator find_face = hole.find(faces[j]);
     if (find_face == hole.end()) {
       hole[faces[j]] = new_simplex_index;

@@ -50,8 +50,8 @@
 #include <vector>
 #include <GL/glew.h>
 
-void GetGLError_(int line);
-#define GetGLError() GetGLError_(__LINE__)
+void GetGLError_(const char *file, int line);
+#define GetGLError() GetGLError_(__FILE__, __LINE__)
 
 class Uncopyable
 {
@@ -63,6 +63,8 @@ private:
   Uncopyable &operator=(const Uncopyable &); // DO NOT DEFINE
 };
 
+// This uses OpenGL 3.3 features, so it isn't Mac-safe...
+#if 0
 class Timer : public Uncopyable
 {
 public:
@@ -101,6 +103,7 @@ public:
 private:
   GLuint id[2];
 };
+#endif
 
 class Shader : public Uncopyable
 {

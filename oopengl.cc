@@ -57,11 +57,11 @@
 #include "matrix.hh"
 #include "oopengl.hh"
 
-void GetGLError_(int line)
+void GetGLError_(const char *file, int line)
 {
   GLenum err;
   if ((err = glGetError()) != GL_NO_ERROR) {
-    fprintf(stderr, "Detected OpenGL error at line %d\n", line);
+    fprintf(stderr, "Detected OpenGL error at file %s line %d\n", file, line);
     do
       fprintf(stderr, "Error code %d (0x%x)\n", err, err);
     while ((err = glGetError()) != GL_NO_ERROR);

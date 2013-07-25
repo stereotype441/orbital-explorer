@@ -62,7 +62,7 @@ public:
   // behavior when assigned a scalar.
   explicit Array(const T &x)
   {
-    for (int i = 0; i < n; ++i)
+    for (unsigned i = 0; i < n; ++i)
       data[i] = x;
   }
 
