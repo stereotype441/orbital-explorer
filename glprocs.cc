@@ -50,9 +50,11 @@
 
 void initGLProcs()
 {
+#ifndef __APPLE__
   GLenum glewInitResult = glewInit();
   if (glewInitResult != GLEW_OK) {
     fprintf(stderr, "glewInit(): %s\n", glewGetErrorString(glewInitResult));
     exit(1);
   }
+#endif
 }
