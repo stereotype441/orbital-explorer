@@ -67,7 +67,6 @@
 #include "mouseevents.hh"
 #include "controls.hh"
 #include "util.hh"
-#include "SDLtoATB.hh"
 
 using namespace std;
 
@@ -169,10 +168,10 @@ static int go()
 
     while (SDL_PollEvent(&event)) {
 
-      // Can AntTweakBar handle the event?
-      int handled = myTwEventSDL20(event);
+      // Can controls handle the event?
+      int handled = handleControls(event);
 
-      // If event hasn't been fully handled by AntTweakBar, process it
+      // If event hasn't been fully handled by controls, process it
       if (!handled) {
         switch (event.type) {
         case SDL_WINDOWEVENT:
@@ -192,20 +191,11 @@ static int go()
         case SDL_MOUSEWHEEL:
           int amount;
           amount = event.wheel.y;
-          clamp(amount, -1, 1);
           if (amount)
             mouse_wheel(amount);
           break;
         case SDL_QUIT:
           return 0;
-#if 0
-        case SDL_TEXTINPUT:
-          // FIXME: This is only semi-funcitonal. Arrow keys don't
-          // work, etc.
-          if (event.text.text[0] != 0 && event.text.text[1] == 0)
-            TwKeyPressed(event.text.text[0], 0);
-          break;
-#endif
         }
       }
     }

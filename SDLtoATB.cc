@@ -75,7 +75,7 @@
 
 // TwEventSDL returns zero if msg has not been handled,
 // and a non-zero value if it has been handled by the AntTweakBar library.
-int TW_CALL myTwEventSDL20(const SDL_Event &event)
+int myTwEventSDL20(const SDL_Event &event)
 {
   int handled = 0;
   static int s_KeyMod = 0;

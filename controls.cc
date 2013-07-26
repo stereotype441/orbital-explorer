@@ -65,6 +65,7 @@
 #include "controls.hh"
 
 #include "AntTweakBar.h"
+#include "SDLtoATB.hh"
 
 using namespace std;
 
@@ -450,6 +451,11 @@ void initControls()
   TwSetParam(graphics, "GPU & Driver", "opened", TW_PARAM_INT32, 1, &f);
 
   setEnergy();
+}
+
+int handleControls(SDL_Event &event)
+{
+  return myTwEventSDL20(event);
 }
 
 void drawControls()

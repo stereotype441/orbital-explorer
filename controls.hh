@@ -51,6 +51,7 @@
 #include "wavefunction.hh"
 
 void initControls();
+int handleControls(SDL_Event &event);
 void drawControls();
 void setVerticesTetrahedra(int vertices, int tetrahedra);
 Orbital getOrbital();
