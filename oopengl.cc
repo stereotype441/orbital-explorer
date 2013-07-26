@@ -116,10 +116,10 @@ void Program::link()
     fprintf(stderr, "Fatal error: program failed to link\n");
     GLint len;
     glGetProgramiv(id, GL_INFO_LOG_LENGTH, &len);
-    GLchar *msg = (GLchar *)malloc(len);
+    GLchar *msg = new GLchar[len];
     glGetProgramInfoLog(id, len, NULL, msg);
     fprintf(stderr, "Error message is:\n%s\n", msg);
-    free(msg);
+    delete[] msg;
     exit(1);
   }
 }
