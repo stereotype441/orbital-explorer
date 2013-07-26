@@ -123,9 +123,7 @@ void mouse_drag_right(int movex, int movey)
 
 void mouse_wheel(int direction)
 {
-  // 1 = zoom in, -1 = zoom out
-  const double factor = sqrt(sqrt(sqrt(sqrt(2))));
-  if (direction ==  1) cameraRadius /= factor;
-  if (direction == -1) cameraRadius *= factor;
+  // + = zoom in, - = zoom out
+  cameraRadius *= pow(2.0, 0.0625 * double(-direction));
   clamp(cameraRadius, 1.0, 2048.0);
 }

@@ -53,7 +53,6 @@
 #include <cmath>
 #include <complex>
 #include <sys/time.h>
-#include <SDL.h>
 
 #include "glprocs.hh"
 #include "callbacks.hh"
