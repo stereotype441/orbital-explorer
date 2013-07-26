@@ -1,7 +1,7 @@
 OPT_OR_DEBUG = -O3
 
-CPP = g++
-CPPFLAGS := -pthread -Wall -Wshadow -Werror $(OPT_OR_DEBUG) $(shell sdl-config --cflags)
+CXX = g++
+CXXFLAGS := -pthread -Wall -Wshadow -Werror $(OPT_OR_DEBUG) $(shell sdl-config --cflags)
 LINKFLAGS := -lAntTweakBar -lX11 -pthread -lGLEW -lGLU -lGL $(shell sdl-config --libs)
 
 OFILES=\
@@ -26,13 +26,13 @@ TEST = unittests
 all: $(PROG)
 
 $(PROG): $(OFILES)
-	$(CPP) $(CPPFLAGS) $(OFILES) -o $@ $(LINKFLAGS)
+	$(CXX) $(CXXFLAGS) $(OFILES) -o $@ $(LINKFLAGS)
 
 $(TEST): unittests.o
-	$(CPP) $(CPPFLAGS) unittests.o -o $@ $(LINKFLAGS) -lgtest -lgtest_main
+	$(CXX) $(CXXFLAGS) unittests.o -o $@ $(LINKFLAGS) -lgtest -lgtest_main
 
 %.o: %.cc
-	$(CPP) $(CPPFLAGS) -MMD -MP -MF $(<:%.cc=.%.d) -c $<
+	$(CXX) $(CXXFLAGS) -MMD -MP -MF $(<:%.cc=.%.d) -c $<
 
 shaders.cc: *.vert *.geom *.frag
 	rm -f shaders.cc
