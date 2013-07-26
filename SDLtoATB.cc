@@ -78,11 +78,10 @@
 int TW_CALL myTwEventSDL20(const SDL_Event &event)
 {
   int handled = 0;
-  //static int s_KeyMod = 0;
+  static int s_KeyMod = 0;
 
   switch (event.type) {
 
-#if 0
   case SDL_TEXTINPUT:
     if (event.text.text[0] != 0 && event.text.text[1] == 0) {
       if (s_KeyMod & TW_KMOD_CTRL && event.text.text[0] < 32)
@@ -93,7 +92,6 @@ int TW_CALL myTwEventSDL20(const SDL_Event &event)
         handled = TwKeyPressed(event.text.text[0], s_KeyMod);
       }
     }
-    s_KeyMod = 0;
     break;
 
   case SDL_KEYDOWN:
@@ -138,14 +136,12 @@ int TW_CALL myTwEventSDL20(const SDL_Event &event)
     else if (event.key.keysym.mod & TW_KMOD_ALT)
       handled = TwKeyPressed(event.key.keysym.sym & 0xFF,
                              event.key.keysym.mod);
-    else
-      s_KeyMod = event.key.keysym.mod;
+    s_KeyMod = event.key.keysym.mod;
     break;
 
   case SDL_KEYUP:
-    s_KeyMod = 0;
+    s_KeyMod = event.key.keysym.mod;
     break;
-#endif
 
   case SDL_MOUSEMOTION:
     handled = TwMouseMotion(event.motion.x, event.motion.y);
