@@ -19,7 +19,7 @@ OFILES=\
 	solid.o \
 	final.o \
 	glprocs.o \
-	SDLtoATB.o
+	myTwEventSDL20.o
 
 PROG = orbital-explorer
 TEST = unittests

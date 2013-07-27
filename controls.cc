@@ -65,7 +65,7 @@
 #include "controls.hh"
 
 #include "AntTweakBar.h"
-#include "SDLtoATB.hh"
+#include "myTwEventSDL20.hh"
 
 using namespace std;
 

@@ -71,7 +71,7 @@
 
 #include <AntTweakBar.h>
 
-#include "SDLtoATB.hh"
+#include "myTwEventSDL20.hh"
 
 // TwEventSDL returns zero if msg has not been handled,
 // and a non-zero value if it has been handled by the AntTweakBar library.
