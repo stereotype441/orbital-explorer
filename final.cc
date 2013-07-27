@@ -112,7 +112,9 @@ void drawFinal(int width, int height, double brightness,
   glDisable(GL_BLEND);
   rect->bind();
   glViewport(0, 0, width, height);
+  glEnable(GL_FRAMEBUFFER_SRGB);
   glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+  glDisable(GL_FRAMEBUFFER_SRGB);
 
   GetGLError();
 }

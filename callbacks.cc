@@ -162,8 +162,6 @@ void initialize()
 
   glClearColor(0., 0., 0., 1.);
 
-  glEnable(GL_FRAMEBUFFER_SRGB);
-
   GetGLError();
 
   /////////////////////////////////////////////////////////////////
