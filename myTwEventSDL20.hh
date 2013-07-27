@@ -46,8 +46,10 @@
 #ifndef SDLTOATB_HH
 #define SDLTOATB_HH
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
+#if SDL_MAJOR_VERSION > 1
 int myTwEventSDL20(const SDL_Event &event);
+#endif
 
 #endif

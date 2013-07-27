@@ -46,7 +46,7 @@
 #ifndef CONTROLS_HH
 #define CONTROLS_HH
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 #include "wavefunction.hh"
 
