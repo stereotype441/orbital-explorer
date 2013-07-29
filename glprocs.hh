@@ -47,7 +47,6 @@
 #define GLPROCS_HH
 
 #ifdef __APPLE__
-// TODO: Unsure if this is the best way to do it on OSX
 #include <OpenGL/gl3.h>
 #else
 #include <GL/glew.h>
