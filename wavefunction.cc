@@ -48,7 +48,6 @@
 #include <map>
 #include <complex>
 #include <cmath>
-#include <cstdio> // TESTING FIXME
 
 #include "util.hh"
 #include "array.hh"
