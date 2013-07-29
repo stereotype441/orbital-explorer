@@ -100,7 +100,7 @@ void drawSolids(const Matrix<4,4> &mvpm, int width, int height,
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glEnable(GL_DEPTH_TEST);
   glDisable(GL_BLEND);
-  glLineWidth(2);
+  // Note: glLineWidth must be no greater than 1.0 in OpenGL 3.2 Core.
   solid->bind();
   glViewport(0, 0, width, height);
   glDrawArrays(GL_LINES, 0, 6);
