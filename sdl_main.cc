@@ -259,6 +259,35 @@ static int go()
 
 int main(int argc, char *argv[])
 {
+
+#ifdef __APPLE__
+
+  //
+  // Compensate for a bug in some versions of AntTweakBar. ATB
+  // attempts to dynamically link with the OpenGL framework without
+  // specifying a full pathname. Setting DYLD_LIBRARY_PATH fixes the
+  // issue, but this environment variable must be set prior to running
+  // the app. So we check it, and, if needed, set it properly and
+  // re-exec ourself. :-(
+  //
+
+  const char *pathvar = "DYLD_LIBRARY_PATH";
+  string new_path("/System/Library/Frameworks/OpenGL.framework/"
+                  "Versions/Current");
+  const char *actual_path_cstr = getenv(pathvar);
+  string actual_path(actual_path_cstr ? actual_path_cstr : "");
+  if (new_path != actual_path.substr(0, new_path.length()) &&
+      // Try to prevent an infinite loop, in case something goes wrong
+      actual_path.length() < 4000) {
+    if (actual_path != "")
+      new_path += ":" + actual_path;
+    setenv(pathvar, new_path.c_str(), 1);
+    execvp(argv[0], argv);
+    // If the exec fails, the best we can do is simply continue...
+  }
+
+#endif
+
   const string polite_error_message =
     "I\'m sorry, Electron Orbital Explorer has crashed.\n"
     "This should never happen and is a bug in the program.\n"
