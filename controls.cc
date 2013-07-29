@@ -474,7 +474,9 @@ void drawControls()
     then = now;
   }
 
+  glEnable(GL_FRAMEBUFFER_SRGB);
   TwDraw();
+  glDisable(GL_FRAMEBUFFER_SRGB);
 }
 
 void setVerticesTetrahedra(int v, int t)
