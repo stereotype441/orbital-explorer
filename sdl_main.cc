@@ -95,16 +95,12 @@ static int go()
   set_sdl_attr(SDL_GL_GREEN_SIZE, 8);
   set_sdl_attr(SDL_GL_BLUE_SIZE, 8);
 
-  // Tell OpenGL we don't need a depth buffer
+  // Tell OpenGL we don't need a depth or alpha buffer
   set_sdl_attr(SDL_GL_DEPTH_SIZE, 0);
+  set_sdl_attr(SDL_GL_ALPHA_SIZE, 0);
 
-#if SDL_MAJOR_VERSION == 1
-  if (SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 0) < 0 ||
-      SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1) < 0) {
-    fprintf(stderr, "STL_GL_SetAttribute(): %s\n", SDL_GetError());
-    return 1;
-  }
-#endif
+  // Request double buffering
+  set_sdl_attr(SDL_GL_DOUBLEBUFFER, 1);
 
 #ifdef __APPLE__
 #if SDL_MAJOR_VERSION == 1
@@ -121,17 +117,20 @@ static int go()
   int starting_height = 480;
 
 #if SDL_MAJOR_VERSION == 1
+
   const SDL_VideoInfo *video = SDL_GetVideoInfo();
   int bpp = video->vfmt->BitsPerPixel;
   const Uint32 videoModeFlags = SDL_OPENGL | SDL_RESIZABLE;
-  resize(starting_width, starting_height);
-  SDL_Surface *screen = SDL_SetVideoMode(getWidth(), getHeight(),
+  SDL_Surface *screen = SDL_SetVideoMode(starting_width, starting_height,
                                          bpp, videoModeFlags);
   if (screen == NULL) {
     fprintf(stderr, "SDL_SetVideoMode(): %s\n", SDL_GetError());
     return 1;
   }
+  SDL_WM_SetCaption("Electron Orbital Explorer", "EOE"); // Can't fail
+
 #else
+
   // Create a window
   SDL_Window *window =
     SDL_CreateWindow("Electron Orbital Explorer",
@@ -142,11 +141,7 @@ static int go()
     fprintf(stderr, "SDL_CreateWindow(): %s\n", SDL_GetError());
     exit(1);
   }
-#endif
 
-#if SDL_MAJOR_VERSION == 1
-  SDL_WM_SetCaption("Electron Orbital Explorer", "EOE"); // Can't fail
-#else
   // Create an OpenGL context associated with the window
   SDL_GLContext glcontext = SDL_GL_CreateContext(window);
   if (!glcontext) {
@@ -154,8 +149,9 @@ static int go()
     exit(1);
   }
 
-  resize(starting_width, starting_height);
 #endif
+
+  resize(starting_width, starting_height);
 
 #if SDL_MAJOR_VERSION == 1
   SDL_EnableUNICODE(1); // Can't fail
