@@ -44,28 +44,17 @@
  */
 
 #include <stdexcept>
-#include <vector>
-#include <map>
-#include <complex>
 #include <cstdlib>
 #include <cmath>
 #include <cstdio>
 #include <ctime>
+#include <AntTweakBar.h>
 
 #include "config.hh"
 #include "glprocs.hh"
-#include "array.hh"
-#include "genericops.hh"
-#include "vector.hh"
-#include "matrix.hh"
-#include "quaternion.hh"
-#include "function.hh"
-#include "polynomial.hh"
 #include "wavefunction.hh"
 #include "mouseevents.hh"
 #include "controls.hh"
-
-#include "AntTweakBar.h"
 #include "myTwEventSDL20.hh"
 
 using namespace std;
