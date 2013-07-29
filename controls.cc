@@ -52,6 +52,7 @@
 #include <cstdio>
 #include <ctime>
 
+#include "config.hh"
 #include "glprocs.hh"
 #include "array.hh"
 #include "genericops.hh"
@@ -76,7 +77,7 @@ static int M = 0;
 static int absM = 0;
 static double E = 0.0; // in eV
 static const int minZ = 1;
-static const int maxZ = 100; // FIXME
+static const int maxZ = MAX_ATOMIC_NUMBER;
 static const int minN = 1;
 static const int maxN = 16;
 static const int minL = 0;
