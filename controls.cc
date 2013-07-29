@@ -460,6 +460,8 @@ void drawControls()
   ++frame_count;
   if (then != now) {
     fps = frame_count;
+    if (then + 1 != now)
+      fps = 0;
     frame_count = 0;
     then = now;
   }
