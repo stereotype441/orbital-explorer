@@ -129,6 +129,14 @@ static int go()
   }
   SDL_WM_SetCaption("Electron Orbital Explorer", "EOE"); // Can't fail
 
+  // Set keyboard mode
+  SDL_EnableUNICODE(1); // Can't fail
+  if (SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY,
+                          SDL_DEFAULT_REPEAT_INTERVAL) < 0) {
+    fprintf(stderr, "SDL_EnableKeyRepeat(): %s\n", SDL_GetError());
+    // This is not a fatal error, so keep going
+  }
+
 #else
 
   // Create a window
@@ -151,18 +159,6 @@ static int go()
 
 #endif
 
-  resize(starting_width, starting_height);
-
-#if SDL_MAJOR_VERSION == 1
-  SDL_EnableUNICODE(1); // Can't fail
-
-  if (SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY,
-                          SDL_DEFAULT_REPEAT_INTERVAL) < 0) {
-    fprintf(stderr, "SDL_EnableKeyRepeat(): %s\n", SDL_GetError());
-    // This is not a fatal error, so keep going
-  }
-#endif
-
   //
   // Get access to OpenGL functions
   //
@@ -174,7 +170,7 @@ static int go()
   //
 
   initialize();
-  resizeTextures();
+  resize(starting_width, starting_height);
 
   //
   // Initialize controls
@@ -200,16 +196,13 @@ static int go()
         switch (event.type) {
 #if SDL_MAJOR_VERSION == 1
         case SDL_VIDEORESIZE:
-          resize(event.resize.w, event.resize.h);
           SDL_SetVideoMode(getWidth(), getHeight(), bpp, videoModeFlags);
-          resizeTextures();
+          resize(event.resize.w, event.resize.h);
           break;
 #else
         case SDL_WINDOWEVENT:
-          if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
+          if (event.window.event == SDL_WINDOWEVENT_RESIZED)
             resize(event.window.data1, event.window.data2);
-            resizeTextures();
-          }
           break;
 #endif
         case SDL_MOUSEMOTION:

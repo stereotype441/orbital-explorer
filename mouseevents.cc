@@ -56,6 +56,7 @@
 #include "matrix.hh"
 #include "quaternion.hh"
 #include "transform.hh"
+#include "callbacks.hh"
 
 using namespace std;
 
@@ -76,6 +77,7 @@ void resize(int w, int h)
 {
   width = w;
   height = h;
+  resizeTextures();
 }
 
 static Quaternion cameraRotation(1.0);
