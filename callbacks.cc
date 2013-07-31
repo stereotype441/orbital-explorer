@@ -96,10 +96,10 @@ static Orbital *orbital = NULL;
 // Subdivision of space into tetrahedra
 static TetrahedralSubdivision *ts = NULL;
 
-Texture *attachNewTexture(GLint internalformat, GLenum format,
+static void attachTexture(Texture *tex,
+                          GLint internalformat, GLenum format,
                           GLenum attachment)
 {
-  Texture *tex = new Texture();
   glBindTexture(GL_TEXTURE_2D, *tex);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -107,7 +107,6 @@ Texture *attachNewTexture(GLint internalformat, GLenum format,
                format, GL_BYTE, NULL);
   glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, attachment, GL_TEXTURE_2D,
                          *tex, 0);
-  return tex;
 }
 
 void resizeTexture(Texture *name, GLint internalformat, GLenum format,
@@ -158,15 +157,18 @@ void initialize()
   // Solid objects
   glGenFramebuffers(1, &solidFBO);
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, solidFBO);
-  solidRGBTex = attachNewTexture(GL_RGB8, GL_RGB, GL_COLOR_ATTACHMENT0);
-  solidDepthTex = attachNewTexture(GL_DEPTH_COMPONENT24, GL_DEPTH_COMPONENT,
-                                   GL_DEPTH_ATTACHMENT);
+  solidRGBTex = new Texture();
+  attachTexture(solidRGBTex, GL_RGB8, GL_RGB, GL_COLOR_ATTACHMENT0);
+  solidDepthTex = new Texture();
+  attachTexture(solidDepthTex, GL_DEPTH_COMPONENT24, GL_DEPTH_COMPONENT,
+                GL_DEPTH_ATTACHMENT);
   checkFramebufferCompleteness();
 
   // Clouds
   glGenFramebuffers(1, &cloudFBO);
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, cloudFBO);
-  cloudDensityTex = attachNewTexture(GL_RGBA16F, GL_RGB, GL_COLOR_ATTACHMENT0);
+  cloudDensityTex = new Texture();
+  attachTexture(cloudDensityTex, GL_RGBA16F, GL_RGB, GL_COLOR_ATTACHMENT0);
   checkFramebufferCompleteness();
 
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
