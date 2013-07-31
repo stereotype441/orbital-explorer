@@ -46,11 +46,10 @@
 #ifndef SOLID_HH
 #define SOLID_HH
 
-#include "glprocs.hh"
+#include "oopengl.hh"
 #include "matrix.hh"
 
-void initSolids();
-void drawSolids(const Matrix<4,4> &mvpm, int width, int height,
-                GLuint solidFBO);
+void initSolids(Texture *solidRGBTex, Texture *solidDepthTex);
+void drawSolids(const Matrix<4,4> &mvpm, int width, int height);
 
 #endif

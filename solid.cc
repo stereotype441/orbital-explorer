@@ -44,14 +44,16 @@
  */
 
 #include "solid.hh"
-#include "oopengl.hh"
 #include "shaders.hh"
 
 static Program *solidProg;
 static VertexArrayObject *solid;
+static GLuint solidFBO;
 
-void initSolids()
+void initSolids(Texture *solidRGBTex, Texture *solidDepthTex)
 {
+  // Solid program
+
   solidProg = new Program();
   solidProg->vertexShader(solidVertexShaderSource);
   solidProg->fragmentShader(solidFragmentShaderSource);
@@ -63,6 +65,7 @@ void initSolids()
   GetGLError();
 
   // Solid objects
+
   solid = new VertexArrayObject();
   solid->bind();
 
@@ -89,10 +92,18 @@ void initSolids()
                         (void *)(3 * sizeof(GLfloat)));
 
   GetGLError();
+
+  // Solid Framebuffer Object
+
+  glGenFramebuffers(1, &solidFBO);
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, solidFBO);
+  attachTexture(solidRGBTex, GL_RGB8, GL_RGB, GL_COLOR_ATTACHMENT0);
+  attachTexture(solidDepthTex, GL_DEPTH_COMPONENT24, GL_DEPTH_COMPONENT,
+                GL_DEPTH_ATTACHMENT);
+  checkFramebufferCompleteness();
 }
 
-void drawSolids(const Matrix<4,4> &mvpm, int width, int height,
-                GLuint solidFBO)
+void drawSolids(const Matrix<4,4> &mvpm, int width, int height)
 {
   solidProg->use();
   solidProg->uniform<Matrix<4,4> >("modelViewProjMatrix") = mvpm;

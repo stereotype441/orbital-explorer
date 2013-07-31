@@ -48,6 +48,8 @@
 
 #include <stdexcept>
 #include <vector>
+#include <cstdlib>
+#include <cstdio>
 
 #include "glprocs.hh"
 
@@ -227,5 +229,30 @@ public:
 private:
   GLuint id;
 };
+
+// FIXME needs refactoring...
+inline void attachTexture(Texture *tex,
+                          GLint internalformat, GLenum format,
+                          GLenum attachment)
+{
+  glBindTexture(GL_TEXTURE_2D, *tex);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexImage2D(GL_TEXTURE_2D, 0, internalformat, 1, 1, 0,
+               format, GL_BYTE, NULL);
+  glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, attachment, GL_TEXTURE_2D,
+                         *tex, 0);
+}
+
+inline void checkFramebufferCompleteness()
+{
+  GLenum isComplete = glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER);
+  if (isComplete != GL_FRAMEBUFFER_COMPLETE) {
+    printf("Framebuffer not complete!\n");
+    printf("glCheckFramebufferStatus returned %x\n", isComplete);
+    GetGLError();
+    exit(1);
+  }
+}
 
 #endif

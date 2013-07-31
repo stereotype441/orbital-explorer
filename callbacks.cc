@@ -82,7 +82,7 @@ using namespace std;
 static VertexArrayObject *cloud;
 
 // Framebuffer names
-static GLuint solidFBO, cloudFBO;
+static GLuint cloudFBO;
 
 // Textures
 static Texture *solidRGBTex, *solidDepthTex, *cloudDensityTex;
@@ -96,19 +96,6 @@ static Orbital *orbital = NULL;
 // Subdivision of space into tetrahedra
 static TetrahedralSubdivision *ts = NULL;
 
-static void attachTexture(Texture *tex,
-                          GLint internalformat, GLenum format,
-                          GLenum attachment)
-{
-  glBindTexture(GL_TEXTURE_2D, *tex);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexImage2D(GL_TEXTURE_2D, 0, internalformat, 1, 1, 0,
-               format, GL_BYTE, NULL);
-  glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, attachment, GL_TEXTURE_2D,
-                         *tex, 0);
-}
-
 void resizeTexture(Texture *name, GLint internalformat, GLenum format,
                    GLuint width, GLuint height)
 {
@@ -117,24 +104,13 @@ void resizeTexture(Texture *name, GLint internalformat, GLenum format,
                format, GL_BYTE, NULL);
 }
 
-static void checkFramebufferCompleteness()
-{
-  GLenum isComplete = glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER);
-  if (isComplete != GL_FRAMEBUFFER_COMPLETE) {
-    printf("Framebuffer not complete!\n");
-    printf("glCheckFramebufferStatus returned %x\n", isComplete);
-    GetGLError();
-    exit(1);
-  }
-}
-
 void initialize()
 {
   solidRGBTex = new Texture();
   solidDepthTex = new Texture();
   cloudDensityTex = new Texture();
 
-  initSolids();
+  initSolids(solidRGBTex, solidDepthTex);
   initClouds(solidDepthTex);
   initFinal(solidRGBTex, cloudDensityTex);
 
@@ -154,14 +130,6 @@ void initialize()
   /////////////////////////////////////////////////////////////////
   // Set up auxiliary FBOs and textures for multistage rendering //
   /////////////////////////////////////////////////////////////////
-
-  // Solid objects
-  glGenFramebuffers(1, &solidFBO);
-  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, solidFBO);
-  attachTexture(solidRGBTex, GL_RGB8, GL_RGB, GL_COLOR_ATTACHMENT0);
-  attachTexture(solidDepthTex, GL_DEPTH_COMPONENT24, GL_DEPTH_COMPONENT,
-                GL_DEPTH_ATTACHMENT);
-  checkFramebufferCompleteness();
 
   // Clouds
   glGenFramebuffers(1, &cloudFBO);
@@ -308,7 +276,7 @@ void display()
   GetGLError();
 
   if (need_full_redraw) {
-    drawSolids(mvpm, width, height, solidFBO);
+    drawSolids(mvpm, width, height);
     drawClouds(mvpm, width, height, near, far,
                cloudFBO, cloud, num_tetrahedra);
     need_full_redraw = false;
