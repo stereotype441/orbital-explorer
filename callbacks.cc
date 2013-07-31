@@ -100,7 +100,7 @@ Texture *attachNewTexture(GLint internalformat, GLenum format,
                           GLenum attachment)
 {
   Texture *tex = new Texture();
-  tex->bind(GL_TEXTURE_2D);
+  glBindTexture(GL_TEXTURE_2D, *tex);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexImage2D(GL_TEXTURE_2D, 0, internalformat, 1, 1, 0,
@@ -113,7 +113,7 @@ Texture *attachNewTexture(GLint internalformat, GLenum format,
 void resizeTexture(Texture *name, GLint internalformat, GLenum format,
                    GLuint width, GLuint height)
 {
-  name->bind(GL_TEXTURE_2D);
+  glBindTexture(GL_TEXTURE_2D, *name);
   glTexImage2D(GL_TEXTURE_2D, 0, internalformat, width, height, 0,
                format, GL_BYTE, NULL);
 }

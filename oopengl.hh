@@ -222,7 +222,6 @@ class Texture : public Uncopyable
 public:
   Texture()                { glGenTextures(1, &id); }
   operator GLuint()        { return id; }
-  void bind(GLenum target) { glBindTexture(target, id); }
   ~Texture()               { glDeleteTextures(1, &id); }
 
 private:

@@ -103,9 +103,9 @@ void drawFinal(int width, int height, double brightness,
   finalProg->uniform<int>("use_color") = getColorPhase();
   finalProg->uniform<float>("brightness") = brightness;
   glActiveTexture(GL_TEXTURE0);
-  solidRGBTex->bind(GL_TEXTURE_2D);
+  glBindTexture(GL_TEXTURE_2D, *solidRGBTex);
   glActiveTexture(GL_TEXTURE1);
-  cloudDensityTex->bind(GL_TEXTURE_2D);
+  glBindTexture(GL_TEXTURE_2D, *cloudDensityTex);
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
   glClear(GL_COLOR_BUFFER_BIT);
   glDisable(GL_DEPTH_TEST);

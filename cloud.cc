@@ -73,7 +73,7 @@ void drawClouds(const Matrix<4,4> &mvpm, int width, int height,
   cloudProg->uniform<Vector<2> >("nearfar") = Vector2(near, far);
   cloudProg->uniform<int>("solidDepth") = 0;
   glActiveTexture(GL_TEXTURE0);
-  solidDepthTex->bind(GL_TEXTURE_2D);
+  glBindTexture(GL_TEXTURE_2D, *solidDepthTex);
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, cloudFBO);
   glClear(GL_COLOR_BUFFER_BIT);
   glDisable(GL_DEPTH_TEST);
