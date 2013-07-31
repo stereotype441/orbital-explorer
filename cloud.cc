@@ -80,6 +80,8 @@ void drawClouds(const Matrix<4,4> &mvpm, int width, int height,
   glClear(GL_COLOR_BUFFER_BIT);
   glDisable(GL_DEPTH_TEST);
   glEnable(GL_BLEND);
+  glBlendEquation(GL_FUNC_ADD);
+  glBlendFunc(GL_ONE, GL_ONE);
   cloud->bind();
   glViewport(0, 0, width, height);
   glDrawElements(GL_LINES_ADJACENCY, 4 * num_tetrahedra, GL_UNSIGNED_INT, 0);

@@ -147,9 +147,6 @@ void initialize()
   // Set up OpenGL state that will never change //
   ////////////////////////////////////////////////
 
-  glBlendEquation(GL_FUNC_ADD);
-  glBlendFunc(GL_ONE, GL_ONE);
-
   glClearColor(0., 0., 0., 0.);
 
   GetGLError();
