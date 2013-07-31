@@ -130,8 +130,12 @@ static void checkFramebufferCompleteness()
 
 void initialize()
 {
+  solidRGBTex = new Texture();
+  solidDepthTex = new Texture();
+  cloudDensityTex = new Texture();
+
   initSolids();
-  initClouds();
+  initClouds(solidDepthTex);
   initFinal();
 
   // Clouds
@@ -157,9 +161,7 @@ void initialize()
   // Solid objects
   glGenFramebuffers(1, &solidFBO);
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, solidFBO);
-  solidRGBTex = new Texture();
   attachTexture(solidRGBTex, GL_RGB8, GL_RGB, GL_COLOR_ATTACHMENT0);
-  solidDepthTex = new Texture();
   attachTexture(solidDepthTex, GL_DEPTH_COMPONENT24, GL_DEPTH_COMPONENT,
                 GL_DEPTH_ATTACHMENT);
   checkFramebufferCompleteness();
@@ -167,7 +169,6 @@ void initialize()
   // Clouds
   glGenFramebuffers(1, &cloudFBO);
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, cloudFBO);
-  cloudDensityTex = new Texture();
   attachTexture(cloudDensityTex, GL_RGBA16F, GL_RGB, GL_COLOR_ATTACHMENT0);
   checkFramebufferCompleteness();
 
@@ -311,7 +312,7 @@ void display()
 
   if (need_full_redraw) {
     drawSolids(mvpm, width, height, solidFBO);
-    drawClouds(mvpm, width, height, near, far, solidDepthTex,
+    drawClouds(mvpm, width, height, near, far,
                cloudFBO, cloud, num_tetrahedra);
     need_full_redraw = false;
   }

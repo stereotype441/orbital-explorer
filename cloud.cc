@@ -48,9 +48,11 @@
 #include "shaders.hh"
 
 static Program *cloudProg;
+static Texture *solidDepthTex;
 
-void initClouds()
+void initClouds(Texture *solidDepthTex_)
 {
+  solidDepthTex = solidDepthTex_;
   cloudProg = new Program();
   cloudProg->vertexShader(cloudVertexShaderSource);
   cloudProg->geometryShader(cloudGeometryShaderSource);
@@ -65,7 +67,7 @@ void initClouds()
 
 void drawClouds(const Matrix<4,4> &mvpm, int width, int height,
                 double near, double far,
-                Texture *solidDepthTex, GLuint cloudFBO,
+                GLuint cloudFBO,
                 VertexArrayObject *cloud, unsigned num_tetrahedra)
 {
   cloudProg->use();
