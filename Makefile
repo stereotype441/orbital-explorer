@@ -17,6 +17,7 @@ OFILES=\
 	radial_data.o \
 	util.o \
 	solid.o \
+	cloud.o \
 	final.o \
 	glprocs.o \
 	myTwEventSDL20.o

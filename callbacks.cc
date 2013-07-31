@@ -73,12 +73,10 @@
 #include "mouseevents.hh"
 #include "controls.hh"
 #include "solid.hh"
+#include "cloud.hh"
 #include "final.hh"
 
 using namespace std;
-
-// GLSL programs
-static Program *cloudProg;
 
 // Vertex array objects
 static VertexArrayObject *cloud;
@@ -134,18 +132,7 @@ static void checkFramebufferCompleteness()
 void initialize()
 {
   initSolids();
-
-  cloudProg = new Program();
-  cloudProg->vertexShader(cloudVertexShaderSource);
-  cloudProg->geometryShader(cloudGeometryShaderSource);
-  cloudProg->fragmentShader(cloudFragmentShaderSource);
-  glBindAttribLocation(*cloudProg, 0, "position");
-  glBindAttribLocation(*cloudProg, 1, "uvY");
-  glBindFragDataLocation(*cloudProg, 0, "integratedValue");
-  cloudProg->link();
-
-  GetGLError();
-
+  initClouds();
   initFinal();
 
   // Clouds
@@ -217,26 +204,6 @@ Matrix<4,4> generateMvpm(int width, int height, double near, double far)
   Matrix<4,4> rotation = transformRotation(getCameraRotation());
 
   return frustum * translation * rotation;
-}
-
-void drawOrbital(const Matrix<4,4> &mvpm, int width, int height,
-                 double N, double F)
-{
-  cloudProg->use();
-  cloudProg->uniform<Matrix<4,4> >("modelViewProjMatrix") = mvpm;
-  cloudProg->uniform<Vector<2> >("nearfar") = Vector2(N, F);
-  cloudProg->uniform<int>("solidDepth") = 0;
-  glActiveTexture(GL_TEXTURE0);
-  solidDepthTex->bind(GL_TEXTURE_2D);
-  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, cloudFBO);
-  glClear(GL_COLOR_BUFFER_BIT);
-  glDisable(GL_DEPTH_TEST);
-  glEnable(GL_BLEND);
-  cloud->bind();
-  glViewport(0, 0, width, height);
-  glDrawElements(GL_LINES_ADJACENCY, 4 * num_tetrahedra, GL_UNSIGNED_INT, 0);
-
-  GetGLError();
 }
 
 void display()
@@ -342,7 +309,8 @@ void display()
 
   if (need_full_redraw) {
     drawSolids(mvpm, width, height, solidFBO);
-    drawOrbital(mvpm, width, height, near, far);
+    drawClouds(mvpm, width, height, near, far, solidDepthTex,
+               cloudFBO, cloud, num_tetrahedra);
     need_full_redraw = false;
   }
   double brightness = pow(1.618, getBrightness());
