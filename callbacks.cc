@@ -136,7 +136,7 @@ void initialize()
 
   initSolids();
   initClouds(solidDepthTex);
-  initFinal();
+  initFinal(solidRGBTex, cloudDensityTex);
 
   // Clouds
   cloud = new VertexArrayObject();
@@ -319,7 +319,7 @@ void display()
   double brightness = pow(1.618, getBrightness());
   if (orbital->square)
     brightness *= brightness;
-  drawFinal(width, height, brightness, solidRGBTex, cloudDensityTex);
+  drawFinal(width, height, brightness);
 
   glFinish();
 

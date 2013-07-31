@@ -50,9 +50,12 @@
 
 static Program *finalProg;
 static VertexArrayObject *rect;
+static Texture *solidRGBTex, *cloudDensityTex;
 
-void initFinal()
+void initFinal(Texture *solidRGBTex_, Texture *cloudDensityTex_)
 {
+  solidRGBTex = solidRGBTex_;
+  cloudDensityTex = cloudDensityTex_;
   finalProg = new Program();
   finalProg->vertexShader(finalVertexShaderSource);
   finalProg->fragmentShader(finalFragmentShaderSource);
@@ -81,8 +84,7 @@ void initFinal()
   GetGLError();
 }
 
-void drawFinal(int width, int height, double brightness,
-               Texture *solidRGBTex, Texture *cloudDensityTex)
+void drawFinal(int width, int height, double brightness)
 {
   double this_instant = now();
   static double last_instant = -1.;
