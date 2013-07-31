@@ -48,10 +48,9 @@
 
 #include "matrix.hh"
 
-void initClouds(Texture *solidDepthTex);
+void initClouds(Texture *solidDepthTex, Texture *cloudDensityTex);
 void drawClouds(const Matrix<4,4> &mvpm, int width, int height,
                 double near, double far,
-                GLuint cloudFBO,
                 VertexArrayObject *cloud, unsigned num_tetrahedra);
 
 #endif

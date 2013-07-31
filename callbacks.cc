@@ -81,9 +81,6 @@ using namespace std;
 // Vertex array objects
 static VertexArrayObject *cloud;
 
-// Framebuffer names
-static GLuint cloudFBO;
-
 // Textures
 static Texture *solidRGBTex, *solidDepthTex, *cloudDensityTex;
 
@@ -111,32 +108,14 @@ void initialize()
   cloudDensityTex = new Texture();
 
   initSolids(solidRGBTex, solidDepthTex);
-  initClouds(solidDepthTex);
+  initClouds(solidDepthTex, cloudDensityTex);
   initFinal(solidRGBTex, cloudDensityTex);
 
   // Clouds
   cloud = new VertexArrayObject();
-
   GetGLError();
-
-  ////////////////////////////////////////////////
-  // Set up OpenGL state that will never change //
-  ////////////////////////////////////////////////
 
   glClearColor(0., 0., 0., 0.);
-
-  GetGLError();
-
-  /////////////////////////////////////////////////////////////////
-  // Set up auxiliary FBOs and textures for multistage rendering //
-  /////////////////////////////////////////////////////////////////
-
-  // Clouds
-  glGenFramebuffers(1, &cloudFBO);
-  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, cloudFBO);
-  attachTexture(cloudDensityTex, GL_RGBA16F, GL_RGB, GL_COLOR_ATTACHMENT0);
-  checkFramebufferCompleteness();
-
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
   GetGLError();
 }
@@ -278,7 +257,7 @@ void display()
   if (need_full_redraw) {
     drawSolids(mvpm, width, height);
     drawClouds(mvpm, width, height, near, far,
-               cloudFBO, cloud, num_tetrahedra);
+               cloud, num_tetrahedra);
     need_full_redraw = false;
   }
   double brightness = pow(1.618, getBrightness());

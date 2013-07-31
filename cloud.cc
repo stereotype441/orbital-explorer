@@ -49,8 +49,9 @@
 
 static Program *cloudProg;
 static Texture *solidDepthTex;
+static GLuint cloudFBO;
 
-void initClouds(Texture *solidDepthTex_)
+void initClouds(Texture *solidDepthTex_, Texture *cloudDensityTex)
 {
   solidDepthTex = solidDepthTex_;
   cloudProg = new Program();
@@ -63,11 +64,15 @@ void initClouds(Texture *solidDepthTex_)
   cloudProg->link();
 
   GetGLError();
+
+  glGenFramebuffers(1, &cloudFBO);
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, cloudFBO);
+  attachTexture(cloudDensityTex, GL_RGBA16F, GL_RGB, GL_COLOR_ATTACHMENT0);
+  checkFramebufferCompleteness();
 }
 
 void drawClouds(const Matrix<4,4> &mvpm, int width, int height,
                 double near, double far,
-                GLuint cloudFBO,
                 VertexArrayObject *cloud, unsigned num_tetrahedra)
 {
   cloudProg->use();
