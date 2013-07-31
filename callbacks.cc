@@ -147,7 +147,7 @@ void initialize()
   glBlendEquation(GL_FUNC_ADD);
   glBlendFunc(GL_ONE, GL_ONE);
 
-  glClearColor(0., 0., 0., 1.);
+  glClearColor(0., 0., 0., 0.);
 
   GetGLError();
 
