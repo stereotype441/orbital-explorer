@@ -2,7 +2,12 @@ OPT_OR_DEBUG = -O3
 
 CXX = g++
 CXXFLAGS := -pthread -Wall -Wshadow -Werror $(OPT_OR_DEBUG) $(shell sdl2-config --cflags)
+
+# Linux
 LINKFLAGS := -lAntTweakBar -lX11 -pthread -lGLEW -lGLU -lGL $(shell sdl2-config --libs)
+
+# OS X
+# LINKFLAGS := -lAntTweakBar -pthread $(shell sdl2-config --libs) -framework OpenGL
 
 OFILES=\
 	sdl_main.o \
