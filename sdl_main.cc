@@ -228,6 +228,24 @@ static int go()
             mouse_wheel(amount);
           break;
 #endif
+        case SDL_KEYDOWN:
+          switch (event.key.keysym.sym) {
+          case SDLK_LEFT:
+            keyboard_move(-1, 0);
+            break;
+          case SDLK_RIGHT:
+            keyboard_move(1, 0);
+            break;
+          case SDLK_UP:
+            keyboard_move(0, -1);
+            break;
+          case SDLK_DOWN:
+            keyboard_move(0, 1);
+            break;
+          default:
+            break;
+          }
+          break;
         case SDL_QUIT:
           return 0;
         }

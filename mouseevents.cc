@@ -94,6 +94,18 @@ double getCameraRadius()
   return cameraRadius;
 }
 
+void keyboard_move(int movex, int movey)
+{
+  double dx = double(movex) / 100.;
+  double dy = double(movey) / 100.;
+
+  Quaternion xz_rotation = quaternionRotation(dx * pi, basisVector<3>(1));
+  Quaternion yz_rotation = quaternionRotation(dy * pi, basisVector<3>(0));
+
+  cameraRotation = xz_rotation * yz_rotation * cameraRotation;
+  cameraRotation /= norm(cameraRotation);
+}
+
 void mouse_drag_left(int movex, int movey)
 {
   double dx = double(movex) / double(width);

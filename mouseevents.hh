@@ -53,6 +53,7 @@ int getHeight();
 void resize(int w, int h);
 Quaternion getCameraRotation();
 double getCameraRadius();
+void keyboard_move(int movex, int movey);
 void mouse_drag_left(int movex, int movey);
 void mouse_drag_right(int movex, int movey);
 void mouse_wheel(int direction);
