@@ -196,8 +196,8 @@ static int go()
         switch (event.type) {
 #if SDL_MAJOR_VERSION == 1
         case SDL_VIDEORESIZE:
-          SDL_SetVideoMode(getWidth(), getHeight(), bpp, videoModeFlags);
           resize(event.resize.w, event.resize.h);
+          SDL_SetVideoMode(getWidth(), getHeight(), bpp, videoModeFlags);
           break;
 #else
         case SDL_WINDOWEVENT:
