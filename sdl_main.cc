@@ -210,7 +210,8 @@ static int go()
           // TODO: detect mouse button down, and put the mouse into
           // relative mode.
           if (event.motion.state == SDL_BUTTON_LMASK)
-            mouse_drag_left(camera, event.motion.xrel, event.motion.yrel);
+            camera.rotate(double(event.motion.xrel) / getWidth(),
+                          double(event.motion.yrel) / getHeight());
           if (event.motion.state == SDL_BUTTON_RMASK)
             mouse_drag_right(camera, event.motion.xrel, event.motion.yrel);
           break;
