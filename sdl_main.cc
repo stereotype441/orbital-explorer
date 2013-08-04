@@ -209,11 +209,14 @@ static int go()
         case SDL_MOUSEMOTION:
           // TODO: detect mouse button down, and put the mouse into
           // relative mode.
-          if (event.motion.state == SDL_BUTTON_LMASK)
+          if (event.motion.state == SDL_BUTTON_LMASK) {
             camera.rotate(double(event.motion.xrel) / getWidth(),
                           double(event.motion.yrel) / getHeight());
-          if (event.motion.state == SDL_BUTTON_RMASK)
-            mouse_drag_right(camera, event.motion.xrel, event.motion.yrel);
+          }
+          else if (event.motion.state == SDL_BUTTON_RMASK) {
+            camera.spin(-double(event.motion.xrel) / getWidth());
+            mouse_drag_zoom(event.motion.yrel);
+          }
           break;
 #if SDL_MAJOR_VERSION == 1
         case SDL_MOUSEBUTTONDOWN:
