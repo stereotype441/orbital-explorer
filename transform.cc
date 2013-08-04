@@ -65,33 +65,6 @@ Matrix<4,4> transformTranslation(const Vector<3> &v)
   return m;
 }
 
-Matrix<4,4> transformRotation(double t, Vector<3> v)
-{
-  v /= norm(v);
-
-  double x = v[0];
-  double y = v[1];
-  double z = v[2];
-
-  double s = sin(t);
-  double c = cos(t);
-
-  Matrix<4,4> m(1.0);
-
-  // Formula copied from glRotatef
-  m(0,0) = x * x * (1 - c) + c;
-  m(0,1) = x * y * (1 - c) - z * s;
-  m(0,2) = x * z * (1 - c) + y * s;
-  m(1,0) = y * x * (1 - c) + z * s;
-  m(1,1) = y * y * (1 - c) + c;
-  m(1,2) = y * z * (1 - c) - x * s;
-  m(2,0) = z * x * (1 - c) - y * s;
-  m(2,1) = z * y * (1 - c) + x * s;
-  m(2,2) = z * z * (1 - c) + c;
-
-  return m;
-}
-
 Matrix<4,4> transformRotation(const Quaternion &q)
 {
   double a = q.real();

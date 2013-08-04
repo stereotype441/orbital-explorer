@@ -50,7 +50,6 @@
 #include "quaternion.hh"
 
 Matrix<4,4> transformTranslation(const Vector<3> &v);
-Matrix<4,4> transformRotation(double t, Vector<3> v);
 Matrix<4,4> transformRotation(const Quaternion &q);
 Quaternion quaternionRotation(double t, Vector<3> v);
 Matrix<4,4> transformFrustum(double left, double right,
