@@ -51,6 +51,5 @@
 int getWidth();
 int getHeight();
 void resize(int w, int h);
-Quaternion getCameraRotation();
 
 #endif
