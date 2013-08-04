@@ -85,14 +85,11 @@ void mouse_drag_zoom(Camera &camera, int movey)
 {
   double dy = double(movey) / double(height);
 
-  double factor = 1 + dy;
-  clamp(factor, 0.5, 2.0);
-
-  camera.zoom(factor);
+  camera.zoom(dy);
 }
 
 void mouse_wheel(Camera &camera, int direction)
 {
   // + = zoom in, - = zoom out
-  camera.zoom(pow(2.0, 0.0625 * double(-direction)));
+  camera.zoom(0.05 * double(-direction));
 }
