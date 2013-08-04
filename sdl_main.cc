@@ -263,10 +263,10 @@ static int go()
                    false) {
             switch (event.key.keysym.sym) {
             case SDLK_LEFT:
-              // FIXME spin camera left
+              camera.spin(0.01);
               break;
             case SDLK_RIGHT:
-              // FIXME spin camera right
+              camera.spin(-0.01);
               break;
             case SDLK_UP:
               mouse_wheel(1);
