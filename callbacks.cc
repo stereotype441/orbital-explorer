@@ -135,7 +135,7 @@ void resizeTextures()
   GetGLError();
 }
 
-Matrix<4,4> generateMvpm(int width, int height, double near, double far)
+Matrix<4,4> generateMvpm(Camera &camera, int width, int height, double near, double far)
 {
   // Generate the so-called model-view-projection matrix
 
@@ -149,12 +149,12 @@ Matrix<4,4> generateMvpm(int width, int height, double near, double far)
   Matrix<4,4> translation =
     transformTranslation(-getCameraRadius() * basisVector<3>(2));
 
-  Matrix<4,4> rotation = transformRotation(getCameraRotation());
+  Matrix<4,4> rotation = transformRotation(camera.getRotation());
 
   return frustum * translation * rotation;
 }
 
-void display()
+void display(Camera &camera)
 {
   static bool need_full_redraw = true;
 
@@ -240,7 +240,7 @@ void display()
 
   double near = 1.0;
   double far = getCameraRadius() + orbital->radius() * sqrt(2.0);
-  Matrix<4,4> mvpm = generateMvpm(width, height, near, far);
+  Matrix<4,4> mvpm = generateMvpm(camera, width, height, near, far);
 
   static Matrix<4,4> old_mvpm;
   if (mvpm != old_mvpm)

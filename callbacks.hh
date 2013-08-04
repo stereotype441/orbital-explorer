@@ -46,9 +46,11 @@
 #ifndef CALLBACKS_HH
 #define CALLBACKS_HH
 
+#include "camera.hh"
+
 void initialize();
 void resizeTextures();
-void display();
+void display(Camera &camera);
 void cleanup();
 
 #endif

@@ -88,28 +88,28 @@ double getCameraRadius()
   return cameraRadius;
 }
 
-void keyboard_move(int movex, int movey)
+void keyboard_move(Camera &camera, int movex, int movey)
 {
   double dx = double(movex) / 100.;
   double dy = double(movey) / 100.;
 
-  cameraRotate(dx, dy);
+  camera.rotate(dx, dy);
 }
 
-void mouse_drag_left(int movex, int movey)
+void mouse_drag_left(Camera &camera, int movex, int movey)
 {
   double dx = double(movex) / double(width);
   double dy = double(movey) / double(height);
 
-  cameraRotate(dx, dy);
+  camera.rotate(dx, dy);
 }
 
-void mouse_drag_right(int movex, int movey)
+void mouse_drag_right(Camera &camera, int movex, int movey)
 {
   double dx = double(movex) / double(width);
   double dy = double(movey) / double(height);
 
-  cameraSpin(-dx);
+  camera.spin(-dx);
 
   double factor = 1 + dy;
   clamp(factor, 0.5, 2.0);

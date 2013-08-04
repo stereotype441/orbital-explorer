@@ -48,8 +48,16 @@
 
 #include "quaternion.hh"
 
-Quaternion getCameraRotation();
-void cameraRotate(double dx, double dy);
-void cameraSpin(double s);
+class Camera
+{
+public:
+  Camera() : rotation(1.0) {}
+  Quaternion getRotation() const { return rotation; }
+  void rotate(double x, double y);
+  void spin(double s);
+
+private:
+  Quaternion rotation;
+};
 
 #endif

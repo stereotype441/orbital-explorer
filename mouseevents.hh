@@ -46,16 +46,16 @@
 #ifndef MOUSEEVENTS_HH
 #define MOUSEEVENTS_HH
 
-#include "quaternion.hh"
+#include "camera.hh"
 
 int getWidth();
 int getHeight();
 void resize(int w, int h);
 Quaternion getCameraRotation();
 double getCameraRadius();
-void keyboard_move(int movex, int movey);
-void mouse_drag_left(int movex, int movey);
-void mouse_drag_right(int movex, int movey);
+void keyboard_move(Camera &camera, int movex, int movey);
+void mouse_drag_left(Camera &camera, int movex, int movey);
+void mouse_drag_right(Camera &camera, int movex, int movey);
 void mouse_wheel(int direction);
 
 #endif

@@ -48,30 +48,23 @@
 #include "transform.hh"
 #include "camera.hh"
 
-static Quaternion cameraRotation(1.0);
-
-Quaternion getCameraRotation()
-{
-  return cameraRotation;
-}
-
 // Rotate the camera around the origin
 // 1.0 = 180 degrees of motion
-void cameraRotate(double x, double y)
+void Camera::rotate(double x, double y)
 {
   Quaternion xz_rotation = quaternionRotation(x * pi, basisVector<3>(1));
   Quaternion yz_rotation = quaternionRotation(y * pi, basisVector<3>(0));
 
-  cameraRotation = xz_rotation * yz_rotation * cameraRotation;
-  cameraRotation /= norm(cameraRotation);
+  rotation = xz_rotation * yz_rotation * rotation;
+  rotation /= norm(rotation);
 }
 
 // Spin the camera around the line of sight
 // 1.0 = 180 degrees of rotation
-void cameraSpin(double s)
+void Camera::spin(double s)
 {
   Quaternion xy_rotation = quaternionRotation(s * pi, basisVector<3>(2));
 
-  cameraRotation = xy_rotation * cameraRotation;
-  cameraRotation /= norm(cameraRotation);
+  rotation = xy_rotation * rotation;
+  rotation /= norm(rotation);
 }

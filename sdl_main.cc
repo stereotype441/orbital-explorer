@@ -182,6 +182,7 @@ static int go()
   // Main loop
   //
 
+  Camera camera;
   SDL_Event event;
   while (1) {
     // Clear the event queue, then redraw a frame
@@ -209,9 +210,9 @@ static int go()
           // TODO: detect mouse button down, and put the mouse into
           // relative mode.
           if (event.motion.state == SDL_BUTTON_LMASK)
-            mouse_drag_left(event.motion.xrel, event.motion.yrel);
+            mouse_drag_left(camera, event.motion.xrel, event.motion.yrel);
           if (event.motion.state == SDL_BUTTON_RMASK)
-            mouse_drag_right(event.motion.xrel, event.motion.yrel);
+            mouse_drag_right(camera, event.motion.xrel, event.motion.yrel);
           break;
 #if SDL_MAJOR_VERSION == 1
         case SDL_MOUSEBUTTONDOWN:
@@ -232,16 +233,16 @@ static int go()
           if (event.key.keysym.mod == KMOD_NONE) {
             switch (event.key.keysym.sym) {
             case SDLK_LEFT:
-              keyboard_move(-1, 0);
+              keyboard_move(camera, -1, 0);
               break;
             case SDLK_RIGHT:
-              keyboard_move(1, 0);
+              keyboard_move(camera, 1, 0);
               break;
             case SDLK_UP:
-              keyboard_move(0, -1);
+              keyboard_move(camera, 0, -1);
               break;
             case SDLK_DOWN:
-              keyboard_move(0, 1);
+              keyboard_move(camera, 0, 1);
               break;
             case SDLK_PAGEUP:
               mouse_wheel(1);
@@ -278,7 +279,7 @@ static int go()
       }
     }
 
-    display();
+    display(camera);
     drawControls();
 #if SDL_MAJOR_VERSION == 1
     SDL_GL_SwapBuffers();
