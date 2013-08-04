@@ -242,6 +242,12 @@ static int go()
           case SDLK_DOWN:
             keyboard_move(0, 1);
             break;
+          case SDLK_PAGEUP:
+            mouse_wheel(1);
+            break;
+          case SDLK_PAGEDOWN:
+            mouse_wheel(-1);
+            break;
           default:
             break;
           }
