@@ -2,12 +2,18 @@ OPT_OR_DEBUG = -O3
 
 CXX = g++
 CXXFLAGS := -pthread -Wall -Wshadow -Werror $(OPT_OR_DEBUG) $(shell sdl2-config --cflags)
+LINKFLAGS := -pthread -lAntTweakBar $(shell sdl2-config --libs)
 
-# Linux
-LINKFLAGS := -lAntTweakBar -lX11 -pthread -lGLEW -lGLU -lGL $(shell sdl2-config --libs)
-
-# OS X
-# LINKFLAGS := -lAntTweakBar -pthread $(shell sdl2-config --libs) -framework OpenGL
+ARCH = $(shell uname -s)
+ifeq ($(ARCH),Linux)
+LINKFLAGS += -lGLEW -lGL
+else
+ifeq ($(ARCH),Darwin)
+LINKFLAGS += -framework OpenGL
+else
+$(error Unknown platform)
+endif
+endif
 
 OFILES=\
 	sdl_main.o \
