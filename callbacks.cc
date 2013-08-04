@@ -70,7 +70,7 @@
 #include "wavefunction.hh"
 #include "tetrahedralize.hh"
 #include "oopengl.hh"
-#include "mouseevents.hh"
+#include "viewport.hh"
 #include "camera.hh"
 #include "controls.hh"
 #include "solid.hh"

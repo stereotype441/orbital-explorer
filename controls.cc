@@ -53,7 +53,7 @@
 #include "config.hh"
 #include "glprocs.hh"
 #include "wavefunction.hh"
-#include "mouseevents.hh"
+#include "viewport.hh"
 #include "controls.hh"
 #include "myTwEventSDL20.hh"
 

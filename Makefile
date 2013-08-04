@@ -19,7 +19,7 @@ OFILES=\
 	sdl_main.o \
 	oopengl.o \
 	callbacks.o \
-	mouseevents.o \
+	viewport.o \
 	camera.o \
 	controls.o \
 	transform.o \

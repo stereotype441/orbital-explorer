@@ -64,7 +64,7 @@
 #include "function.hh"
 #include "polynomial.hh"
 #include "wavefunction.hh"
-#include "mouseevents.hh"
+#include "viewport.hh"
 #include "controls.hh"
 #include "util.hh"
 
