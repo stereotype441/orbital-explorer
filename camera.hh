@@ -43,84 +43,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <stdexcept>
-#include <vector>
-#include <map>
-#include <complex>
-#include <cmath>
+#ifndef CAMERA_HH
+#define CAMERA_HH
 
-#include "util.hh"
-#include "genericops.hh"
-#include "array.hh"
-#include "vector.hh"
-#include "matrix.hh"
 #include "quaternion.hh"
-#include "transform.hh"
-#include "callbacks.hh"
-#include "camera.hh"
 
-using namespace std;
+Quaternion getCameraRotation();
+void cameraRotate(double dx, double dy);
+void cameraSpin(double s);
 
-static int width = 0;
-static int height = 0;
-
-int getWidth()
-{
-  return width;
-}
-
-int getHeight()
-{
-  return height;
-}
-
-void resize(int w, int h)
-{
-  width = w;
-  height = h;
-  resizeTextures();
-}
-
-static double cameraRadius = 32.;
-
-double getCameraRadius()
-{
-  return cameraRadius;
-}
-
-void keyboard_move(int movex, int movey)
-{
-  double dx = double(movex) / 100.;
-  double dy = double(movey) / 100.;
-
-  cameraRotate(dx, dy);
-}
-
-void mouse_drag_left(int movex, int movey)
-{
-  double dx = double(movex) / double(width);
-  double dy = double(movey) / double(height);
-
-  cameraRotate(dx, dy);
-}
-
-void mouse_drag_right(int movex, int movey)
-{
-  double dx = double(movex) / double(width);
-  double dy = double(movey) / double(height);
-
-  cameraSpin(-dx);
-
-  double factor = 1 + dy;
-  clamp(factor, 0.5, 2.0);
-
-  cameraRadius *= factor;
-  clamp(cameraRadius, 1.0, 2048.0);
-}
-
-void mouse_wheel(int direction)
-{
-  // + = zoom in, - = zoom out
-  cameraRadius *= pow(2.0, 0.0625 * double(-direction));
-  clamp(cameraRadius, 1.0, 2048.0);
-}
+#endif

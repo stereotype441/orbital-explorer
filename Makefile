@@ -20,6 +20,7 @@ OFILES=\
 	oopengl.o \
 	callbacks.o \
 	mouseevents.o \
+	camera.o \
 	controls.o \
 	transform.o \
 	shaders.o \

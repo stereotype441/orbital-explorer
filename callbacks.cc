@@ -71,6 +71,7 @@
 #include "tetrahedralize.hh"
 #include "oopengl.hh"
 #include "mouseevents.hh"
+#include "camera.hh"
 #include "controls.hh"
 #include "solid.hh"
 #include "cloud.hh"
