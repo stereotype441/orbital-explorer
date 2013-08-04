@@ -231,8 +231,12 @@ static int go()
           break;
 #endif
         case SDL_KEYDOWN:
-          if (event.key.keysym.mod == KMOD_NONE) {
-            switch (event.key.keysym.sym) {
+          int key, mod;
+          key = event.key.keysym.sym;
+          // Ignore the Num Lock key state
+          mod = event.key.keysym.mod & ~KMOD_NUM;
+          if (mod == KMOD_NONE) {
+            switch (key) {
             case SDLK_LEFT:
               camera.rotate(-0.01, 0);
               break;
@@ -255,10 +259,9 @@ static int go()
               break;
             }
           }
-          else if (event.key.keysym.mod == KMOD_LSHIFT ||
-                   event.key.keysym.mod == KMOD_RSHIFT ||
-                   event.key.keysym.mod == KMOD_SHIFT) {
-            switch (event.key.keysym.sym) {
+          else if (mod == KMOD_LSHIFT || mod == KMOD_RSHIFT ||
+                   mod == KMOD_SHIFT) {
+            switch (key) {
             case SDLK_LEFT:
               camera.spin(0.01);
               break;
