@@ -80,10 +80,3 @@ void resize(int w, int h)
   height = h;
   resizeTextures();
 }
-
-void mouse_drag_zoom(Camera &camera, int movey)
-{
-  double dy = double(movey) / double(height);
-
-  camera.zoom(dy);
-}

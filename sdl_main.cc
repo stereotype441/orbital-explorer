@@ -215,7 +215,7 @@ static int go()
           }
           else if (event.motion.state == SDL_BUTTON_RMASK) {
             camera.spin(-double(event.motion.xrel) / getWidth());
-            mouse_drag_zoom(camera, event.motion.yrel);
+            camera.zoom(double(event.motion.yrel) / getHeight());
           }
           break;
 #if SDL_MAJOR_VERSION == 1
