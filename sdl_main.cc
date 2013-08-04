@@ -113,15 +113,14 @@ static int go()
   set_sdl_attr(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 #endif
 
-  int starting_width = 640;
-  int starting_height = 480;
+  Viewport view(640, 480);
 
 #if SDL_MAJOR_VERSION == 1
 
   const SDL_VideoInfo *video = SDL_GetVideoInfo();
   int bpp = video->vfmt->BitsPerPixel;
   const Uint32 videoModeFlags = SDL_OPENGL | SDL_RESIZABLE;
-  SDL_Surface *screen = SDL_SetVideoMode(starting_width, starting_height,
+  SDL_Surface *screen = SDL_SetVideoMode(view.getWidth(), view.getHeight(),
                                          bpp, videoModeFlags);
   if (screen == NULL) {
     fprintf(stderr, "SDL_SetVideoMode(): %s\n", SDL_GetError());
@@ -143,7 +142,7 @@ static int go()
   SDL_Window *window =
     SDL_CreateWindow("Electron Orbital Explorer",
                      SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                     starting_width, starting_height,
+                     view.getWidth(), view.getHeight(),
                      SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
   if (!window) {
     fprintf(stderr, "SDL_CreateWindow(): %s\n", SDL_GetError());
@@ -170,7 +169,6 @@ static int go()
   //
 
   initialize();
-  Viewport view(starting_width, starting_height);
   resizeTextures(view);
 
   //
