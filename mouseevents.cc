@@ -88,14 +88,6 @@ double getCameraRadius()
   return cameraRadius;
 }
 
-void keyboard_move(Camera &camera, int movex, int movey)
-{
-  double dx = double(movex) / 100.;
-  double dy = double(movey) / 100.;
-
-  camera.rotate(dx, dy);
-}
-
 void mouse_drag_left(Camera &camera, int movex, int movey)
 {
   double dx = double(movex) / double(width);

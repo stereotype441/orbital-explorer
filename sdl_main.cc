@@ -233,16 +233,16 @@ static int go()
           if (event.key.keysym.mod == KMOD_NONE) {
             switch (event.key.keysym.sym) {
             case SDLK_LEFT:
-              keyboard_move(camera, -1, 0);
+              camera.rotate(-0.01, 0);
               break;
             case SDLK_RIGHT:
-              keyboard_move(camera, 1, 0);
+              camera.rotate(0.01, 0);
               break;
             case SDLK_UP:
-              keyboard_move(camera, 0, -1);
+              camera.rotate(0, -0.01);
               break;
             case SDLK_DOWN:
-              keyboard_move(camera, 0, 1);
+              camera.rotate(0, 0.01);
               break;
             case SDLK_PAGEUP:
               mouse_wheel(1);
