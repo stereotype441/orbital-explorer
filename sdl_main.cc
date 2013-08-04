@@ -221,16 +221,13 @@ static int go()
 #if SDL_MAJOR_VERSION == 1
         case SDL_MOUSEBUTTONDOWN:
           if (event.button.button == SDL_BUTTON_WHEELUP)
-            mouse_wheel(camera, 1);
+            camera.zoom(-0.05);
           if (event.button.button == SDL_BUTTON_WHEELDOWN)
-            mouse_wheel(camera, -1);
+            camera.zoom(0.05);
           break;
 #else
         case SDL_MOUSEWHEEL:
-          int amount;
-          amount = event.wheel.y;
-          if (amount)
-            mouse_wheel(camera, amount);
+          camera.zoom(-0.05 * event.wheel.y);
           break;
 #endif
         case SDL_KEYDOWN:
@@ -249,10 +246,10 @@ static int go()
               camera.rotate(0, 0.01);
               break;
             case SDLK_PAGEUP:
-              mouse_wheel(camera, 1);
+              camera.zoom(-0.05);
               break;
             case SDLK_PAGEDOWN:
-              mouse_wheel(camera, -1);
+              camera.zoom(0.05);
               break;
             default:
               break;
@@ -269,10 +266,10 @@ static int go()
               camera.spin(-0.01);
               break;
             case SDLK_UP:
-              mouse_wheel(camera, 1);
+              camera.zoom(-0.05);
               break;
             case SDLK_DOWN:
-              mouse_wheel(camera, -1);
+              camera.zoom(0.05);
               break;
             default:
               break;
