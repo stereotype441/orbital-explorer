@@ -51,13 +51,16 @@
 class Camera
 {
 public:
-  Camera() : rotation(1.0) {}
+  Camera() : rotation(1.0), radius(4.0) {}
   Quaternion getRotation() const { return rotation; }
+  double getRadius() const { return radius; }
   void rotate(double x, double y);
   void spin(double s);
+  void zoom(double f);
 
 private:
   Quaternion rotation;
+  double radius;
 };
 
 #endif

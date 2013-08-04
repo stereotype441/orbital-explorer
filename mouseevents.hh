@@ -52,8 +52,7 @@ int getWidth();
 int getHeight();
 void resize(int w, int h);
 Quaternion getCameraRotation();
-double getCameraRadius();
-void mouse_drag_zoom(int movey);
-void mouse_wheel(int direction);
+void mouse_drag_zoom(Camera &camera, int movey);
+void mouse_wheel(Camera &camera, int direction);
 
 #endif

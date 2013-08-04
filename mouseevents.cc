@@ -81,27 +81,18 @@ void resize(int w, int h)
   resizeTextures();
 }
 
-static double cameraRadius = 32.;
-
-double getCameraRadius()
-{
-  return cameraRadius;
-}
-
-void mouse_drag_zoom(int movey)
+void mouse_drag_zoom(Camera &camera, int movey)
 {
   double dy = double(movey) / double(height);
 
   double factor = 1 + dy;
   clamp(factor, 0.5, 2.0);
 
-  cameraRadius *= factor;
-  clamp(cameraRadius, 1.0, 2048.0);
+  camera.zoom(factor);
 }
 
-void mouse_wheel(int direction)
+void mouse_wheel(Camera &camera, int direction)
 {
   // + = zoom in, - = zoom out
-  cameraRadius *= pow(2.0, 0.0625 * double(-direction));
-  clamp(cameraRadius, 1.0, 2048.0);
+  camera.zoom(pow(2.0, 0.0625 * double(-direction)));
 }

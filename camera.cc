@@ -68,3 +68,12 @@ void Camera::spin(double s)
   rotation = xy_rotation * rotation;
   rotation /= norm(rotation);
 }
+
+// f is a multiplicative factor.
+// 0 < f < 1 --> zoom in
+//   1 < f   --> zoom out
+void Camera::zoom(double f)
+{
+  radius *= f;
+  clamp(radius, 1.0, 2048.0);
+}

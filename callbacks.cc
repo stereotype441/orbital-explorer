@@ -147,7 +147,7 @@ Matrix<4,4> generateMvpm(Camera &camera, int width, int height, double near, dou
   Matrix<4,4> frustum = transformFrustum(L, R, B, T, near, far);
 
   Matrix<4,4> translation =
-    transformTranslation(-getCameraRadius() * basisVector<3>(2));
+    transformTranslation(-camera.getRadius() * basisVector<3>(2));
 
   Matrix<4,4> rotation = transformRotation(camera.getRotation());
 
@@ -239,7 +239,7 @@ void display(Camera &camera)
   GetGLError();
 
   double near = 1.0;
-  double far = getCameraRadius() + orbital->radius() * sqrt(2.0);
+  double far = camera.getRadius() + orbital->radius() * sqrt(2.0);
   Matrix<4,4> mvpm = generateMvpm(camera, width, height, near, far);
 
   static Matrix<4,4> old_mvpm;
