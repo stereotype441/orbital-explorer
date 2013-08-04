@@ -229,27 +229,47 @@ static int go()
           break;
 #endif
         case SDL_KEYDOWN:
-          switch (event.key.keysym.sym) {
-          case SDLK_LEFT:
-            keyboard_move(-1, 0);
-            break;
-          case SDLK_RIGHT:
-            keyboard_move(1, 0);
-            break;
-          case SDLK_UP:
-            keyboard_move(0, -1);
-            break;
-          case SDLK_DOWN:
-            keyboard_move(0, 1);
-            break;
-          case SDLK_PAGEUP:
-            mouse_wheel(1);
-            break;
-          case SDLK_PAGEDOWN:
-            mouse_wheel(-1);
-            break;
-          default:
-            break;
+          if (event.key.keysym.mod == KMOD_NONE) {
+            switch (event.key.keysym.sym) {
+            case SDLK_LEFT:
+              keyboard_move(-1, 0);
+              break;
+            case SDLK_RIGHT:
+              keyboard_move(1, 0);
+              break;
+            case SDLK_UP:
+              keyboard_move(0, -1);
+              break;
+            case SDLK_DOWN:
+              keyboard_move(0, 1);
+              break;
+            case SDLK_PAGEUP:
+              mouse_wheel(1);
+              break;
+            case SDLK_PAGEDOWN:
+              mouse_wheel(-1);
+              break;
+            default:
+              break;
+            }
+          }
+          else if (event.key.keysym.mod == KMOD_LSHIFT ||
+                   event.key.keysym.mod == KMOD_RSHIFT ||
+                   false) {
+            switch (event.key.keysym.sym) {
+            case SDLK_LEFT:
+              // FIXME spin camera left
+              break;
+            case SDLK_RIGHT:
+              // FIXME spin camera right
+              break;
+            case SDLK_UP:
+              mouse_wheel(1);
+              break;
+            case SDLK_DOWN:
+              mouse_wheel(-1);
+              break;
+            }
           }
           break;
         case SDL_QUIT:
