@@ -170,13 +170,14 @@ static int go()
   //
 
   initialize();
-  resize(starting_width, starting_height);
+  Viewport view(starting_width, starting_height);
+  resizeTextures(view);
 
   //
   // Initialize controls
   //
 
-  initControls();
+  initControls(view);
 
   //
   // Main loop
@@ -197,25 +198,29 @@ static int go()
         switch (event.type) {
 #if SDL_MAJOR_VERSION == 1
         case SDL_VIDEORESIZE:
-          resize(event.resize.w, event.resize.h);
-          SDL_SetVideoMode(getWidth(), getHeight(), bpp, videoModeFlags);
+          view.resize(event.resize.w, event.resize.h);
+          resizeTextures(view);
+          SDL_SetVideoMode(view.getWidth(), view.getHeight(),
+                           bpp, videoModeFlags);
           break;
 #else
         case SDL_WINDOWEVENT:
-          if (event.window.event == SDL_WINDOWEVENT_RESIZED)
-            resize(event.window.data1, event.window.data2);
+          if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
+            view.resize(event.window.data1, event.window.data2);
+            resizeTextures(view);
+          }
           break;
 #endif
         case SDL_MOUSEMOTION:
           // TODO: detect mouse button down, and put the mouse into
           // relative mode.
           if (event.motion.state == SDL_BUTTON_LMASK) {
-            camera.rotate(double(event.motion.xrel) / getWidth(),
-                          double(event.motion.yrel) / getHeight());
+            camera.rotate(double(event.motion.xrel) / view.getWidth(),
+                          double(event.motion.yrel) / view.getHeight());
           }
           else if (event.motion.state == SDL_BUTTON_RMASK) {
-            camera.spin(-double(event.motion.xrel) / getWidth());
-            camera.zoom(double(event.motion.yrel) / getHeight());
+            camera.spin(-double(event.motion.xrel) / view.getWidth());
+            camera.zoom(double(event.motion.yrel) / view.getHeight());
           }
           break;
 #if SDL_MAJOR_VERSION == 1
@@ -285,7 +290,7 @@ static int go()
       }
     }
 
-    display(camera);
+    display(view, camera);
     drawControls();
 #if SDL_MAJOR_VERSION == 1
     SDL_GL_SwapBuffers();

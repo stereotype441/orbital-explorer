@@ -48,8 +48,17 @@
 
 #include "camera.hh"
 
-int getWidth();
-int getHeight();
-void resize(int w, int h);
+class Viewport
+{
+public:
+  Viewport() : width(0), height(0) {}
+  Viewport(int w, int h) : width(w), height(h) {}
+  int getWidth()  const { return width; }
+  int getHeight() const { return height; }
+  void resize(int w, int h) { width = w; height = h; }
+
+private:
+  int width, height;
+};
 
 #endif

@@ -48,9 +48,10 @@
 
 #include <SDL.h>
 
+#include "viewport.hh"
 #include "wavefunction.hh"
 
-void initControls();
+void initControls(Viewport &view);
 int handleControls(SDL_Event &event);
 void drawControls();
 void setVerticesTetrahedra(int vertices, int tetrahedra);

@@ -121,10 +121,10 @@ void initialize()
   GetGLError();
 }
 
-void resizeTextures()
+void resizeTextures(Viewport &view)
 {
-  int width = getWidth();
-  int height = getHeight();
+  int width = view.getWidth();
+  int height = view.getHeight();
 
   // Resize statically-sized textures
   resizeTexture(solidRGBTex, GL_RGB8, GL_RGB, width, height);
@@ -154,12 +154,12 @@ Matrix<4,4> generateMvpm(Camera &camera, int width, int height, double near, dou
   return frustum * translation * rotation;
 }
 
-void display(Camera &camera)
+void display(Viewport &view, Camera &camera)
 {
   static bool need_full_redraw = true;
 
-  int width = getWidth();
-  int height = getHeight();
+  int width = view.getWidth();
+  int height = view.getHeight();
 
   static int num_points = 0;
   bool just_started = false;

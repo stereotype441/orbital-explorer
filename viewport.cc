@@ -43,40 +43,4 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <stdexcept>
-#include <vector>
-#include <map>
-#include <complex>
-#include <cmath>
-
-#include "util.hh"
-#include "genericops.hh"
-#include "array.hh"
-#include "vector.hh"
-#include "matrix.hh"
-#include "quaternion.hh"
-#include "transform.hh"
-#include "callbacks.hh"
-#include "camera.hh"
-
-using namespace std;
-
-static int width = 0;
-static int height = 0;
-
-int getWidth()
-{
-  return width;
-}
-
-int getHeight()
-{
-  return height;
-}
-
-void resize(int w, int h)
-{
-  width = w;
-  height = h;
-  resizeTextures();
-}
+#include "viewport.hh"

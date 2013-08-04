@@ -265,7 +265,7 @@ static int fps = 0;
 static int vertices = 0;
 static int tetrahedra = 0;
 
-void initControls()
+void initControls(Viewport &view)
 {
   int t = 1;
   int f = 0;
@@ -280,7 +280,7 @@ void initControls()
   }
   atexit(myTwTerminate);
 
-  TwWindowSize(getWidth(), getHeight());
+  TwWindowSize(view.getWidth(), view.getHeight());
 
   physics = TwNewBar("Physics");
   graphics = TwNewBar("Graphics");
