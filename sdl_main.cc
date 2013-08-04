@@ -274,6 +274,8 @@ static int go()
             case SDLK_DOWN:
               mouse_wheel(-1);
               break;
+            default:
+              break;
             }
           }
           break;
