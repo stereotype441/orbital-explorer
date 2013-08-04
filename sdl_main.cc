@@ -260,7 +260,7 @@ static int go()
           }
           else if (event.key.keysym.mod == KMOD_LSHIFT ||
                    event.key.keysym.mod == KMOD_RSHIFT ||
-                   false) {
+                   event.key.keysym.mod == KMOD_SHIFT) {
             switch (event.key.keysym.sym) {
             case SDLK_LEFT:
               camera.spin(0.01);
