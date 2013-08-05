@@ -50,8 +50,8 @@
 #include "camera.hh"
 
 void initialize();
-void resizeTextures(const Viewport &view);
-void display(const Viewport &view, const Camera &camera);
+void resizeTextures(const Viewport &viewport);
+void display(const Viewport &viewport, const Camera &camera);
 void cleanup();
 
 #endif

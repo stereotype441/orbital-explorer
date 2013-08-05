@@ -100,15 +100,16 @@ static int go()
   set_sdl_attr(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 #endif
 
-  Viewport view(640, 480);
+  Viewport viewport(640, 480);
 
 #if SDL_MAJOR_VERSION == 1
 
   const SDL_VideoInfo *video = SDL_GetVideoInfo();
   int bpp = video->vfmt->BitsPerPixel;
   const Uint32 videoModeFlags = SDL_OPENGL | SDL_RESIZABLE;
-  SDL_Surface *screen = SDL_SetVideoMode(view.getWidth(), view.getHeight(),
-                                         bpp, videoModeFlags);
+  SDL_Surface *screen =
+    SDL_SetVideoMode(viewport.getWidth(), viewport.getHeight(),
+                     bpp, videoModeFlags);
   if (screen == NULL) {
     fprintf(stderr, "SDL_SetVideoMode(): %s\n", SDL_GetError());
     return 1;
@@ -129,7 +130,7 @@ static int go()
   SDL_Window *window =
     SDL_CreateWindow("Electron Orbital Explorer",
                      SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                     view.getWidth(), view.getHeight(),
+                     viewport.getWidth(), viewport.getHeight(),
                      SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
   if (!window) {
     fprintf(stderr, "SDL_CreateWindow(): %s\n", SDL_GetError());
@@ -156,13 +157,13 @@ static int go()
   //
 
   initialize();
-  resizeTextures(view);
+  resizeTextures(viewport);
 
   //
   // Initialize controls
   //
 
-  initControls(view);
+  initControls(viewport);
 
   //
   // Main loop
@@ -183,27 +184,27 @@ static int go()
         switch (event.type) {
 #if SDL_MAJOR_VERSION == 1
         case SDL_VIDEORESIZE:
-          view.resize(event.resize.w, event.resize.h);
-          resizeTextures(view);
-          SDL_SetVideoMode(view.getWidth(), view.getHeight(),
+          viewport.resize(event.resize.w, event.resize.h);
+          resizeTextures(viewport);
+          SDL_SetVideoMode(viewport.getWidth(), viewport.getHeight(),
                            bpp, videoModeFlags);
           break;
 #else
         case SDL_WINDOWEVENT:
           if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
-            view.resize(event.window.data1, event.window.data2);
-            resizeTextures(view);
+            viewport.resize(event.window.data1, event.window.data2);
+            resizeTextures(viewport);
           }
           break;
 #endif
         case SDL_MOUSEMOTION:
           if (event.motion.state == SDL_BUTTON_LMASK) {
-            camera.rotate(double(event.motion.xrel) / view.getWidth(),
-                          double(event.motion.yrel) / view.getHeight());
+            camera.rotate(double(event.motion.xrel) / viewport.getWidth(),
+                          double(event.motion.yrel) / viewport.getHeight());
           }
           else if (event.motion.state == SDL_BUTTON_RMASK) {
-            camera.spin(-double(event.motion.xrel) / view.getWidth());
-            camera.zoom(double(event.motion.yrel) / view.getHeight());
+            camera.spin(-double(event.motion.xrel) / viewport.getWidth());
+            camera.zoom(double(event.motion.yrel) / viewport.getHeight());
           }
           break;
 #if SDL_MAJOR_VERSION == 1
@@ -273,7 +274,7 @@ static int go()
       }
     }
 
-    display(view, camera);
+    display(viewport, camera);
     drawControls();
 #if SDL_MAJOR_VERSION == 1
     SDL_GL_SwapBuffers();

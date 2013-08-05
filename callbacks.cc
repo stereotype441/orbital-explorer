@@ -107,10 +107,10 @@ void initialize()
   GetGLError();
 }
 
-void resizeTextures(const Viewport &view)
+void resizeTextures(const Viewport &viewport)
 {
-  int width = view.getWidth();
-  int height = view.getHeight();
+  int width = viewport.getWidth();
+  int height = viewport.getHeight();
 
   // Resize statically-sized textures
   resizeTexture(solidRGBTex, GL_RGB8, GL_RGB, width, height);
@@ -121,12 +121,12 @@ void resizeTextures(const Viewport &view)
   GetGLError();
 }
 
-void display(const Viewport &view, const Camera &camera)
+void display(const Viewport &viewport, const Camera &camera)
 {
   static bool need_full_redraw = true;
 
-  int width = view.getWidth();
-  int height = view.getHeight();
+  int width = viewport.getWidth();
+  int height = viewport.getHeight();
 
   static int num_points = 0;
   bool just_started = false;
@@ -208,7 +208,7 @@ void display(const Viewport &view, const Camera &camera)
   double near = 1.0;
   double far = camera.getRadius() + orbital->radius() * sqrt(2.0);
   Matrix<4,4> viewMatrix = camera.viewMatrix();
-  Matrix<4,4> mvpm = view.projMatrix(near, far) * viewMatrix;
+  Matrix<4,4> mvpm = viewport.projMatrix(near, far) * viewMatrix;
   // Vector<4> cameraPosition = inverse(viewMatrix) * basisVector<4>(3);
 
   static Matrix<4,4> old_mvpm;
