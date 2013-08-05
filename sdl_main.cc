@@ -46,28 +46,14 @@
 #include <stdexcept>
 #include <string>
 #include <iostream>
-#include <vector>
-#include <map>
-#include <complex>
 #include <cstdlib>
-#include <cmath>
-#include <unistd.h>
 #include <SDL.h>
 
 #include "config.hh"
 #include "glprocs.hh"
 #include "callbacks.hh"
-#include "array.hh"
-#include "genericops.hh"
-#include "vector.hh"
-#include "matrix.hh"
-#include "quaternion.hh"
-#include "function.hh"
-#include "polynomial.hh"
-#include "wavefunction.hh"
 #include "viewport.hh"
 #include "controls.hh"
-#include "util.hh"
 
 using namespace std;
 

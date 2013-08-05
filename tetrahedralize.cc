@@ -43,20 +43,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <stdexcept>
 #include <vector>
-#include <set>
-#include <map>
 #include <algorithm>
 #include <cmath>
 #include <complex>
-#include <cstdio>
 
-#include "util.hh"
 #include "array.hh"
-#include "genericops.hh"
 #include "vector.hh"
-#include "matrix.hh"
 #include "function.hh"
 #include "delaunay.hh"
 #include "tetrahedralize.hh"

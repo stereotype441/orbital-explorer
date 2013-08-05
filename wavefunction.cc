@@ -43,18 +43,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <stdexcept>
-#include <vector>
-#include <map>
 #include <complex>
 #include <cmath>
 
 #include "util.hh"
-#include "array.hh"
-#include "genericops.hh"
 #include "vector.hh"
-#include "matrix.hh"
-#include "function.hh"
 #include "polynomial.hh"
 #include "wavefunction.hh"
 #include "radial_data.hh"

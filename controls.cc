@@ -43,9 +43,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <stdexcept>
 #include <cstdlib>
-#include <cmath>
 #include <cstdio>
 #include <ctime>
 #include <AntTweakBar.h>

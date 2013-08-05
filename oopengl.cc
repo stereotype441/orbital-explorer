@@ -43,15 +43,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <stdexcept>
 #include <vector>
-#include <complex>
 #include <cstdlib>
-#include <cmath>
 #include <cstdio>
 
 #include "array.hh"
-#include "genericops.hh"
 #include "vector.hh"
 #include "matrix.hh"
 #include "oopengl.hh"

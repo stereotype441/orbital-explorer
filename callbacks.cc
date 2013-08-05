@@ -43,30 +43,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <stdexcept>
 #include <vector>
-#include <set>
-#include <map>
-#include <vector>
-#include <cstdio>
 #include <cstdlib>
 #include <cmath>
 #include <complex>
-#include <sys/time.h>
 
 #include "glprocs.hh"
 #include "callbacks.hh"
-#include "shaders.hh"
-#include "array.hh"
-#include "genericops.hh"
 #include "vector.hh"
 #include "matrix.hh"
-#include "quaternion.hh"
 #include "transform.hh"
-#include "util.hh"
-#include "delaunay.hh"
-#include "function.hh"
-#include "polynomial.hh"
 #include "wavefunction.hh"
 #include "tetrahedralize.hh"
 #include "oopengl.hh"

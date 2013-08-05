@@ -43,13 +43,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <stdexcept>
-#include <vector>
-#include <complex>
 #include <cmath>
 
-#include "array.hh"
-#include "genericops.hh"
 #include "vector.hh"
 #include "matrix.hh"
 #include "quaternion.hh"
