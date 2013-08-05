@@ -46,11 +46,14 @@
 #ifndef MOUSEEVENTS_HH
 #define MOUSEEVENTS_HH
 
+#include "matrix.hh"
+
 class Viewport
 {
 public:
   Viewport() : width(0), height(0) {}
   Viewport(int w, int h) : width(w), height(h) {}
+  Matrix<4,4> projMatrix(double near, double far) const;
   int getWidth()  const { return width; }
   int getHeight() const { return height; }
   void resize(int w, int h) { width = w; height = h; }

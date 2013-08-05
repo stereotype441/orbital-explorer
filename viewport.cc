@@ -43,4 +43,18 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "matrix.hh"
+#include "transform.hh"
 #include "viewport.hh"
+
+Matrix<4,4> Viewport::projMatrix(double near, double far) const
+{
+  double rectangular_imbalance = sqrt(double(width) / double(height));
+
+  double L = -rectangular_imbalance;
+  double R =  rectangular_imbalance;
+  double B = -1.0 / rectangular_imbalance;
+  double T =  1.0 / rectangular_imbalance;
+
+  return transformFrustum(L, R, B, T, near, far);
+}

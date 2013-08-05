@@ -121,21 +121,16 @@ void resizeTextures(const Viewport &view)
   GetGLError();
 }
 
-static Matrix<4,4> generateMvpm(const Camera &camera, int width, int height,
+static Matrix<4,4> generateMvpm(const Camera &camera, const Viewport &view,
                                 double near, double far)
 {
   // Generate the so-called model-view-projection matrix
+  // Since the nucleus is at the origin, model and global coordinates
+  // are the same.
+  Matrix<4,4> v = camera.viewMatrix();
+  Matrix<4,4> p = view.projMatrix(near, far);
 
-  double rectangular_imbalance = sqrt(double(width) / double(height));
-  double L = -rectangular_imbalance;
-  double R =  rectangular_imbalance;
-  double B = -1.0 / rectangular_imbalance;
-  double T =  1.0 / rectangular_imbalance;
-  Matrix<4,4> frustum = transformFrustum(L, R, B, T, near, far);
-
-  Matrix<4,4> view = camera.viewMatrix();
-
-  return frustum * view;
+  return p * v;
 }
 
 void display(const Viewport &view, const Camera &camera)
@@ -224,7 +219,7 @@ void display(const Viewport &view, const Camera &camera)
 
   double near = 1.0;
   double far = camera.getRadius() + orbital->radius() * sqrt(2.0);
-  Matrix<4,4> mvpm = generateMvpm(camera, width, height, near, far);
+  Matrix<4,4> mvpm = generateMvpm(camera, view, near, far);
 
   static Matrix<4,4> old_mvpm;
   if (mvpm != old_mvpm)
