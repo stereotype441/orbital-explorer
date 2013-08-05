@@ -207,7 +207,9 @@ void display(const Viewport &view, const Camera &camera)
 
   double near = 1.0;
   double far = camera.getRadius() + orbital->radius() * sqrt(2.0);
-  Matrix<4,4> mvpm = view.projMatrix(near, far) * camera.viewMatrix();
+  Matrix<4,4> viewMatrix = camera.viewMatrix();
+  Matrix<4,4> mvpm = view.projMatrix(near, far) * viewMatrix;
+  // Vector<4> cameraPosition = inverse(viewMatrix) * basisVector<4>(3);
 
   static Matrix<4,4> old_mvpm;
   if (mvpm != old_mvpm)
