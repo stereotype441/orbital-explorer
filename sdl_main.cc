@@ -197,8 +197,6 @@ static int go()
           break;
 #endif
         case SDL_MOUSEMOTION:
-          // TODO: detect mouse button down, and put the mouse into
-          // relative mode.
           if (event.motion.state == SDL_BUTTON_LMASK) {
             camera.rotate(double(event.motion.xrel) / view.getWidth(),
                           double(event.motion.yrel) / view.getHeight());
