@@ -52,4 +52,16 @@
 
 const int MAX_ATOMIC_NUMBER = 118;
 
+// How much to rotate the camera when an arrow key is pressed.
+// 1.0 = 180 degrees
+
+const double DISCRETE_ROTATION_SIZE = 0.01;
+
+// How much to zoom the camera when a key is pressed or the mouse wheel
+// is clicked up/down.
+// -1.0 = zoom in by a factor of two
+// 1.0 = zoom out by a factor of two
+
+const double DISCRETE_ZOOM_SIZE = 0.05;
+
 #endif

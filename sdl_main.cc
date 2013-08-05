@@ -54,6 +54,7 @@
 #include <unistd.h>
 #include <SDL.h>
 
+#include "config.hh"
 #include "glprocs.hh"
 #include "callbacks.hh"
 #include "array.hh"
@@ -224,13 +225,13 @@ static int go()
 #if SDL_MAJOR_VERSION == 1
         case SDL_MOUSEBUTTONDOWN:
           if (event.button.button == SDL_BUTTON_WHEELUP)
-            camera.zoom(-0.05);
+            camera.zoom(-DISCRETE_ZOOM_SIZE);
           if (event.button.button == SDL_BUTTON_WHEELDOWN)
-            camera.zoom(0.05);
+            camera.zoom(DISCRETE_ZOOM_SIZE);
           break;
 #else
         case SDL_MOUSEWHEEL:
-          camera.zoom(-0.05 * event.wheel.y);
+          camera.zoom(-DISCRETE_ZOOM_SIZE * event.wheel.y);
           break;
 #endif
         case SDL_KEYDOWN:
@@ -241,22 +242,22 @@ static int go()
           if (mod == KMOD_NONE) {
             switch (key) {
             case SDLK_LEFT:
-              camera.rotate(-0.01, 0);
+              camera.rotate(-DISCRETE_ROTATION_SIZE, 0);
               break;
             case SDLK_RIGHT:
-              camera.rotate(0.01, 0);
+              camera.rotate(DISCRETE_ROTATION_SIZE, 0);
               break;
             case SDLK_UP:
-              camera.rotate(0, -0.01);
+              camera.rotate(0, -DISCRETE_ROTATION_SIZE);
               break;
             case SDLK_DOWN:
-              camera.rotate(0, 0.01);
+              camera.rotate(0, DISCRETE_ROTATION_SIZE);
               break;
             case SDLK_PAGEUP:
-              camera.zoom(-0.05);
+              camera.zoom(-DISCRETE_ZOOM_SIZE);
               break;
             case SDLK_PAGEDOWN:
-              camera.zoom(0.05);
+              camera.zoom(DISCRETE_ZOOM_SIZE);
               break;
             default:
               break;
@@ -266,16 +267,16 @@ static int go()
                    mod == KMOD_SHIFT) {
             switch (key) {
             case SDLK_LEFT:
-              camera.spin(0.01);
+              camera.spin(DISCRETE_ROTATION_SIZE);
               break;
             case SDLK_RIGHT:
-              camera.spin(-0.01);
+              camera.spin(-DISCRETE_ROTATION_SIZE);
               break;
             case SDLK_UP:
-              camera.zoom(-0.05);
+              camera.zoom(-DISCRETE_ZOOM_SIZE);
               break;
             case SDLK_DOWN:
-              camera.zoom(0.05);
+              camera.zoom(DISCRETE_ZOOM_SIZE);
               break;
             default:
               break;
