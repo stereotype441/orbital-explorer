@@ -121,7 +121,7 @@ void initialize()
   GetGLError();
 }
 
-void resizeTextures(Viewport &view)
+void resizeTextures(const Viewport &view)
 {
   int width = view.getWidth();
   int height = view.getHeight();
@@ -135,7 +135,8 @@ void resizeTextures(Viewport &view)
   GetGLError();
 }
 
-Matrix<4,4> generateMvpm(Camera &camera, int width, int height, double near, double far)
+static Matrix<4,4> generateMvpm(const Camera &camera, int width, int height,
+                                double near, double far)
 {
   // Generate the so-called model-view-projection matrix
 
@@ -154,7 +155,7 @@ Matrix<4,4> generateMvpm(Camera &camera, int width, int height, double near, dou
   return frustum * translation * rotation;
 }
 
-void display(Viewport &view, Camera &camera)
+void display(const Viewport &view, const Camera &camera)
 {
   static bool need_full_redraw = true;
 
