@@ -46,6 +46,7 @@
 #ifndef CLOUD_HH
 #define CLOUD_HH
 
+#include "oopengl.hh"
 #include "matrix.hh"
 
 void initClouds(Texture *solidDepthTex, Texture *cloudDensityTex);

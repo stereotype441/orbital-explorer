@@ -46,8 +46,6 @@
 #ifndef MOUSEEVENTS_HH
 #define MOUSEEVENTS_HH
 
-#include "camera.hh"
-
 class Viewport
 {
 public:
