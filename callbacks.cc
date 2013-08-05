@@ -121,18 +121,6 @@ void resizeTextures(const Viewport &view)
   GetGLError();
 }
 
-static Matrix<4,4> generateMvpm(const Camera &camera, const Viewport &view,
-                                double near, double far)
-{
-  // Generate the so-called model-view-projection matrix
-  // Since the nucleus is at the origin, model and global coordinates
-  // are the same.
-  Matrix<4,4> v = camera.viewMatrix();
-  Matrix<4,4> p = view.projMatrix(near, far);
-
-  return p * v;
-}
-
 void display(const Viewport &view, const Camera &camera)
 {
   static bool need_full_redraw = true;
@@ -219,7 +207,7 @@ void display(const Viewport &view, const Camera &camera)
 
   double near = 1.0;
   double far = camera.getRadius() + orbital->radius() * sqrt(2.0);
-  Matrix<4,4> mvpm = generateMvpm(camera, view, near, far);
+  Matrix<4,4> mvpm = view.projMatrix(near, far) * camera.viewMatrix();
 
   static Matrix<4,4> old_mvpm;
   if (mvpm != old_mvpm)
