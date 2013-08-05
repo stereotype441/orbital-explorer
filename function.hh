@@ -72,7 +72,7 @@ public:
 };
 
 template <unsigned n>
-Vector<n> RealFunction<n>::gradient(const Vector<n> &x) const
+inline Vector<n> RealFunction<n>::gradient(const Vector<n> &x) const
 {
   const RealFunction<n> &f = *this;
 
@@ -90,7 +90,7 @@ Vector<n> RealFunction<n>::gradient(const Vector<n> &x) const
 }
 
 template <unsigned n>
-Matrix<n,n> RealFunction<n>::hessian(const Vector<n> &x) const
+inline Matrix<n,n> RealFunction<n>::hessian(const Vector<n> &x) const
 {
   const RealFunction<n> &f = *this;
 

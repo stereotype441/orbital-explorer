@@ -52,14 +52,15 @@ static const double pi = 3.141592653589793238;
 
 double now();
 
-template <typename T> void clamp(T &x, T low, T high)
+template <typename T>
+inline void clamp(T &x, T low, T high)
 {
   if (x < low) x = low;
   if (x > high) x = high;
 }
 
 template <class K, class V>
-std::map<K,V> singleton(const K &k, const V &v)
+inline std::map<K,V> singleton(const K &k, const V &v)
 {
   std::map<K,V> m;
   m.insert(std::make_pair(k,v));

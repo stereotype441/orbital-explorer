@@ -53,7 +53,7 @@
 #include "util.hh"
 
 template <unsigned n>
-Vector<n> find_circumcenter(const Array<n + 1, Vector<n> > &xs)
+inline Vector<n> find_circumcenter(const Array<n + 1, Vector<n> > &xs)
 {
   Matrix<n, n> a;
   for (unsigned i = 0; i < n; ++i)
@@ -66,8 +66,8 @@ Vector<n> find_circumcenter(const Array<n + 1, Vector<n> > &xs)
 }
 
 template<unsigned n>
-double average_distance_squared(const Vector<n> &x,
-                                const Array<n + 1, Vector<n> > &ys)
+inline double average_distance_squared(const Vector<n> &x,
+                                       const Array<n + 1, Vector<n> > &ys)
 {
   double sum = 0.0;
 
@@ -179,13 +179,13 @@ inline Simplex<3>::Simplex(const std::vector<Vector<3> > &points,
 }
 
 template <unsigned n>
-bool Simplex<n>::isInsideCircumsphere(const Vector<n> &v) const
+inline bool Simplex<n>::isInsideCircumsphere(const Vector<n> &v) const
 {
   return norm_squared(v - c) < r2 * (1. + 1e-9);
 }
 
 template <unsigned n>
-Array<n + 1, Face<n> > Simplex<n>::faces() const
+inline Array<n + 1, Face<n> > Simplex<n>::faces() const
 {
   Array<n + 1, Face<n> > fs;
 
@@ -201,8 +201,8 @@ Array<n + 1, Face<n> > Simplex<n>::faces() const
 }
 
 template <unsigned n>
-unsigned Simplex<n>::connectAcrossFace(const Face<n> &face,
-                                       unsigned other_simplex_index)
+inline unsigned Simplex<n>::connectAcrossFace(const Face<n> &face,
+                                              unsigned other_simplex_index)
 {
   // Find the position of the forming point which is not on the face
   unsigned forming_point_pos;
@@ -247,7 +247,7 @@ private:
 };
 
 template <unsigned n>
-Delaunay<n>::Delaunay(const Array<n + 1, Vector<n> > &vs)
+inline Delaunay<n>::Delaunay(const Array<n + 1, Vector<n> > &vs)
   : points(vs.toVector()),
     max_simplex(1),
     simplex_map()
@@ -259,13 +259,13 @@ Delaunay<n>::Delaunay(const Array<n + 1, Vector<n> > &vs)
 }
 
 template <unsigned n>
-unsigned Delaunay<n>::numPoints() const
+inline unsigned Delaunay<n>::numPoints() const
 {
   return points.size();
 }
 
 template <unsigned n>
-const Vector<n> &Delaunay<n>::getPoint(unsigned i) const
+inline const Vector<n> &Delaunay<n>::getPoint(unsigned i) const
 {
   if (i >= points.size())
     throw std::range_error("Tried to get an out-of-range point");
@@ -273,19 +273,19 @@ const Vector<n> &Delaunay<n>::getPoint(unsigned i) const
 }
 
 template <unsigned n>
-unsigned Delaunay<n>::maxSimplex() const
+inline unsigned Delaunay<n>::maxSimplex() const
 {
   return max_simplex;
 }
 
 template <unsigned n>
-bool Delaunay<n>::hasSimplex(unsigned i) const
+inline bool Delaunay<n>::hasSimplex(unsigned i) const
 {
   return simplex_map.find(i) != simplex_map.end();
 }
 
 template <unsigned n>
-const Simplex<n> &Delaunay<n>::getSimplex(unsigned i) const
+inline const Simplex<n> &Delaunay<n>::getSimplex(unsigned i) const
 {
   typename std::map<unsigned, Simplex<n> >::const_iterator s;
   s = simplex_map.find(i);
@@ -295,13 +295,13 @@ const Simplex<n> &Delaunay<n>::getSimplex(unsigned i) const
 }
 
 template <unsigned n>
-void Delaunay<n>::inefficientAddPoint(const Vector<n> &v)
+inline void Delaunay<n>::inefficientAddPoint(const Vector<n> &v)
 {
   addPoint(v, findOneDeletedSimplex(v));
 }
 
 template <unsigned n>
-unsigned Delaunay<n>::findOneDeletedSimplex(const Vector<n> &v) const
+inline unsigned Delaunay<n>::findOneDeletedSimplex(const Vector<n> &v) const
 {
   for (unsigned i = 0; i <= max_simplex; ++i)
     if (hasSimplex(i) && getSimplex(i).isInsideCircumsphere(v))
@@ -311,7 +311,8 @@ unsigned Delaunay<n>::findOneDeletedSimplex(const Vector<n> &v) const
 }
 
 template <unsigned n>
-void Delaunay<n>::addPoint(const Vector<n> &new_point, unsigned in_simplex)
+inline void Delaunay<n>::addPoint(const Vector<n> &new_point,
+                                  unsigned in_simplex)
 {
   unsigned new_point_index = points.size();
   points.push_back(new_point);
@@ -327,7 +328,7 @@ void Delaunay<n>::addPoint(const Vector<n> &new_point, unsigned in_simplex)
 }
 
 template <unsigned n>
-std::set<unsigned>
+inline std::set<unsigned>
 Delaunay<n>::findDeletedSimplices(const Vector<n> &v, unsigned start) const
 {
   std::set<unsigned> deleted_set;
@@ -356,7 +357,7 @@ Delaunay<n>::findDeletedSimplices(const Vector<n> &v, unsigned start) const
 }
 
 template <unsigned n>
-typename Delaunay<n>::Hole
+inline typename Delaunay<n>::Hole
 Delaunay<n>::deleteSimplices(const std::set<unsigned> &deleted_set)
 {
   Hole hole;
@@ -367,7 +368,7 @@ Delaunay<n>::deleteSimplices(const std::set<unsigned> &deleted_set)
 }
 
 template <unsigned n>
-void Delaunay<n>::deleteSimplex(Hole &hole, unsigned delete_me_index)
+inline void Delaunay<n>::deleteSimplex(Hole &hole, unsigned delete_me_index)
 {
   const Simplex<n> &delete_me = getSimplex(delete_me_index);
   Array<n + 1, Face<n> > faces = delete_me.faces();
@@ -381,7 +382,7 @@ void Delaunay<n>::deleteSimplex(Hole &hole, unsigned delete_me_index)
 }
 
 template <unsigned n>
-void Delaunay<n>::addSimplices(unsigned new_point_index, Hole &hole)
+inline void Delaunay<n>::addSimplices(unsigned new_point_index, Hole &hole)
 {
   std::vector<Simplex<n> > simplex_list;
   bool success = false;
@@ -414,8 +415,8 @@ void Delaunay<n>::addSimplices(unsigned new_point_index, Hole &hole)
 }
 
 template <unsigned n>
-void Delaunay<n>::addSimplex(Hole &hole,
-                             Simplex<n> &new_simplex)
+inline void Delaunay<n>::addSimplex(Hole &hole,
+                                    Simplex<n> &new_simplex)
 {
   unsigned new_simplex_index = ++max_simplex;
   Array<n + 1, Face<n> > faces = new_simplex.faces();

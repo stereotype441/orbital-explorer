@@ -129,7 +129,7 @@ private:
 };
 
 template <unsigned n, typename T>
-void Array<n,T>::throw_array_range_exception() const
+inline void Array<n,T>::throw_array_range_exception() const
 {
   throw std::range_error("Array<> index out of range");
 }

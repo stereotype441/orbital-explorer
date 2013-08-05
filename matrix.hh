@@ -88,7 +88,7 @@ private:
 };
 
 template <unsigned p, unsigned q, typename T, class M>
-void GenericMatrix<p,q,T,M>::throw_matrix_range_exception() const
+inline void GenericMatrix<p,q,T,M>::throw_matrix_range_exception() const
 {
   throw std::range_error("Matrix access out of range");
 }
@@ -204,7 +204,7 @@ inline CMatrix<p,r> operator*(const CMatrix<p,q> &x, const CMatrix<q,r> &y)
 }
 
 template <unsigned p, unsigned q, typename T, class M>
-typename M::TransposeType transpose(const GenericMatrix<p,q,T,M> &x)
+inline typename M::TransposeType transpose(const GenericMatrix<p,q,T,M> &x)
 {
   typename M::TransposeType t;
 
@@ -216,7 +216,7 @@ typename M::TransposeType transpose(const GenericMatrix<p,q,T,M> &x)
 }
 
 template <unsigned n, typename T, class M>
-M inverse(const GenericMatrix<n,n,T,M> &x)
+inline M inverse(const GenericMatrix<n,n,T,M> &x)
 {
   M y(static_cast<const M &>(x));
   M z(T(1.0));
