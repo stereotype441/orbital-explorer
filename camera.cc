@@ -49,9 +49,10 @@
 #include "transform.hh"
 #include "camera.hh"
 
-Matrix<4,4> Camera::getRotation() const
+Matrix<4,4> Camera::viewMatrix() const
 {
-  return transformRotation(rotation);
+  return transformTranslation(-radius * basisVector<3>(2)) *
+    transformRotation(rotation);
 }
 
 // Rotate the camera around the origin

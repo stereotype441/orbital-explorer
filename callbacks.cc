@@ -133,12 +133,9 @@ static Matrix<4,4> generateMvpm(const Camera &camera, int width, int height,
   double T =  1.0 / rectangular_imbalance;
   Matrix<4,4> frustum = transformFrustum(L, R, B, T, near, far);
 
-  Matrix<4,4> translation =
-    transformTranslation(-camera.getRadius() * basisVector<3>(2));
+  Matrix<4,4> view = camera.viewMatrix();
 
-  Matrix<4,4> rotation = camera.getRotation();
-
-  return frustum * translation * rotation;
+  return frustum * view;
 }
 
 void display(const Viewport &view, const Camera &camera)

@@ -53,7 +53,7 @@ class Camera
 {
 public:
   Camera() : rotation(1.0), radius(4.0) {}
-  Matrix<4,4> getRotation() const;
+  Matrix<4,4> viewMatrix() const;
   double getRadius() const { return radius; }
   void rotate(double x, double y);
   void spin(double s);
