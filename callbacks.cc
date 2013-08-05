@@ -136,7 +136,7 @@ static Matrix<4,4> generateMvpm(const Camera &camera, int width, int height,
   Matrix<4,4> translation =
     transformTranslation(-camera.getRadius() * basisVector<3>(2));
 
-  Matrix<4,4> rotation = transformRotation(camera.getRotation());
+  Matrix<4,4> rotation = camera.getRotation();
 
   return frustum * translation * rotation;
 }

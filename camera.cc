@@ -45,8 +45,14 @@
 
 #include "util.hh"
 #include "vector.hh"
+#include "matrix.hh"
 #include "transform.hh"
 #include "camera.hh"
+
+Matrix<4,4> Camera::getRotation() const
+{
+  return transformRotation(rotation);
+}
 
 // Rotate the camera around the origin
 // 1.0 = 180 degrees of motion

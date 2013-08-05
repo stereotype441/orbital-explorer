@@ -47,12 +47,13 @@
 #define CAMERA_HH
 
 #include "quaternion.hh"
+#include "matrix.hh"
 
 class Camera
 {
 public:
   Camera() : rotation(1.0), radius(4.0) {}
-  Quaternion getRotation() const { return rotation; }
+  Matrix<4,4> getRotation() const;
   double getRadius() const { return radius; }
   void rotate(double x, double y);
   void spin(double s);
