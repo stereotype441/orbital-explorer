@@ -298,17 +298,13 @@ int TetrahedralSubdivision::numVertices()
   return n;
 }
 
-vector<float> TetrahedralSubdivision::vertexPositions()
+vector<Vector<3> > TetrahedralSubdivision::vertexPositions()
 {
   pthread_mutex_lock(&mutex);
   unsigned num_points = subdivision.numPoints();
-  vector<float> vp(num_points * 3);
-  for (unsigned p = 0; p < num_points; ++p) {
-    Vector<3> point = subdivision.getPoint(p);
-    vp[3 * p + 0] = point[0];
-    vp[3 * p + 1] = point[1];
-    vp[3 * p + 2] = point[2];
-  }
+  vector<Vector<3> > vp(num_points);
+  for (unsigned p = 0; p < num_points; ++p)
+    vp[p] = subdivision.getPoint(p);
   pthread_mutex_unlock(&mutex);
   return vp;
 }

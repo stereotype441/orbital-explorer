@@ -101,7 +101,7 @@ public:
   bool isFinished();
   void kill();
   int numVertices();
-  std::vector<float> vertexPositions();
+  std::vector<Vector<3> > vertexPositions();
   std::vector<unsigned> tetrahedronVertexIndices();
 
   // Thread interface only, not for class-external use

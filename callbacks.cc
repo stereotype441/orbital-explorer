@@ -172,16 +172,16 @@ void display(const Viewport &viewport, const Camera &camera)
     GetGLError();
 
     // Vertex positions
-    std::vector<float> positions = ts->vertexPositions();
-    num_points = positions.size() / 3;
+    std::vector<Vector<3> > positions = ts->vertexPositions();
+    num_points = positions.size();
 
     // Vertex varying data
-    std::vector<float> varyings(positions.size() * 2);
+    std::vector<float> varyings(num_points * 6);
     Vector<3> x;
     for (int p = 0; p < num_points; ++p) {
-      x[0] = varyings[6 * p]     = positions[3 * p];
-      x[1] = varyings[6 * p + 1] = positions[3 * p + 1];
-      x[2] = varyings[6 * p + 2] = positions[3 * p + 2];
+      x[0] = varyings[6 * p]     = positions[p][0];
+      x[1] = varyings[6 * p + 1] = positions[p][1];
+      x[2] = varyings[6 * p + 2] = positions[p][2];
       complex<double> density = (*orbital)(x);
       double a = arg(density);
       double r = 0.06;
