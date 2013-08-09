@@ -123,7 +123,6 @@ void resizeTextures(const Viewport &viewport)
 
 struct Varying
 {
-  Varying() {}
   FVector<3> pos;
   float uY;
   float vY;
