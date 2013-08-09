@@ -121,6 +121,15 @@ void resizeTextures(const Viewport &viewport)
   GetGLError();
 }
 
+struct Varying
+{
+  Varying() {}
+  FVector<3> pos;
+  float uY;
+  float vY;
+  float Y;
+};
+
 void display(const Viewport &viewport, const Camera &camera)
 {
   static bool need_full_redraw = true;
@@ -176,18 +185,18 @@ void display(const Viewport &viewport, const Camera &camera)
     num_points = positions.size();
 
     // Vertex varying data
-    std::vector<float> varyings(num_points * 6);
+    std::vector<Varying> varyings(num_points * 6);
     Vector<3> x;
     for (int p = 0; p < num_points; ++p) {
-      x[0] = varyings[6 * p]     = positions[p][0];
-      x[1] = varyings[6 * p + 1] = positions[p][1];
-      x[2] = varyings[6 * p + 2] = positions[p][2];
+      x[0] = varyings[p].pos[0] = positions[p][0];
+      x[1] = varyings[p].pos[1] = positions[p][1];
+      x[2] = varyings[p].pos[2] = positions[p][2];
       complex<double> density = (*orbital)(x);
       double a = arg(density);
       double r = 0.06;
-      varyings[6 * p + 3] = r * cos(a);
-      varyings[6 * p + 4] = r * sin(a);
-      varyings[6 * p + 5] = abs(density);
+      varyings[p].uY = r * cos(a);
+      varyings[p].vY = r * sin(a);
+      varyings[p].Y = abs(density);
     }
     cloud->buffer(GL_ARRAY_BUFFER, varyings);
     glEnableVertexAttribArray(0);
