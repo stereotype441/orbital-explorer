@@ -186,12 +186,9 @@ void display(const Viewport &viewport, const Camera &camera)
 
     // Vertex varying data
     std::vector<Varying> varyings(num_points * 6);
-    Vector<3> x;
     for (int p = 0; p < num_points; ++p) {
-      x[0] = varyings[p].pos[0] = positions[p][0];
-      x[1] = varyings[p].pos[1] = positions[p][1];
-      x[2] = varyings[p].pos[2] = positions[p][2];
-      complex<double> density = (*orbital)(x);
+      varyings[p].pos = FVector<3>(positions[p]);
+      complex<double> density = (*orbital)(positions[p]);
       double a = arg(density);
       double r = 0.06;
       varyings[p].uY = r * cos(a);
