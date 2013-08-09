@@ -221,4 +221,12 @@ inline Vector<3> Vector3(double x, double y, double z)
   return a;
 }
 
+inline FVector<2> FVector2(float x, float y)
+{
+  FVector<2> a;
+  a[0] = x;
+  a[1] = y;
+  return a;
+}
+
 #endif

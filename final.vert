@@ -45,11 +45,11 @@
 
 #version 150
 
-in vec4 inPosition;
+in vec2 inPosition;
 out vec2 coord;
 
 void main(void)
 {
-  gl_Position = inPosition;
-  coord = (inPosition.xy + 1.0)/2.0;
+  gl_Position = vec4(inPosition, 0.0, 1.0);
+  coord = (inPosition + 1.0)/2.0;
 }

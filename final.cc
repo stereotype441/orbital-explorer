@@ -70,16 +70,15 @@ void initFinal(Texture *solidRGBTex_, Texture *cloudDensityTex_)
   rect->bind();
 
   // Positions
-  GLfloat rect_data[] = {
-    -1.0, -1.0, 0.0,
-    -1.0,  1.0, 0.0,
-    +1.0,  1.0, 0.0,
-    +1.0, -1.0, 0.0,
-  };
+  FVector<2> rect_data[4];
+  rect_data[0] = FVector2(-1.0, -1.0);
+  rect_data[1] = FVector2(-1.0,  1.0);
+  rect_data[2] = FVector2( 1.0,  1.0);
+  rect_data[3] = FVector2( 1.0, -1.0);
   rect->buffer(GL_ARRAY_BUFFER, rect_data, sizeof(rect_data));
 
   glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(GLfloat), 0);
+  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(rect_data[0]), NULL);
 
   GetGLError();
 }
