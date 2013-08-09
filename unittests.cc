@@ -327,6 +327,13 @@ TEST_F(VectorTest, Norm) {
   EXPECT_EQ(sqrt(1.25), norm(z));
 }
 
+TEST_F(VectorTest, AssignToFVector) {
+  FVector<3> a(x);
+  EXPECT_EQ(a[0], float(1.0));
+  EXPECT_EQ(a[1], float(2.0));
+  EXPECT_EQ(a[2], float(3.0));
+}
+
 class CVectorTest : public ::testing::Test {
 protected:
   virtual void SetUp()

@@ -77,6 +77,23 @@ public:
   using GenericVector<n, double, Vector<n> >::operator=;
 };
 
+// FVector exists only for converting doubles to floats prior to
+// uploading vertex data to the GPU.
+template <unsigned n>
+class FVector : public GenericVector<n, float, FVector<n> >
+{
+public:
+  FVector() {}
+  explicit FVector(float x) : GenericVector<n, float, FVector<n> >(x) {}
+  explicit FVector(const Vector<n> &x)
+  {
+    for (int i = 0; i < n; ++i)
+      (*this)[i] = x[i];
+  }
+
+  using GenericVector<n, float, FVector<n> >::operator=;
+};
+
 template <unsigned n>
 class CVector : public GenericVector<n, std::complex<double>, CVector<n> >
 {
