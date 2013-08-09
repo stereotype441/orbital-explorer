@@ -50,6 +50,12 @@ static Program *solidProg;
 static VertexArrayObject *solid;
 static GLuint solidFBO;
 
+struct SolidVarying
+{
+  FVector<3> pos;
+  FVector<3> xyY; // Emitted CIE 1931 color
+};
+
 void initSolids(Texture *solidRGBTex, Texture *solidDepthTex)
 {
   // Solid program
@@ -69,27 +75,38 @@ void initSolids(Texture *solidRGBTex, Texture *solidDepthTex)
   solid = new VertexArrayObject();
   solid->bind();
 
-  // Positions
-  GLfloat solid_data[] = {
-    // X axis
-    0.0, 0.0, 0.0, 0.6400, 0.3300, 0.2126,
-    1.0, 0.0, 0.0, 0.6400, 0.3300, 0.2126,
+  SolidVarying solid_data[6];
+  FVector<3> origin(FVector3(0.0, 0.0, 0.0));
+  FVector<3> red_xyY  (FVector3(0.6400, 0.3300, 0.2126));
+  FVector<3> green_xyY(FVector3(0.3000, 0.6000, 0.3290));
+  FVector<3> blue_xyY (FVector3(0.1500, 0.0600, 0.0721));
+
+  // X axis
+  solid_data[0].pos = origin;
+  solid_data[0].xyY = red_xyY;
+  solid_data[1].pos = FVector3(1.0, 0.0, 0.0);
+  solid_data[1].xyY = red_xyY;
 
     // Y axis
-    0.0, 0.0, 0.0, 0.3000, 0.6000, 0.3290,
-    0.0, 1.0, 0.0, 0.3000, 0.6000, 0.3290,
+  solid_data[2].pos = origin;
+  solid_data[2].xyY = green_xyY;
+  solid_data[3].pos = FVector3(0.0, 1.0, 0.0);
+  solid_data[3].xyY = green_xyY;
 
     // Z axis
-    0.0, 0.0, 0.0, 0.1500, 0.0600, 0.0721,
-    0.0, 0.0, 1.0, 0.1500, 0.0600, 0.0721
-  };
+  solid_data[4].pos = origin;
+  solid_data[4].xyY = blue_xyY;
+  solid_data[5].pos = FVector3(0.0, 0.0, 1.0);
+  solid_data[5].xyY = blue_xyY;
+
   solid->buffer(GL_ARRAY_BUFFER, solid_data, sizeof(solid_data));
 
   glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6*sizeof(GLfloat), 0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(SolidVarying),
+                        reinterpret_cast<void *>(offsetof(SolidVarying, pos)));
   glEnableVertexAttribArray(1);
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6*sizeof(GLfloat),
-                        (void *)(3 * sizeof(GLfloat)));
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(SolidVarying),
+                        reinterpret_cast<void *>(offsetof(SolidVarying, xyY)));
 
   GetGLError();
 

@@ -229,4 +229,13 @@ inline FVector<2> FVector2(float x, float y)
   return a;
 }
 
+inline FVector<3> FVector3(float x, float y, float z)
+{
+  FVector<3> a;
+  a[0] = x;
+  a[1] = y;
+  a[2] = z;
+  return a;
+}
+
 #endif
