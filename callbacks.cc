@@ -197,10 +197,10 @@ void display(const Viewport &viewport, const Camera &camera)
     }
     cloud->buffer(GL_ARRAY_BUFFER, varyings);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Varying),
                           reinterpret_cast<void *>(offsetof(Varying, pos)));
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Varying),
                           reinterpret_cast<void *>(offsetof(Varying, uY)));
 
     GetGLError();
