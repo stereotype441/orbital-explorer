@@ -117,7 +117,8 @@ void setPrimitives(const std::vector<Vector<3> > &positions,
 }
 
 void drawClouds(const Matrix<4,4> &mvpm, int width, int height,
-                double near, double far, unsigned num_tetrahedra)
+                double near, double far, unsigned num_tetrahedra,
+                const Vector<4> &camera_position)
 {
   cloudProg->use();
   cloudProg->uniform<Matrix<4,4> >("modelViewProjMatrix") = mvpm;

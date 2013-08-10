@@ -175,7 +175,7 @@ void display(const Viewport &viewport, const Camera &camera)
   double far = camera.getRadius() + orbital->radius() * sqrt(2.0);
   Matrix<4,4> viewMatrix = camera.viewMatrix();
   Matrix<4,4> mvpm = viewport.projMatrix(near, far) * viewMatrix;
-  // Vector<4> cameraPosition = inverse(viewMatrix) * basisVector<4>(3);
+  Vector<4> camera_position = inverse(viewMatrix) * basisVector<4>(3);
 
   static Matrix<4,4> old_mvpm;
   if (mvpm != old_mvpm)
@@ -193,7 +193,7 @@ void display(const Viewport &viewport, const Camera &camera)
   if (need_full_redraw) {
     drawSolids(mvpm, width, height);
     drawClouds(mvpm, width, height, near, far,
-               num_tetrahedra);
+               num_tetrahedra, camera_position);
     need_full_redraw = false;
   }
   double brightness = pow(1.618, getBrightness());
