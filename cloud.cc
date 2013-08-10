@@ -43,6 +43,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <complex>
+
 #include "oopengl.hh"
 #include "cloud.hh"
 #include "shaders.hh"
@@ -50,6 +52,7 @@
 static Program *cloudProg;
 static Texture *solidDepthTex;
 static GLuint cloudFBO;
+static VertexArrayObject *cloud;
 
 void initClouds(Texture *solidDepthTex_, Texture *cloudDensityTex)
 {
@@ -69,11 +72,53 @@ void initClouds(Texture *solidDepthTex_, Texture *cloudDensityTex)
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, cloudFBO);
   attachTexture(cloudDensityTex, GL_RGBA16F, GL_RGB, GL_COLOR_ATTACHMENT0);
   checkFramebufferCompleteness();
+
+  GetGLError();
+
+  cloud = new VertexArrayObject();
+
+  GetGLError();
+}
+
+struct Varying
+{
+  FVector<3> pos;
+  FVector<3> uvY;
+};
+
+void setPrimitives(const std::vector<Vector<3> > &positions,
+                   const std::vector<unsigned> &indices,
+                   Orbital *orbital)
+{
+  int num_points = positions.size();
+
+  cloud->bind();
+  cloud->buffer(GL_ELEMENT_ARRAY_BUFFER, indices);
+
+  GetGLError();
+
+  // Vertex varying data
+  std::vector<Varying> varyings(num_points * 6);
+  for (int p = 0; p < num_points; ++p) {
+    varyings[p].pos = FVector<3>(positions[p]);
+    std::complex<double> density = (*orbital)(positions[p]);
+    double a = arg(density);
+    double r = 0.06;
+    varyings[p].uvY = FVector3(r * cos(a), r * sin(a), abs(density));
+  }
+  cloud->buffer(GL_ARRAY_BUFFER, varyings);
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(varyings[0]),
+                        reinterpret_cast<void *>(offsetof(Varying, pos)));
+  glEnableVertexAttribArray(1);
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(varyings[0]),
+                        reinterpret_cast<void *>(offsetof(Varying, uvY)));
+
+    GetGLError();
 }
 
 void drawClouds(const Matrix<4,4> &mvpm, int width, int height,
-                double near, double far,
-                VertexArrayObject *cloud, unsigned num_tetrahedra)
+                double near, double far, unsigned num_tetrahedra)
 {
   cloudProg->use();
   cloudProg->uniform<Matrix<4,4> >("modelViewProjMatrix") = mvpm;

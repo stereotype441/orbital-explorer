@@ -66,7 +66,6 @@
 using namespace std;
 
 // Vertex array objects
-static VertexArrayObject *cloud;
 
 // Textures
 static Texture *solidRGBTex, *solidDepthTex, *cloudDensityTex;
@@ -98,10 +97,6 @@ void initialize()
   initClouds(solidDepthTex, cloudDensityTex);
   initFinal(solidRGBTex, cloudDensityTex);
 
-  // Clouds
-  cloud = new VertexArrayObject();
-  GetGLError();
-
   glClearColor(0., 0., 0., 0.);
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
   GetGLError();
@@ -120,12 +115,6 @@ void resizeTextures(const Viewport &viewport)
 
   GetGLError();
 }
-
-struct Varying
-{
-  FVector<3> pos;
-  FVector<3> uvY;
-};
 
 void display(const Viewport &viewport, const Camera &camera)
 {
@@ -168,37 +157,15 @@ void display(const Viewport &viewport, const Camera &camera)
   // takes to suck down primitives slows down subdivision substantially
   if ((ts->isRunning() && ts->numVertices() > num_points + 100) ||
       ts->isFinished() || just_started) {
-    cloud->bind();
-
     // Tetrahedron indices
     std::vector<unsigned> indices = ts->tetrahedronVertexIndices();
     num_tetrahedra = indices.size() / 4;
-    cloud->buffer(GL_ELEMENT_ARRAY_BUFFER, indices);
-
-    GetGLError();
 
     // Vertex positions
     std::vector<Vector<3> > positions = ts->vertexPositions();
     num_points = positions.size();
 
-    // Vertex varying data
-    std::vector<Varying> varyings(num_points * 6);
-    for (int p = 0; p < num_points; ++p) {
-      varyings[p].pos = FVector<3>(positions[p]);
-      complex<double> density = (*orbital)(positions[p]);
-      double a = arg(density);
-      double r = 0.06;
-      varyings[p].uvY = FVector3(r * cos(a), r * sin(a), abs(density));
-    }
-    cloud->buffer(GL_ARRAY_BUFFER, varyings);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(varyings[0]),
-                          reinterpret_cast<void *>(offsetof(Varying, pos)));
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(varyings[0]),
-                          reinterpret_cast<void *>(offsetof(Varying, uvY)));
-
-    GetGLError();
+    setPrimitives(positions, indices, orbital);
 
     setVerticesTetrahedra(int(num_points), int(num_tetrahedra));
 
@@ -229,7 +196,7 @@ void display(const Viewport &viewport, const Camera &camera)
   if (need_full_redraw) {
     drawSolids(mvpm, width, height);
     drawClouds(mvpm, width, height, near, far,
-               cloud, num_tetrahedra);
+               num_tetrahedra);
     need_full_redraw = false;
   }
   double brightness = pow(1.618, getBrightness());

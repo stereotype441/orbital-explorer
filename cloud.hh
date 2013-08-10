@@ -48,10 +48,13 @@
 
 #include "oopengl.hh"
 #include "matrix.hh"
+#include "wavefunction.hh"
 
 void initClouds(Texture *solidDepthTex, Texture *cloudDensityTex);
+void setPrimitives(const std::vector<Vector<3> > &positions,
+                   const std::vector<unsigned> &indices,
+                   Orbital *orbital);
 void drawClouds(const Matrix<4,4> &mvpm, int width, int height,
-                double near, double far,
-                VertexArrayObject *cloud, unsigned num_tetrahedra);
+                double near, double far, unsigned num_tetrahedra);
 
 #endif
