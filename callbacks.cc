@@ -157,16 +157,13 @@ void display(const Viewport &viewport, const Camera &camera)
   // takes to suck down primitives slows down subdivision substantially
   if ((ts->isRunning() && ts->numVertices() > num_points + 100) ||
       ts->isFinished() || just_started) {
-    // Tetrahedron indices
+    // Must get indices first, because subdivision may be in progress
     std::vector<unsigned> indices = ts->tetrahedronVertexIndices();
-    num_tetrahedra = indices.size() / 4;
-
-    // Vertex positions
     std::vector<Vector<3> > positions = ts->vertexPositions();
-    num_points = positions.size();
-
     setPrimitives(positions, indices, orbital);
 
+    num_points = positions.size();
+    num_tetrahedra = indices.size() / 4;
     setVerticesTetrahedra(int(num_points), int(num_tetrahedra));
 
     need_full_redraw = true;
