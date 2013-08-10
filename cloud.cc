@@ -88,7 +88,7 @@ struct Varying
 
 void setPrimitives(const std::vector<Vector<3> > &positions,
                    const std::vector<unsigned> &indices,
-                   Orbital *orbital)
+                   const Orbital *orbital)
 {
   cloud->bind();
   cloud->buffer(GL_ELEMENT_ARRAY_BUFFER, indices);
