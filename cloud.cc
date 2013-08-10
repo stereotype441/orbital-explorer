@@ -113,7 +113,7 @@ void setPrimitives(const std::vector<Vector<3> > &positions,
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(varyings[0]),
                         reinterpret_cast<void *>(offsetof(Varying, uvY)));
 
-    GetGLError();
+  GetGLError();
 }
 
 void drawClouds(const Matrix<4,4> &mvpm, int width, int height,
