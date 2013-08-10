@@ -90,15 +90,14 @@ void setPrimitives(const std::vector<Vector<3> > &positions,
                    const std::vector<unsigned> &indices,
                    Orbital *orbital)
 {
-  int num_points = positions.size();
-
   cloud->bind();
   cloud->buffer(GL_ELEMENT_ARRAY_BUFFER, indices);
 
   GetGLError();
 
   // Vertex varying data
-  std::vector<Varying> varyings(num_points * 6);
+  int num_points = positions.size();
+  std::vector<Varying> varyings(num_points);
   for (int p = 0; p < num_points; ++p) {
     varyings[p].pos = FVector<3>(positions[p]);
     std::complex<double> density = (*orbital)(positions[p]);
