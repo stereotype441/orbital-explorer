@@ -124,9 +124,7 @@ void resizeTextures(const Viewport &viewport)
 struct Varying
 {
   FVector<3> pos;
-  float uY;
-  float vY;
-  float Y;
+  FVector<3> uvY;
 };
 
 void display(const Viewport &viewport, const Camera &camera)
@@ -190,9 +188,7 @@ void display(const Viewport &viewport, const Camera &camera)
       complex<double> density = (*orbital)(positions[p]);
       double a = arg(density);
       double r = 0.06;
-      varyings[p].uY = r * cos(a);
-      varyings[p].vY = r * sin(a);
-      varyings[p].Y = abs(density);
+      varyings[p].uvY = FVector3(r * cos(a), r * sin(a), abs(density));
     }
     cloud->buffer(GL_ARRAY_BUFFER, varyings);
     glEnableVertexAttribArray(0);
@@ -200,7 +196,7 @@ void display(const Viewport &viewport, const Camera &camera)
                           reinterpret_cast<void *>(offsetof(Varying, pos)));
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(varyings[0]),
-                          reinterpret_cast<void *>(offsetof(Varying, uY)));
+                          reinterpret_cast<void *>(offsetof(Varying, uvY)));
 
     GetGLError();
 
