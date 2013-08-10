@@ -86,40 +86,52 @@ struct Varying
   FVector<3> uvY;
 };
 
-void setPrimitives(const std::vector<Vector<3> > &positions,
-                   const std::vector<unsigned> &indices,
-                   const Orbital *orbital)
+static std::vector<Vector<3> > positions;
+static std::vector<unsigned> indices;
+static const Orbital *orbital;
+static bool primitives_changed = false;
+
+void setPrimitives(const std::vector<Vector<3> > &pos,
+                   const std::vector<unsigned> &ind,
+                   const Orbital *orb)
 {
-  cloud->bind();
-  cloud->buffer(GL_ELEMENT_ARRAY_BUFFER, indices);
-
-  GetGLError();
-
-  // Vertex varying data
-  int num_points = positions.size();
-  std::vector<Varying> varyings(num_points);
-  for (int p = 0; p < num_points; ++p) {
-    varyings[p].pos = FVector<3>(positions[p]);
-    std::complex<double> density = (*orbital)(positions[p]);
-    double a = arg(density);
-    double r = 0.06;
-    varyings[p].uvY = FVector3(r * cos(a), r * sin(a), abs(density));
-  }
-  cloud->buffer(GL_ARRAY_BUFFER, varyings);
-  glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(varyings[0]),
-                        reinterpret_cast<void *>(offsetof(Varying, pos)));
-  glEnableVertexAttribArray(1);
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(varyings[0]),
-                        reinterpret_cast<void *>(offsetof(Varying, uvY)));
-
-  GetGLError();
+  positions = pos;
+  indices = ind;
+  orbital = orb;
+  primitives_changed = true;
 }
 
 void drawClouds(const Matrix<4,4> &mvpm, int width, int height,
                 double near, double far, unsigned num_tetrahedra,
                 const Vector<4> &camera_position)
 {
+  if (primitives_changed) {
+    cloud->bind();
+    cloud->buffer(GL_ELEMENT_ARRAY_BUFFER, indices);
+
+    GetGLError();
+
+    // Vertex varying data
+    int num_points = positions.size();
+    std::vector<Varying> varyings(num_points);
+    for (int p = 0; p < num_points; ++p) {
+      varyings[p].pos = FVector<3>(positions[p]);
+      std::complex<double> density = (*orbital)(positions[p]);
+      double a = arg(density);
+      double r = 0.06;
+      varyings[p].uvY = FVector3(r * cos(a), r * sin(a), abs(density));
+    }
+    cloud->buffer(GL_ARRAY_BUFFER, varyings);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(varyings[0]),
+                          reinterpret_cast<void *>(offsetof(Varying, pos)));
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(varyings[0]),
+                          reinterpret_cast<void *>(offsetof(Varying, uvY)));
+
+    GetGLError();
+  }
+
   cloudProg->use();
   cloudProg->uniform<Matrix<4,4> >("modelViewProjMatrix") = mvpm;
   cloudProg->uniform<Vector<2> >("nearfar") = Vector2(near, far);
