@@ -48,7 +48,7 @@
 uniform mat4 modelViewProjMatrix;
 
 in vec4 position;
-in vec3 uvY;
+in vec3 uY_vY_Y;
 out vec4 inverted_position;
 out vec3 integrand;
 
@@ -78,9 +78,7 @@ void calculate_position()
 // coordinates that are sensible to integrate.
 void calculate_color()
 {
-  vec2 uv = uvY.xy;
-  float Y = uvY.z;
-  integrand = Y * vec3(uv, 1.0);
+  integrand = uY_vY_Y;
 }
 
 void main(void)

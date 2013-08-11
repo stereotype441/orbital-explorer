@@ -66,7 +66,7 @@ void initClouds(Texture *solidDepthTex_, Texture *cloudDensityTex)
   cloudProg->geometryShader(cloudGeometryShaderSource);
   cloudProg->fragmentShader(cloudFragmentShaderSource);
   glBindAttribLocation(*cloudProg, 0, "position");
-  glBindAttribLocation(*cloudProg, 1, "uvY");
+  glBindAttribLocation(*cloudProg, 1, "uY_vY_Y");
   glBindFragDataLocation(*cloudProg, 0, "integratedValue");
   cloudProg->link();
 
@@ -155,9 +155,9 @@ void drawClouds(const Matrix<4,4> &mvpm, int width, int height,
     for (int p = 0; p < num_points; ++p) {
       varyings[p].pos = FVector<3>(positions[p]);
       std::complex<double> density = (*orbital)(positions[p]);
-      double a = arg(density);
-      double r = 0.06;
-      varyings[p].uvY = FVector3(r * cos(a), r * sin(a), abs(density));
+      double s = 0.06;
+      varyings[p].uvY = FVector3(s * density.real(), s * density.imag(),
+                                 abs(density));
     }
     cloud->buffer(GL_ARRAY_BUFFER, varyings);
     glEnableVertexAttribArray(0);
