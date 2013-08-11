@@ -86,8 +86,30 @@ struct Varying
   FVector<3> uvY;
 };
 
+struct Tetra
+{
+  double sort_key;
+  unsigned vertex[4];
+  bool operator<(const struct Tetra &rhs) { return sort_key < rhs.sort_key; }
+};
+
+struct StrippedTetra
+{
+  unsigned vertex[4];
+};
+
+StrippedTetra strip_sort_key(const Tetra &t)
+{
+  StrippedTetra s;
+
+  for (int i = 0; i < 4; ++i)
+    s.vertex[i] = t.vertex[i];
+
+  return s;
+}
+
 static std::vector<Vector<3> > positions;
-static std::vector<unsigned> indices;
+static std::vector<Tetra> indices;
 static const Orbital *orbital;
 static bool primitives_changed = false;
 
@@ -96,18 +118,29 @@ void setPrimitives(const std::vector<Vector<3> > &pos,
                    const Orbital *orb)
 {
   positions = pos;
-  indices = ind;
+
+  int num_tetrahedra = ind.size() / 4;
+  indices.resize(num_tetrahedra);
+  for (int i = 0; i < num_tetrahedra; ++i) {
+    indices[i].sort_key = 0.0;
+    for (int j = 0; j < 4; ++j)
+      indices[i].vertex[j] = ind[4 * i + j];
+  }
   orbital = orb;
   primitives_changed = true;
 }
 
 void drawClouds(const Matrix<4,4> &mvpm, int width, int height,
-                double near, double far, unsigned num_tetrahedra,
+                double near, double far, int num_tetrahedra,
                 const Vector<4> &camera_position)
 {
   if (primitives_changed) {
     cloud->bind();
-    cloud->buffer(GL_ELEMENT_ARRAY_BUFFER, indices);
+
+    std::vector<StrippedTetra> upload_indices(num_tetrahedra);
+    for (int i = 0; i < num_tetrahedra; ++i)
+      upload_indices[i] = strip_sort_key(indices[i]);
+    cloud->buffer(GL_ELEMENT_ARRAY_BUFFER, upload_indices);
 
     GetGLError();
 
