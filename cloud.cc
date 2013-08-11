@@ -173,6 +173,19 @@ void drawClouds(const Matrix<4,4> &mvpm, int width, int height,
 
     // Set up tetrahedra for depth sort
     for (int i = 0; i < num_tetrahedra; ++i) {
+      Matrix<4,4> vertexMatrix;
+      for (int col = 0; col < 4; ++col) {
+        Vector<3> vert = positions[indices[i].vertex[col]];
+        vertexMatrix(0, col) = vert[0];
+        vertexMatrix(1, col) = vert[1];
+        vertexMatrix(2, col) = vert[2];
+        vertexMatrix(3, col) = 1.0;
+      }
+      Vector<4> vert_norm_sqr;
+      for (int col = 0; col < 4; ++col)
+        vert_norm_sqr[col] = norm_squared(positions[indices[i].vertex[col]]);
+      indices[i].sort_key =
+        dot_product(vert_norm_sqr, inverse(vertexMatrix) * camera_position);
     }
 
     std::sort(indices.begin(), indices.end());
