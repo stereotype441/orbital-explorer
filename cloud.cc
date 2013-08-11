@@ -163,6 +163,8 @@ void drawClouds(const Matrix<4,4> &mvpm, int width, int height,
                           reinterpret_cast<void *>(offsetof(Varying, uvY)));
 
     GetGLError();
+
+    primitives_changed = false;
   }
 
   cloudProg->use();
