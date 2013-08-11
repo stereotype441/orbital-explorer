@@ -55,7 +55,7 @@ void setPrimitives(const std::vector<Vector<3> > &positions,
                    const std::vector<unsigned> &indices,
                    const Orbital *orbital);
 void drawClouds(const Matrix<4,4> &mvpm, int width, int height,
-                double near, double far, int num_tetrahedra,
+                double near, double far,
                 const Vector<4> &camera_position);
 
 #endif

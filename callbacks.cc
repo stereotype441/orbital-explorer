@@ -192,8 +192,7 @@ void display(const Viewport &viewport, const Camera &camera)
 
   if (need_full_redraw) {
     drawSolids(mvpm, width, height);
-    drawClouds(mvpm, width, height, near, far,
-               num_tetrahedra, camera_position);
+    drawClouds(mvpm, width, height, near, far, camera_position);
     need_full_redraw = false;
   }
   double brightness = pow(1.618, getBrightness());
