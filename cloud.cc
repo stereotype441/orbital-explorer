@@ -44,6 +44,8 @@
  */
 
 #include <complex>
+#include <vector>
+#include <algorithm>
 
 #include "oopengl.hh"
 #include "cloud.hh"
@@ -53,6 +55,8 @@ static Program *cloudProg;
 static Texture *solidDepthTex;
 static GLuint cloudFBO;
 static VertexArrayObject *cloud;
+
+static Vector<4> old_camera_position;
 
 void initClouds(Texture *solidDepthTex_, Texture *cloudDensityTex)
 {
@@ -78,6 +82,9 @@ void initClouds(Texture *solidDepthTex_, Texture *cloudDensityTex)
   cloud = new VertexArrayObject();
 
   GetGLError();
+
+  // Camera should not actually start at this location
+  old_camera_position = Vector<4>(0.);
 }
 
 struct Varying
@@ -90,7 +97,10 @@ struct Tetra
 {
   double sort_key;
   unsigned vertex[4];
-  bool operator<(const struct Tetra &rhs) { return sort_key < rhs.sort_key; }
+  bool operator<(const struct Tetra &rhs) const
+  {
+    return sort_key < rhs.sort_key;
+  }
 };
 
 struct StrippedTetra
@@ -137,13 +147,6 @@ void drawClouds(const Matrix<4,4> &mvpm, int width, int height,
   if (primitives_changed) {
     cloud->bind();
 
-    std::vector<StrippedTetra> upload_indices(num_tetrahedra);
-    for (int i = 0; i < num_tetrahedra; ++i)
-      upload_indices[i] = strip_sort_key(indices[i]);
-    cloud->buffer(GL_ELEMENT_ARRAY_BUFFER, upload_indices);
-
-    GetGLError();
-
     // Vertex varying data
     int num_points = positions.size();
     std::vector<Varying> varyings(num_points);
@@ -163,9 +166,27 @@ void drawClouds(const Matrix<4,4> &mvpm, int width, int height,
                           reinterpret_cast<void *>(offsetof(Varying, uvY)));
 
     GetGLError();
-
-    primitives_changed = false;
   }
+
+  if (primitives_changed || camera_position != old_camera_position) {
+    cloud->bind();
+
+    // Set up tetrahedra for depth sort
+    for (int i = 0; i < num_tetrahedra; ++i) {
+    }
+
+    std::sort(indices.begin(), indices.end());
+
+    std::vector<StrippedTetra> upload_indices(num_tetrahedra);
+    for (int i = 0; i < num_tetrahedra; ++i)
+      upload_indices[i] = strip_sort_key(indices[i]);
+    cloud->buffer(GL_ELEMENT_ARRAY_BUFFER, upload_indices);
+
+    GetGLError();
+  }
+
+  primitives_changed = false;
+  old_camera_position = camera_position;
 
   cloudProg->use();
   cloudProg->uniform<Matrix<4,4> >("modelViewProjMatrix") = mvpm;
