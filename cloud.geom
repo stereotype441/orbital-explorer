@@ -65,13 +65,17 @@ noperspective out vec3 integrand_over_w_front;
 noperspective out vec3 integrand_over_w_back;
 noperspective out vec2 texPosition;
 
+#if 0
 // Swap two things
+// Passing elements of an array as inout parameters appears to be
+// broken with version 325 of Nvidia drivers.
 void swap(inout vertex_data a, inout vertex_data b)
 {
   vertex_data t = a;
   a = b;
   b = t;
 }
+#endif
 
 vec4 vector_inverse(vec4 a)
 {
@@ -150,11 +154,36 @@ void main(void)
 
   // Handle the near clipping plane.
   // Move clipped vertices to the front of the array using a "sorting network"
-  if (x[0].p.w >= near && x[2].p.w < near) swap(x[0], x[2]);
-  if (x[1].p.w >= near && x[3].p.w < near) swap(x[1], x[3]);
-  if (x[0].p.w >= near && x[1].p.w < near) swap(x[0], x[1]);
-  if (x[2].p.w >= near && x[3].p.w < near) swap(x[2], x[3]);
-  if (x[1].p.w >= near && x[2].p.w < near) swap(x[1], x[2]);
+  if (x[0].p.w >= near && x[2].p.w < near) {
+    //swap(x[0], x[2]);
+    vertex_data temp = x[0];
+    x[0] = x[2];
+    x[2] = temp;
+  }
+  if (x[1].p.w >= near && x[3].p.w < near) {
+    //swap(x[1], x[3]);
+    vertex_data temp = x[1];
+    x[1] = x[3];
+    x[3] = temp;
+  }
+  if (x[0].p.w >= near && x[1].p.w < near) {
+    //swap(x[0], x[1]);
+    vertex_data temp = x[0];
+    x[0] = x[1];
+    x[1] = temp;
+  }
+  if (x[2].p.w >= near && x[3].p.w < near) {
+    //swap(x[2], x[3]);
+    vertex_data temp = x[2];
+    x[2] = x[3];
+    x[3] = temp;
+  }
+  if (x[1].p.w >= near && x[2].p.w < near) {
+    //swap(x[1], x[2]);
+    vertex_data temp = x[1];
+    x[1] = x[2];
+    x[2] = temp;
+  }
 
   switch (num_clipped) {
 
@@ -312,7 +341,12 @@ void handle_tetrahedron(vertex_data x[4])
     }
 
     // Reorder so that the middle vertex is at index 0
-    swap(x[0], x[middle]);
+    {
+      //swap(x[0], x[middle]);
+      vertex_data temp = x[0];
+      x[0] = x[middle];
+      x[middle] = temp;
+    }
 
     // We need the point on the big face that intersects the middle point
     // in screen cooordinates.  To do this, we need to solve the following
@@ -336,8 +370,12 @@ void handle_tetrahedron(vertex_data x[4])
     y1.d = weighted_x1.w * x[1].d + weighted_x2.w * x[2].d +
       weighted_x3.w * x[3].d;
     y1.d /= y1.n.w;
-    if (y0.n.z > y1.n.z)
-      swap(y0, y1);
+    if (y0.n.z > y1.n.z) {
+      //swap(y0, y1);
+      vertex_data temp = y0;
+      y0 = y1;
+      y1 = temp;
+    }
 
     // Draw three triangles.
     // x[1] - x[2] - y
@@ -365,12 +403,19 @@ void handle_tetrahedron(vertex_data x[4])
     if (orient01 > 0.)
       // 0 and 1 already match, do nothng
       ;
-    else if (orient02 > 0.)
+    else if (orient02 > 0.) {
       // 0 and 2 match, so swap 1 with 2
-      swap(x[1], x[2]);
-    else
+      //swap(x[1], x[2]);
+      vertex_data temp = x[1];
+      x[1] = x[2];
+      x[2] = temp;
+    } else {
       // 0 and 3 match, so swap 1 with 3
-      swap(x[1], x[3]);
+      //swap(x[1], x[3]);
+      vertex_data temp = x[1];
+      x[1] = x[3];
+      x[3] = temp;
+    }
 
     // Compute the intersection point of segment 01 with segment 23
     // We need to solve this system of equations in the xy plane:
@@ -408,8 +453,12 @@ void handle_tetrahedron(vertex_data x[4])
     y1.d /= y1.n.w;
 
     // Make sure y0 is front and y1 is back
-    if (y0.n.z > y1.n.z)
-      swap(y0, y1);
+    if (y0.n.z > y1.n.z) {
+      //swap(y0, y1);
+      vertex_data temp = y0;
+      y0 = y1;
+      y1 = temp;
+    }
 
     // Draw four triangles.
     // x[0] - x[2] - y
