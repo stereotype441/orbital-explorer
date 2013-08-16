@@ -140,6 +140,65 @@ void setPrimitives(const std::vector<Vector<3> > &pos,
   primitives_changed = true;
 }
 
+void depthSortClouds(const Vector<4> &camera_position)
+{
+  // Set up tetrahedra for depth sort
+  for (int i = 0; i < int(indices.size()); ++i) {
+    Matrix<4,4> vertexMatrix;
+    for (int col = 0; col < 4; ++col) {
+      Vector<3> vert = positions[indices[i].vertex[col]];
+      vertexMatrix(0, col) = vert[0];
+      vertexMatrix(1, col) = vert[1];
+      vertexMatrix(2, col) = vert[2];
+      vertexMatrix(3, col) = 1.0;
+    }
+    Vector<4> vert_norm_sqr;
+    for (int col = 0; col < 4; ++col)
+      vert_norm_sqr[col] = norm_squared(positions[indices[i].vertex[col]]);
+    indices[i].sort_key =
+      dot_product(vert_norm_sqr, inverse(vertexMatrix) * camera_position);
+  }
+
+  std::sort(indices.begin(), indices.end());
+}
+
+void uploadVertices()
+{
+  // Vertex varying data
+  int num_points = positions.size();
+  std::vector<Varying> varyings(num_points);
+  for (int p = 0; p < num_points; ++p) {
+    varyings[p].pos = FVector<3>(positions[p]);
+    std::complex<double> density = (*orbital)(positions[p]);
+    double s = 0.06;
+    varyings[p].uvY = FVector3(s * density.real(), s * density.imag(),
+                               abs(density));
+  }
+
+  cloud->bind();
+  cloud->buffer(GL_ARRAY_BUFFER, varyings);
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(varyings[0]),
+                        reinterpret_cast<void *>(offsetof(Varying, pos)));
+  glEnableVertexAttribArray(1);
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(varyings[0]),
+                        reinterpret_cast<void *>(offsetof(Varying, uvY)));
+  GetGLError();
+}
+
+void uploadPrimitives()
+{
+  int num_tetrahedra = indices.size();
+
+  std::vector<StrippedTetra> upload_indices(num_tetrahedra);
+  for (int i = 0; i < num_tetrahedra; ++i)
+    upload_indices[i] = strip_sort_key(indices[i]);
+
+  cloud->bind();
+  cloud->buffer(GL_ELEMENT_ARRAY_BUFFER, upload_indices);
+  GetGLError();
+}
+
 void drawClouds(const Matrix<4,4> &mvpm, int width, int height,
                 double near, double far,
                 const Vector<4> &camera_position)
@@ -147,57 +206,12 @@ void drawClouds(const Matrix<4,4> &mvpm, int width, int height,
   int num_tetrahedra = indices.size();
 
   if (primitives_changed) {
-    cloud->bind();
-
-    // Vertex varying data
-    int num_points = positions.size();
-    std::vector<Varying> varyings(num_points);
-    for (int p = 0; p < num_points; ++p) {
-      varyings[p].pos = FVector<3>(positions[p]);
-      std::complex<double> density = (*orbital)(positions[p]);
-      double s = 0.06;
-      varyings[p].uvY = FVector3(s * density.real(), s * density.imag(),
-                                 abs(density));
-    }
-    cloud->buffer(GL_ARRAY_BUFFER, varyings);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(varyings[0]),
-                          reinterpret_cast<void *>(offsetof(Varying, pos)));
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(varyings[0]),
-                          reinterpret_cast<void *>(offsetof(Varying, uvY)));
-
-    GetGLError();
+    uploadVertices();
   }
 
   if (primitives_changed || camera_position != old_camera_position) {
-    cloud->bind();
-
-    // Set up tetrahedra for depth sort
-    for (int i = 0; i < num_tetrahedra; ++i) {
-      Matrix<4,4> vertexMatrix;
-      for (int col = 0; col < 4; ++col) {
-        Vector<3> vert = positions[indices[i].vertex[col]];
-        vertexMatrix(0, col) = vert[0];
-        vertexMatrix(1, col) = vert[1];
-        vertexMatrix(2, col) = vert[2];
-        vertexMatrix(3, col) = 1.0;
-      }
-      Vector<4> vert_norm_sqr;
-      for (int col = 0; col < 4; ++col)
-        vert_norm_sqr[col] = norm_squared(positions[indices[i].vertex[col]]);
-      indices[i].sort_key =
-        dot_product(vert_norm_sqr, inverse(vertexMatrix) * camera_position);
-    }
-
-    std::sort(indices.begin(), indices.end());
-
-    std::vector<StrippedTetra> upload_indices(num_tetrahedra);
-    for (int i = 0; i < num_tetrahedra; ++i)
-      upload_indices[i] = strip_sort_key(indices[i]);
-    cloud->buffer(GL_ELEMENT_ARRAY_BUFFER, upload_indices);
-
-    GetGLError();
+    depthSortClouds(camera_position);
+    uploadPrimitives();
   }
 
   primitives_changed = false;
