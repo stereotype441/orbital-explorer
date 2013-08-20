@@ -80,6 +80,7 @@ static TetrahedralSubdivision *ts = NULL;
 // Classes representing render stages
 static Solid *solid = NULL;
 static Cloud *cloud = NULL;
+static Final *final = NULL;
 
 void resizeTexture(Texture *name, GLint internalformat, GLenum format,
                    GLuint width, GLuint height)
@@ -97,7 +98,7 @@ void initialize()
 
   solid = new Solid(solidRGBTex, solidDepthTex);
   cloud = new Cloud(solidDepthTex, cloudDensityTex);
-  initFinal(solidRGBTex, cloudDensityTex);
+  final = new Final(solidRGBTex, cloudDensityTex);
 
   glClearColor(0., 0., 0., 0.);
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
@@ -200,7 +201,7 @@ void display(const Viewport &viewport, const Camera &camera)
   double brightness = pow(1.618, getBrightness());
   if (orbital->square)
     brightness *= brightness;
-  drawFinal(width, height, brightness);
+  final->draw(width, height, brightness);
 
   glFinish();
 

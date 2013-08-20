@@ -48,7 +48,11 @@
 
 #include "oopengl.hh"
 
-void initFinal(Texture *solidRGBTex, Texture *cloudDensityTex);
-void drawFinal(int width, int height, double brightness);
+class Final
+{
+public:
+  Final(Texture *solidRGBTex, Texture *cloudDensityTex);
+  void draw(int width, int height, double brightness);
+};
 
 #endif
