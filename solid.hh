@@ -54,6 +54,17 @@ class Solid
 public:
   Solid(Texture *solidRGBTex, Texture *solidDepthTex);
   void draw(const Matrix<4,4> &mvpm, int width, int height);
+
+private:
+  struct Varying
+  {
+    FVector<3> pos;
+    FVector<3> xyY; // Emitted CIE 1931 color
+  };
+
+  Program *solidProg;
+  VertexArrayObject *solidVAO;
+  GLuint solidFBO;
 };
 
 #endif

@@ -46,16 +46,6 @@
 #include "solid.hh"
 #include "shaders.hh"
 
-static Program *solidProg;
-static VertexArrayObject *solid;
-static GLuint solidFBO;
-
-struct SolidVarying
-{
-  FVector<3> pos;
-  FVector<3> xyY; // Emitted CIE 1931 color
-};
-
 Solid::Solid(Texture *solidRGBTex, Texture *solidDepthTex)
 {
   // Solid program
@@ -72,10 +62,10 @@ Solid::Solid(Texture *solidRGBTex, Texture *solidDepthTex)
 
   // Solid objects
 
-  solid = new VertexArrayObject();
-  solid->bind();
+  solidVAO = new VertexArrayObject();
+  solidVAO->bind();
 
-  SolidVarying solid_data[6];
+  Varying solid_data[6];
   FVector<3> origin(FVector3(0.0, 0.0, 0.0));
   FVector<3> red_xyY  (FVector3(0.6400, 0.3300, 0.2126));
   FVector<3> green_xyY(FVector3(0.3000, 0.6000, 0.3290));
@@ -99,14 +89,14 @@ Solid::Solid(Texture *solidRGBTex, Texture *solidDepthTex)
   solid_data[5].pos = FVector3(0.0, 0.0, 1.0);
   solid_data[5].xyY = blue_xyY;
 
-  solid->buffer(GL_ARRAY_BUFFER, solid_data, sizeof(solid_data));
+  solidVAO->buffer(GL_ARRAY_BUFFER, solid_data, sizeof(solid_data));
 
   glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(SolidVarying),
-                        reinterpret_cast<void *>(offsetof(SolidVarying, pos)));
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Varying),
+                        reinterpret_cast<void *>(offsetof(Varying, pos)));
   glEnableVertexAttribArray(1);
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(SolidVarying),
-                        reinterpret_cast<void *>(offsetof(SolidVarying, xyY)));
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Varying),
+                        reinterpret_cast<void *>(offsetof(Varying, xyY)));
 
   GetGLError();
 
@@ -129,7 +119,7 @@ void Solid::draw(const Matrix<4,4> &mvpm, int width, int height)
   glEnable(GL_DEPTH_TEST);
   glDisable(GL_BLEND);
   // Note: glLineWidth must be no greater than 1.0 in OpenGL 3.2 Core.
-  solid->bind();
+  solidVAO->bind();
   glViewport(0, 0, width, height);
   glDrawArrays(GL_LINES, 0, 6);
 
