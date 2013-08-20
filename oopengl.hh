@@ -222,12 +222,28 @@ private:
 class Texture : public Uncopyable
 {
 public:
-  Texture()                { glGenTextures(1, &id); }
-  operator GLuint()        { return id; }
+  Texture(GLint internalformat_, GLenum format_)
+    : internalformat(internalformat_),
+      format(format_)
+  {
+    glGenTextures(1, &id);
+  }
+  operator GLuint()
+  {
+    return id;
+  }
+  void resize(GLuint width, GLuint height)
+  {
+    glBindTexture(GL_TEXTURE_2D, id);
+    glTexImage2D(GL_TEXTURE_2D, 0, internalformat, width, height, 0, format,
+                 GL_BYTE, NULL);
+  }
   ~Texture()               { glDeleteTextures(1, &id); }
 
 private:
   GLuint id;
+  GLint internalformat;
+  GLenum format;
 };
 
 // FIXME needs refactoring...

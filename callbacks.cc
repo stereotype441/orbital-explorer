@@ -82,19 +82,11 @@ static Solid *solid = NULL;
 static Cloud *cloud = NULL;
 static Final *final = NULL;
 
-void resizeTexture(Texture *name, GLint internalformat, GLenum format,
-                   GLuint width, GLuint height)
-{
-  glBindTexture(GL_TEXTURE_2D, *name);
-  glTexImage2D(GL_TEXTURE_2D, 0, internalformat, width, height, 0,
-               format, GL_BYTE, NULL);
-}
-
 void initialize()
 {
-  solidRGBTex = new Texture();
-  solidDepthTex = new Texture();
-  cloudDensityTex = new Texture();
+  solidRGBTex = new Texture(GL_RGB8, GL_RGB);
+  solidDepthTex = new Texture(GL_DEPTH_COMPONENT24, GL_DEPTH_COMPONENT);
+  cloudDensityTex = new Texture(GL_RGBA16F, GL_RGB);
 
   solid = new Solid(solidRGBTex, solidDepthTex);
   cloud = new Cloud(solidDepthTex, cloudDensityTex);
@@ -102,6 +94,7 @@ void initialize()
 
   glClearColor(0., 0., 0., 0.);
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+
   GetGLError();
 }
 
@@ -111,10 +104,9 @@ void resizeTextures(const Viewport &viewport)
   int height = viewport.getHeight();
 
   // Resize statically-sized textures
-  resizeTexture(solidRGBTex, GL_RGB8, GL_RGB, width, height);
-  resizeTexture(solidDepthTex, GL_DEPTH_COMPONENT24, GL_DEPTH_COMPONENT,
-                width, height);
-  resizeTexture(cloudDensityTex, GL_RGBA16F, GL_RGB, width, height);
+  solidRGBTex->resize(width, height);
+  solidDepthTex->resize(width, height);
+  cloudDensityTex->resize(width, height);
 
   GetGLError();
 }
