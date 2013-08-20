@@ -78,6 +78,7 @@ static Orbital *orbital = NULL;
 static TetrahedralSubdivision *ts = NULL;
 
 // Classes representing render stages
+static Solid *solid = NULL;
 static Cloud *cloud = NULL;
 
 void resizeTexture(Texture *name, GLint internalformat, GLenum format,
@@ -94,7 +95,7 @@ void initialize()
   solidDepthTex = new Texture();
   cloudDensityTex = new Texture();
 
-  initSolids(solidRGBTex, solidDepthTex);
+  solid = new Solid(solidRGBTex, solidDepthTex);
   cloud = new Cloud(solidDepthTex, cloudDensityTex);
   initFinal(solidRGBTex, cloudDensityTex);
 
@@ -192,7 +193,7 @@ void display(const Viewport &viewport, const Camera &camera)
   GetGLError();
 
   if (need_full_redraw) {
-    drawSolids(mvpm, width, height);
+    solid->draw(mvpm, width, height);
     cloud->draw(mvpm, width, height, near, far, camera_position);
     need_full_redraw = false;
   }

@@ -49,7 +49,11 @@
 #include "oopengl.hh"
 #include "matrix.hh"
 
-void initSolids(Texture *solidRGBTex, Texture *solidDepthTex);
-void drawSolids(const Matrix<4,4> &mvpm, int width, int height);
+class Solid
+{
+public:
+  Solid(Texture *solidRGBTex, Texture *solidDepthTex);
+  void draw(const Matrix<4,4> &mvpm, int width, int height);
+};
 
 #endif

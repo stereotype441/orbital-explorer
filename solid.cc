@@ -56,7 +56,7 @@ struct SolidVarying
   FVector<3> xyY; // Emitted CIE 1931 color
 };
 
-void initSolids(Texture *solidRGBTex, Texture *solidDepthTex)
+Solid::Solid(Texture *solidRGBTex, Texture *solidDepthTex)
 {
   // Solid program
 
@@ -120,7 +120,7 @@ void initSolids(Texture *solidRGBTex, Texture *solidDepthTex)
   checkFramebufferCompleteness();
 }
 
-void drawSolids(const Matrix<4,4> &mvpm, int width, int height)
+void Solid::draw(const Matrix<4,4> &mvpm, int width, int height)
 {
   solidProg->use();
   solidProg->uniform<Matrix<4,4> >("modelViewProjMatrix") = mvpm;
