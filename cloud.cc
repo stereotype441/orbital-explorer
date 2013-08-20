@@ -58,7 +58,7 @@ static VertexArrayObject *cloud;
 
 static Vector<4> old_camera_position;
 
-void initClouds(Texture *solidDepthTex_, Texture *cloudDensityTex)
+Cloud::Cloud(Texture *solidDepthTex_, Texture *cloudDensityTex)
 {
   solidDepthTex = solidDepthTex_;
   cloudProg = new Program();
@@ -123,9 +123,9 @@ static std::vector<Tetra> indices;
 static const Orbital *orbital;
 static bool primitives_changed = false;
 
-void setPrimitives(const std::vector<Vector<3> > &pos,
-                   const std::vector<unsigned> &ind,
-                   const Orbital *orb)
+void Cloud::setPrimitives(const std::vector<Vector<3> > &pos,
+                          const std::vector<unsigned> &ind,
+                          const Orbital *orb)
 {
   positions = pos;
 
@@ -199,9 +199,9 @@ void uploadPrimitives()
   GetGLError();
 }
 
-void drawClouds(const Matrix<4,4> &mvpm, int width, int height,
-                double near, double far,
-                const Vector<4> &camera_position)
+void Cloud::draw(const Matrix<4,4> &mvpm, int width, int height,
+                 double near, double far,
+                 const Vector<4> &camera_position)
 {
   int num_tetrahedra = indices.size();
 

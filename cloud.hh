@@ -50,12 +50,16 @@
 #include "matrix.hh"
 #include "wavefunction.hh"
 
-void initClouds(Texture *solidDepthTex, Texture *cloudDensityTex);
-void setPrimitives(const std::vector<Vector<3> > &positions,
-                   const std::vector<unsigned> &indices,
-                   const Orbital *orbital);
-void drawClouds(const Matrix<4,4> &mvpm, int width, int height,
-                double near, double far,
-                const Vector<4> &camera_position);
+class Cloud
+{
+public:
+  Cloud(Texture *solidDepthTex, Texture *cloudDensityTex);
+  void setPrimitives(const std::vector<Vector<3> > &positions,
+                     const std::vector<unsigned> &indices,
+                     const Orbital *orbital);
+  void draw(const Matrix<4,4> &mvpm, int width, int height,
+            double near, double far,
+            const Vector<4> &camera_position);
+};
 
 #endif

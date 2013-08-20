@@ -65,8 +65,6 @@
 
 using namespace std;
 
-// Vertex array objects
-
 // Textures
 static Texture *solidRGBTex, *solidDepthTex, *cloudDensityTex;
 
@@ -78,6 +76,9 @@ static Orbital *orbital = NULL;
 
 // Subdivision of space into tetrahedra
 static TetrahedralSubdivision *ts = NULL;
+
+// Classes representing render stages
+static Cloud *cloud = NULL;
 
 void resizeTexture(Texture *name, GLint internalformat, GLenum format,
                    GLuint width, GLuint height)
@@ -94,7 +95,7 @@ void initialize()
   cloudDensityTex = new Texture();
 
   initSolids(solidRGBTex, solidDepthTex);
-  initClouds(solidDepthTex, cloudDensityTex);
+  cloud = new Cloud(solidDepthTex, cloudDensityTex);
   initFinal(solidRGBTex, cloudDensityTex);
 
   glClearColor(0., 0., 0., 0.);
@@ -160,7 +161,7 @@ void display(const Viewport &viewport, const Camera &camera)
     // Must get indices first, because subdivision may be in progress
     std::vector<unsigned> indices = ts->tetrahedronVertexIndices();
     std::vector<Vector<3> > positions = ts->vertexPositions();
-    setPrimitives(positions, indices, orbital);
+    cloud->setPrimitives(positions, indices, orbital);
 
     num_points = positions.size();
     num_tetrahedra = indices.size() / 4;
@@ -192,7 +193,7 @@ void display(const Viewport &viewport, const Camera &camera)
 
   if (need_full_redraw) {
     drawSolids(mvpm, width, height);
-    drawClouds(mvpm, width, height, near, far, camera_position);
+    cloud->draw(mvpm, width, height, near, far, camera_position);
     need_full_redraw = false;
   }
   double brightness = pow(1.618, getBrightness());
