@@ -18,7 +18,7 @@ endif
 OFILES=\
 	sdl_main.o \
 	oopengl.o \
-	callbacks.o \
+	render.o \
 	viewport.o \
 	camera.o \
 	controls.o \

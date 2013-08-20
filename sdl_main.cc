@@ -51,7 +51,7 @@
 
 #include "config.hh"
 #include "glprocs.hh"
-#include "callbacks.hh"
+#include "render.hh"
 #include "viewport.hh"
 #include "controls.hh"
 

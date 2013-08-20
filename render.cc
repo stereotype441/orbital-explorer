@@ -49,7 +49,7 @@
 #include <complex>
 
 #include "glprocs.hh"
-#include "callbacks.hh"
+#include "render.hh"
 #include "vector.hh"
 #include "matrix.hh"
 #include "transform.hh"
