@@ -60,6 +60,43 @@ public:
   void draw(const Matrix<4,4> &mvpm, int width, int height,
             double near, double far,
             const Vector<4> &camera_position);
+
+private:
+  struct Tetra
+  {
+    double sort_key;
+    unsigned vertex[4];
+    bool operator<(const struct Tetra &rhs) const
+    {
+      return sort_key < rhs.sort_key;
+    }
+  };
+
+  struct StrippedTetra
+  {
+    unsigned vertex[4];
+  };
+
+  struct Varying
+  {
+    FVector<3> pos;
+    FVector<3> uvY;
+  };
+
+  void uploadVertices();
+  void uploadPrimitives();
+  StrippedTetra strip_sort_key(const Tetra &t);
+  void depthSortClouds(const Vector<4> &camera_position);
+
+  Program *cloudProg;
+  Texture *solidDepthTex;
+  GLuint cloudFBO;
+  VertexArrayObject *cloudVAO;
+  Vector<4> old_camera_position;
+  std::vector<Vector<3> > positions;
+  std::vector<Tetra> indices;
+  const Orbital *orbital;
+  bool primitives_changed;
 };
 
 #endif

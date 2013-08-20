@@ -51,13 +51,6 @@
 #include "cloud.hh"
 #include "shaders.hh"
 
-static Program *cloudProg;
-static Texture *solidDepthTex;
-static GLuint cloudFBO;
-static VertexArrayObject *cloud;
-
-static Vector<4> old_camera_position;
-
 Cloud::Cloud(Texture *solidDepthTex_, Texture *cloudDensityTex)
 {
   solidDepthTex = solidDepthTex_;
@@ -79,36 +72,17 @@ Cloud::Cloud(Texture *solidDepthTex_, Texture *cloudDensityTex)
 
   GetGLError();
 
-  cloud = new VertexArrayObject();
+  cloudVAO = new VertexArrayObject();
 
   GetGLError();
 
   // Camera should not actually start at this location
   old_camera_position = Vector<4>(0.);
+
+  primitives_changed = false;
 }
 
-struct Varying
-{
-  FVector<3> pos;
-  FVector<3> uvY;
-};
-
-struct Tetra
-{
-  double sort_key;
-  unsigned vertex[4];
-  bool operator<(const struct Tetra &rhs) const
-  {
-    return sort_key < rhs.sort_key;
-  }
-};
-
-struct StrippedTetra
-{
-  unsigned vertex[4];
-};
-
-StrippedTetra strip_sort_key(const Tetra &t)
+Cloud::StrippedTetra Cloud::strip_sort_key(const Tetra &t)
 {
   StrippedTetra s;
 
@@ -117,11 +91,6 @@ StrippedTetra strip_sort_key(const Tetra &t)
 
   return s;
 }
-
-static std::vector<Vector<3> > positions;
-static std::vector<Tetra> indices;
-static const Orbital *orbital;
-static bool primitives_changed = false;
 
 void Cloud::setPrimitives(const std::vector<Vector<3> > &pos,
                           const std::vector<unsigned> &ind,
@@ -140,7 +109,7 @@ void Cloud::setPrimitives(const std::vector<Vector<3> > &pos,
   primitives_changed = true;
 }
 
-void depthSortClouds(const Vector<4> &camera_position)
+void Cloud::depthSortClouds(const Vector<4> &camera_position)
 {
   // Set up tetrahedra for depth sort
   for (int i = 0; i < int(indices.size()); ++i) {
@@ -162,7 +131,7 @@ void depthSortClouds(const Vector<4> &camera_position)
   std::sort(indices.begin(), indices.end());
 }
 
-void uploadVertices()
+void Cloud::uploadVertices()
 {
   // Vertex varying data
   int num_points = positions.size();
@@ -175,8 +144,8 @@ void uploadVertices()
                                abs(density));
   }
 
-  cloud->bind();
-  cloud->buffer(GL_ARRAY_BUFFER, varyings);
+  cloudVAO->bind();
+  cloudVAO->buffer(GL_ARRAY_BUFFER, varyings);
   glEnableVertexAttribArray(0);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(varyings[0]),
                         reinterpret_cast<void *>(offsetof(Varying, pos)));
@@ -186,7 +155,7 @@ void uploadVertices()
   GetGLError();
 }
 
-void uploadPrimitives()
+void Cloud::uploadPrimitives()
 {
   int num_tetrahedra = indices.size();
 
@@ -194,8 +163,8 @@ void uploadPrimitives()
   for (int i = 0; i < num_tetrahedra; ++i)
     upload_indices[i] = strip_sort_key(indices[i]);
 
-  cloud->bind();
-  cloud->buffer(GL_ELEMENT_ARRAY_BUFFER, upload_indices);
+  cloudVAO->bind();
+  cloudVAO->buffer(GL_ELEMENT_ARRAY_BUFFER, upload_indices);
   GetGLError();
 }
 
@@ -229,7 +198,7 @@ void Cloud::draw(const Matrix<4,4> &mvpm, int width, int height,
   glEnable(GL_BLEND);
   glBlendEquation(GL_FUNC_ADD);
   glBlendFunc(GL_ONE, GL_ONE);
-  cloud->bind();
+  cloudVAO->bind();
   glViewport(0, 0, width, height);
   glDrawElements(GL_LINES_ADJACENCY, 4 * num_tetrahedra, GL_UNSIGNED_INT, 0);
 
