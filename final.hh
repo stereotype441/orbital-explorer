@@ -53,6 +53,13 @@ class Final
 public:
   Final(Texture *solidRGBTex, Texture *cloudDensityTex);
   void draw(int width, int height, double brightness);
+
+private:
+  Program *finalProg;
+  VertexArrayObject *rect;
+  Texture *solidRGBTex, *cloudDensityTex;
+  double last_instant;
+  double color_cycle;
 };
 
 #endif

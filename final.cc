@@ -49,10 +49,6 @@
 #include "controls.hh"
 #include "final.hh"
 
-static Program *finalProg;
-static VertexArrayObject *rect;
-static Texture *solidRGBTex, *cloudDensityTex;
-
 Final::Final(Texture *solidRGBTex_, Texture *cloudDensityTex_)
 {
   solidRGBTex = solidRGBTex_;
@@ -82,15 +78,16 @@ Final::Final(Texture *solidRGBTex_, Texture *cloudDensityTex_)
   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(rect_data[0]), NULL);
 
   GetGLError();
+
+  last_instant = -1.0;
+  color_cycle = 0.0;
 }
 
 void Final::draw(int width, int height, double brightness)
 {
   double this_instant = now();
-  static double last_instant = -1.;
   if (last_instant < 0)
     last_instant = this_instant;
-  static double color_cycle = 0.;
   color_cycle += (this_instant - last_instant) * double(getCycleRate());
   last_instant = this_instant;
 
