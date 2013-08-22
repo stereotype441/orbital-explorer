@@ -87,7 +87,7 @@ public:
   explicit FVector(float x) : GenericVector<n, float, FVector<n> >(x) {}
   explicit FVector(const Vector<n> &x)
   {
-    for (int i = 0; i < n; ++i)
+    for (int i = 0; i < int(n); ++i)
       (*this)[i] = x[i];
   }
 
