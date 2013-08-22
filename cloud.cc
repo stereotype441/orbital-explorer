@@ -50,6 +50,7 @@
 #include "oopengl.hh"
 #include "cloud.hh"
 #include "shaders.hh"
+#include "util.hh"
 
 Cloud::Cloud(Texture *solidDepthTex_, Texture *cloudDensityTex)
 {
@@ -148,10 +149,10 @@ void Cloud::uploadVertices()
   cloudVAO->buffer(GL_ARRAY_BUFFER, varyings);
   glEnableVertexAttribArray(0);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(varyings[0]),
-                        reinterpret_cast<void *>(offsetof(Varying, pos)));
+                        reinterpret_cast<void *>(myoffsetof(Varying, pos)));
   glEnableVertexAttribArray(1);
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(varyings[0]),
-                        reinterpret_cast<void *>(offsetof(Varying, uvY)));
+                        reinterpret_cast<void *>(myoffsetof(Varying, uvY)));
   GetGLError();
 }
 

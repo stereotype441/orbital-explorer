@@ -48,6 +48,8 @@
 
 #include <map>
 
+#define myoffsetof(type, member) (reinterpret_cast<char *>(&(reinterpret_cast<type *>(0x1000)->member))-reinterpret_cast<char *>(0x1000))
+
 static const double pi = 3.141592653589793238;
 
 double now();

@@ -45,6 +45,7 @@
 
 #include "solid.hh"
 #include "shaders.hh"
+#include "util.hh"
 
 Solid::Solid(Texture *solidRGBTex, Texture *solidDepthTex)
 {
@@ -93,10 +94,10 @@ Solid::Solid(Texture *solidRGBTex, Texture *solidDepthTex)
 
   glEnableVertexAttribArray(0);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Varying),
-                        reinterpret_cast<void *>(offsetof(Varying, pos)));
+                        reinterpret_cast<void *>(myoffsetof(Varying, pos)));
   glEnableVertexAttribArray(1);
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Varying),
-                        reinterpret_cast<void *>(offsetof(Varying, xyY)));
+                        reinterpret_cast<void *>(myoffsetof(Varying, xyY)));
 
   GetGLError();
 
