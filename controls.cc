@@ -443,11 +443,7 @@ void initControls(Viewport &viewport)
 
 int handleControls(SDL_Event &event)
 {
-#if SDL_MAJOR_VERSION == 1
-  return TwEventSDL(&event, SDL_MAJOR_VERSION, SDL_MINOR_VERSION);
-#else
   return myTwEventSDL20(event);
-#endif
 }
 
 void drawControls()

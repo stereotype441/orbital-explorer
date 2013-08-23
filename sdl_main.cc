@@ -91,9 +91,6 @@ static int go()
   set_sdl_attr(SDL_GL_DOUBLEBUFFER, 1);
 
 #ifdef __APPLE__
-#if SDL_MAJOR_VERSION == 1
-#error The Orbital Explorer requires SDL 2 on OSX
-#endif
   // Apple defaults to an OpenGL 2.1 Compatibility context unless you
   // specify otherwise.
   set_sdl_attr(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -102,30 +99,6 @@ static int go()
 #endif
 
   Viewport viewport(640, 480);
-
-#if SDL_MAJOR_VERSION == 1
-
-  const SDL_VideoInfo *video = SDL_GetVideoInfo();
-  int bpp = video->vfmt->BitsPerPixel;
-  const Uint32 videoModeFlags = SDL_OPENGL | SDL_RESIZABLE;
-  SDL_Surface *screen =
-    SDL_SetVideoMode(viewport.getWidth(), viewport.getHeight(),
-                     bpp, videoModeFlags);
-  if (screen == NULL) {
-    fprintf(stderr, "SDL_SetVideoMode(): %s\n", SDL_GetError());
-    return 1;
-  }
-  SDL_WM_SetCaption("Electron Orbital Explorer", "EOE"); // Can't fail
-
-  // Set keyboard mode
-  SDL_EnableUNICODE(1); // Can't fail
-  if (SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY,
-                          SDL_DEFAULT_REPEAT_INTERVAL) < 0) {
-    fprintf(stderr, "SDL_EnableKeyRepeat(): %s\n", SDL_GetError());
-    // This is not a fatal error, so keep going
-  }
-
-#else
 
   // Create a window
   SDL_Window *window =
@@ -147,8 +120,6 @@ static int go()
     fprintf(stderr, "SDL_GL_CreateContext(): %s\n", SDL_GetError());
     exit(1);
   }
-
-#endif
 
   //
   // Get access to OpenGL functions
@@ -189,21 +160,12 @@ static int go()
       // If event hasn't been fully handled by controls, process it
       if (!handled) {
         switch (event.type) {
-#if SDL_MAJOR_VERSION == 1
-        case SDL_VIDEORESIZE:
-          viewport.resize(event.resize.w, event.resize.h);
-          resizeTextures(viewport);
-          SDL_SetVideoMode(viewport.getWidth(), viewport.getHeight(),
-                           bpp, videoModeFlags);
-          break;
-#else
         case SDL_WINDOWEVENT:
           if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
             viewport.resize(event.window.data1, event.window.data2);
             resizeTextures(viewport);
           }
           break;
-#endif
         case SDL_MOUSEMOTION:
           if (event.motion.state == SDL_BUTTON_LMASK) {
             camera.rotate(double(event.motion.xrel) / viewport.getWidth(),
@@ -214,18 +176,9 @@ static int go()
             camera.zoom(double(event.motion.yrel) / viewport.getHeight());
           }
           break;
-#if SDL_MAJOR_VERSION == 1
-        case SDL_MOUSEBUTTONDOWN:
-          if (event.button.button == SDL_BUTTON_WHEELUP)
-            camera.zoom(-DISCRETE_ZOOM_SIZE);
-          if (event.button.button == SDL_BUTTON_WHEELDOWN)
-            camera.zoom(DISCRETE_ZOOM_SIZE);
-          break;
-#else
         case SDL_MOUSEWHEEL:
           camera.zoom(-DISCRETE_ZOOM_SIZE * event.wheel.y);
           break;
-#endif
         case SDL_KEYDOWN:
           int key, mod;
           key = event.key.keysym.sym;
@@ -292,11 +245,7 @@ static int go()
     display(viewport, camera);
     if (show_controls)
       drawControls();
-#if SDL_MAJOR_VERSION == 1
-    SDL_GL_SwapBuffers();
-#else
     SDL_GL_SwapWindow(window);
-#endif
   }
 
   return 0;

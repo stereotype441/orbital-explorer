@@ -75,7 +75,6 @@
 
 // TwEventSDL returns zero if msg has not been handled,
 // and a non-zero value if it has been handled by the AntTweakBar library.
-#if SDL_MAJOR_VERSION > 1
 int myTwEventSDL20(const SDL_Event &event)
 {
   int handled = 0;
@@ -203,4 +202,3 @@ int myTwEventSDL20(const SDL_Event &event)
 
   return handled;
 }
-#endif

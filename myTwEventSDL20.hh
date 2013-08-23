@@ -48,8 +48,6 @@
 
 #include <SDL.h>
 
-#if SDL_MAJOR_VERSION > 1
 int myTwEventSDL20(const SDL_Event &event);
-#endif
 
 #endif
