@@ -54,6 +54,7 @@
 #include "render.hh"
 #include "viewport.hh"
 #include "controls.hh"
+#include "icon.hh"
 
 using namespace std;
 
@@ -136,6 +137,9 @@ static int go()
     fprintf(stderr, "SDL_CreateWindow(): %s\n", SDL_GetError());
     exit(1);
   }
+  SDL_Surface *icon = getIcon();
+  SDL_SetWindowIcon(window, icon);
+  SDL_FreeSurface(icon);
 
   // Create an OpenGL context associated with the window
   SDL_GLContext glcontext = SDL_GL_CreateContext(window);

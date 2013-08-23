@@ -32,7 +32,8 @@ OFILES=\
 	cloud.o \
 	final.o \
 	glprocs.o \
-	myTwEventSDL20.o
+	myTwEventSDL20.o \
+	icon.o
 
 PROG = orbital-explorer
 TEST = unittests
