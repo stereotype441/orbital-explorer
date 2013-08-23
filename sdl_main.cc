@@ -244,6 +244,11 @@ static int go()
             case SDLK_PAGEDOWN:
               camera.zoom(DISCRETE_ZOOM_SIZE);
               break;
+            case SDLK_F11:
+              static int fullscreen_mode = 0;
+              fullscreen_mode ^= SDL_WINDOW_FULLSCREEN_DESKTOP;
+              SDL_SetWindowFullscreen(window, fullscreen_mode);
+              break;
             default:
               break;
             }
