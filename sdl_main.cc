@@ -175,13 +175,16 @@ static int go()
 
   Camera camera;
   SDL_Event event;
+  bool show_controls = true;
   while (1) {
     // Clear the event queue, then redraw a frame
 
     while (SDL_PollEvent(&event)) {
 
       // Can controls handle the event?
-      int handled = handleControls(event);
+      int handled = false;
+      if (show_controls)
+        handled = handleControls(event);
 
       // If event hasn't been fully handled by controls, process it
       if (!handled) {
@@ -253,6 +256,9 @@ static int go()
               fullscreen_mode ^= SDL_WINDOW_FULLSCREEN_DESKTOP;
               SDL_SetWindowFullscreen(window, fullscreen_mode);
               break;
+            case SDLK_F10:
+              show_controls = !show_controls;
+              break;
             default:
               break;
             }
@@ -284,7 +290,8 @@ static int go()
     }
 
     display(viewport, camera);
-    drawControls();
+    if (show_controls)
+      drawControls();
 #if SDL_MAJOR_VERSION == 1
     SDL_GL_SwapBuffers();
 #else
