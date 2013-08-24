@@ -48,7 +48,14 @@
 
 #include <map>
 
-#define myoffsetof(type, member) (reinterpret_cast<char *>(&(reinterpret_cast<type *>(0x1000)->member))-reinterpret_cast<char *>(0x1000))
+#ifdef __APPLE__
+// This is really stupid. Apple's compiler generates a warning when
+// using a NULL pointer in this way, so instead we use some arbitrary
+// highly-aligned constant.
+#define myoffsetof(type, member) (reinterpret_cast<char *>(&(reinterpret_cast<type *>(0x40000000)->member))-reinterpret_cast<char *>(0x40000000))
+#else
+#define myoffsetof(type, member) offsetof(type, member)
+#endif
 
 static const double pi = 3.141592653589793238;
 
