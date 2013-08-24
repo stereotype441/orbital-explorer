@@ -193,6 +193,7 @@ void Cloud::draw(const Matrix<4,4> &mvpm, int width, int height,
   cloudProg->uniform<Matrix<4,4> >("modelViewProjMatrix") = mvpm;
   cloudProg->uniform<Vector<2> >("nearfar") = Vector2(near, far);
   cloudProg->uniform<int>("solidDepth") = 0;
+  cloudProg->uniform<int>("depth_obscuration") = 0;
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, *solidDepthTex);
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, cloudFBO);

@@ -53,6 +53,7 @@ noperspective in vec2 texPosition;
 out vec3 integratedValue;
 uniform sampler2D solidDepth;
 uniform vec2 nearfar;
+uniform bool depth_obscuration;
 
 // Extract the w value (which is the pre-projection z value) of the
 // solid object from the depth buffer that was used in the solid
