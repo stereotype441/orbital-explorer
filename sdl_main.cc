@@ -152,9 +152,9 @@ static int go()
 
     while (SDL_PollEvent(&event)) {
 
-      // Can controls handle the event?
+      // Can controls handle the event, or is it a resize event?
       int handled = false;
-      if (show_controls)
+      if (show_controls || event.type == SDL_WINDOWEVENT)
         handled = handleControls(event);
 
       // If event hasn't been fully handled by controls, process it
