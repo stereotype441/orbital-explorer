@@ -43,6 +43,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef ICON_HH
+#define ICON_HH
+
 #include <SDL.h>
 
 SDL_Surface *getIcon();
+
+#endif
