@@ -108,6 +108,14 @@ void main(void)
     w_back = solid_w;
   }
 
-  integratedValue = (w_back - w_front) *
-    (integrand_front + integrand_back) / 2.0;
+  float depth = w_back - w_front;
+  vec3 integrand_middle = (integrand_front + integrand_back) / 2.0;
+  if (!depth_obscuration) {
+    integratedValue = depth * integrand_middle;
+  } else {
+    // Assume the z-component of the integrand represents intensity,
+    // and calculate the falloff of all components based on its
+    // integral along the line of sight.
+    // TODO
+  }
 }
