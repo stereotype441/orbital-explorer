@@ -113,7 +113,7 @@ void main(void)
   if (!depth_obscuration) {
     integratedValue = depth * integrand_middle;
   } else {
-    // Assume the z-component of the integrand represents intensity,
+    // Assume the z-component of the integrand represents magnitude,
     // and calculate the falloff of all components based on its
     // integral along the line of sight.
     // TODO

@@ -60,7 +60,7 @@ Cloud::Cloud(Texture *solidDepthTex_, Texture *cloudDensityTex)
   cloudProg->geometryShader(cloudGeometryShaderSource);
   cloudProg->fragmentShader(cloudFragmentShaderSource);
   glBindAttribLocation(*cloudProg, 0, "position");
-  glBindAttribLocation(*cloudProg, 1, "uY_vY_Y");
+  glBindAttribLocation(*cloudProg, 1, "rim");
   glBindFragDataLocation(*cloudProg, 0, "integratedValue");
   cloudProg->link();
 
@@ -140,8 +140,7 @@ void Cloud::uploadVertices()
   for (int p = 0; p < num_points; ++p) {
     varyings[p].pos = FVector<3>(positions[p]);
     std::complex<double> density = (*orbital)(positions[p]);
-    double s = 0.06;
-    varyings[p].uvY = FVector3(s * density.real(), s * density.imag(),
+    varyings[p].rim = FVector3(density.real(), density.imag(),
                                abs(density));
   }
 
@@ -152,7 +151,7 @@ void Cloud::uploadVertices()
                         reinterpret_cast<void *>(myoffsetof(Varying, pos)));
   glEnableVertexAttribArray(1);
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(varyings[0]),
-                        reinterpret_cast<void *>(myoffsetof(Varying, uvY)));
+                        reinterpret_cast<void *>(myoffsetof(Varying, rim)));
   GetGLError();
 }
 

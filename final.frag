@@ -55,22 +55,20 @@ uniform float brightness;
 
 void main(void)
 {
-  // sRGB code here. We start by extracting xyY coordinates.
-
-  // The input is integrated (u * Y, v * Y, Y) from rendering multiple
+  // The input is integrated (real, imag, mag) from rendering multiple
   // tetrahedra with additive blending.
-  vec3 integrated_uvY = texture(cloudData, coord).xyz;
+  vec3 integrated_rim = texture(cloudData, coord).xyz;
 
   // Extract u, v, and Y from the input.
 
   // Integral of intensity (Y) along line of sight.
-  float integrated_Y = integrated_uvY[2];
+  float integrated_Y = integrated_rim.z;
 
   vec2 cloud_uv;
   if (use_color && integrated_Y > 0.0)
     // Integral of intensity-scaled chromaticity (u * Y and v * Y), divided
     // by total intensity (Y), gives intensity-weighted chromaticity.
-    cloud_uv = integrated_uvY.xy / integrated_Y;
+    cloud_uv = vec2(0.06, 0.06) * integrated_rim.xy / integrated_Y;
   else
     cloud_uv = vec2(0, 0);
 

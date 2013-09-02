@@ -80,7 +80,7 @@ private:
   struct Varying
   {
     FVector<3> pos;
-    FVector<3> uvY;
+    FVector<3> rim;
   };
 
   void uploadVertices();
